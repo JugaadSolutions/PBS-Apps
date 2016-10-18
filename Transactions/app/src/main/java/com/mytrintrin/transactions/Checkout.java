@@ -4,8 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -19,25 +22,89 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Checkout extends AppCompatActivity {
 
-    EditText coVehicleID,coFromport,coCardID;
+    EditText coVehicleID,coCardID;
     Button sendcheckout;
+
+    Spinner checkoutstationspinner;
+    String checkoutPortid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
         coVehicleID = (EditText) findViewById(R.id.checkoutvehicleid);
-        coFromport = (EditText) findViewById(R.id.checkoutfromportid);
+       // coFromport = (EditText) findViewById(R.id.checkoutfromportid);
         coCardID = (EditText) findViewById(R.id.checkoutcardid);
         sendcheckout = (Button) findViewById(R.id.bsendcheckout);
+        checkoutstationspinner = (Spinner) findViewById(R.id.checkoutstationspinner);
+        ckeckoutdockingstations();
+
+
+
     }
+
+    private void ckeckoutdockingstations() {
+
+        List<String> categories = new ArrayList<String>();
+        categories.add("Select Stations");
+        categories.add("Fleet");
+        categories.add("Holding Area");
+        categories.add("Redistrubution Vehicle");
+        categories.add("Maintainence Centre");
+        ArrayAdapter<String> dockingadapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, categories);
+        dockingadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        checkoutstationspinner.setAdapter(dockingadapter);
+        checkoutstationspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 1:
+                        Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                        checkoutPortid=TransactionAPI.fleetid;
+                        break;
+
+                    case 2:
+                        Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                        checkoutPortid=TransactionAPI.holdingareaid;
+                        break;
+
+                    case 3:
+                        Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                        checkoutPortid=TransactionAPI.redistrubutionid;
+                        break;
+
+                    case 4:
+                        Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                        checkoutPortid=TransactionAPI.maintainenceid;
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+    }
+
 
     public void sendcheckoutdetails(View view)
     {
@@ -96,9 +163,10 @@ public class Checkout extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params= new HashMap<>();
-                params.put("vehicleNumber",coVehicleID.getText().toString().trim());
+                params.put("vehicleId",coVehicleID.getText().toString().trim());
                 params.put("cardId",coCardID.getText().toString().trim());
-                params.put("fromPort",coFromport.getText().toString().trim());
+                //params.put("fromPort",coFromport.getText().toString().trim());
+                params.put("fromPort",checkoutPortid);
                 params.put("checkOutTime",checkouttime);
                 return params;
             }

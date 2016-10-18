@@ -16,13 +16,13 @@
         android:id="@+id/checkoutvehicleid"
         android:hint="Bicycle ID" />
 
-    <EditText
+
+
+
+    <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/checkoutfromportid"
-        android:hint="From Port" />
-
-
+        android:id="@+id/checkoutstationspinner" />
 
     <EditText
         android:layout_width="match_parent"
