@@ -7,34 +7,35 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mytrintrin.transactions.Checkout"
+    tools:context="com.mytrintrin.transactions.testspinner"
     android:orientation="vertical">
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/checkoutstationspinner" />
+        android:id="@+id/stationspinner"
+         />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/HAspinner"
         android:visibility="gone"
-        />
+         />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/MCspinner"
         android:visibility="gone"
-        />
+         />
 
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/RVspinner"
         android:visibility="gone"
-        />
+         />
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,29 +43,12 @@
         android:visibility="gone"
         />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkoutvehicleid"
-        android:hint="Bicycle ID"
-        android:textColorHint="#009746"/>
-
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkoutcardid"
-        android:hint="Card ID"
-        android:textColorHint="#009746"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Check OUT"
-        android:id="@+id/bsendcheckout"
+        android:text="Send"
+        android:id="@+id/button"
         android:layout_gravity="center_horizontal"
-        android:onClick="sendcheckoutdetails"
-        android:background="#009746"
-        android:textColor="#fff"/>
-
+        android:onClick="Sendetails" />
 </LinearLayout>

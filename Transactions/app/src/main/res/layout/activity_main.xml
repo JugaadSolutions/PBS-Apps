@@ -10,19 +10,26 @@
     tools:context="com.mytrintrin.transactions.MainActivity">
 
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Check in"
-        android:id="@+id/bcheckin"
-        android:layout_weight="1"
-        android:onClick="gotocheckin"/>
+
 
     <Button
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Check out"
         android:id="@+id/bcheckout"
         android:layout_weight="1"
-        android:onClick="gotocheckout"/>
+        android:onClick="gotocheckout"
+        android:background="#009746"
+        android:textColor="#fff"/>
+    <Button
+        android:layout_marginLeft="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check in"
+        android:id="@+id/bcheckin"
+        android:layout_weight="1"
+        android:onClick="gotocheckin"
+        android:background="#009746"
+        android:textColor="#fff"/>
 </LinearLayout>

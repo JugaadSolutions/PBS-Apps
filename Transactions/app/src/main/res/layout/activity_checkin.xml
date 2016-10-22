@@ -16,7 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/checkinvehicleid"
-        android:hint="Bicycle ID" />
+        android:hint="Bicycle ID"
+        android:textColorHint="#009746"/>
 
     <Spinner
         android:layout_width="match_parent"
@@ -28,7 +29,32 @@
         android:layout_height="wrap_content"
         android:id="@+id/checkintoportid"
         android:hint="To Port" />-->
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/HAspinner"
+        android:visibility="gone"
+        />
 
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/MCspinner"
+        android:visibility="gone"
+        />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/RVspinner"
+        android:visibility="gone"
+        />
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Fleetspinner"
+        android:visibility="gone"
+        />
 
 
 
@@ -38,5 +64,7 @@
         android:text="Check IN"
         android:id="@+id/bsendcheckin"
         android:layout_gravity="center_horizontal"
-        android:onClick="sendcheckindetails"/>
+        android:onClick="sendcheckindetails"
+        android:background="#009746"
+        android:textColor="#fff"/>
 </LinearLayout>
