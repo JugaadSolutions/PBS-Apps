@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ public class Login extends AppCompatActivity {
 
     EditText loginmail;
     EditText loginpassword;
+    CheckBox loginshowpassword;
 
     /*Login URL*/
     // String loginurl="http://43.251.80.79:3001/api/auth/login";
@@ -42,6 +46,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         loginmail = (EditText) findViewById(R.id.etloginemail);
         loginpassword = (EditText) findViewById(R.id.etloginpassword);
+        loginshowpassword= (CheckBox) findViewById(R.id.cbshowpassword);
         checkinternet();
 
     }
@@ -71,6 +76,19 @@ public class Login extends AppCompatActivity {
     }
 
     /*ends*/
+
+    public void showpassword(View view)
+    {
+        if(loginshowpassword.isChecked())
+        {
+            loginpassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        }
+        else
+        {
+
+            loginpassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
+    }
 
     //Login verify using email and password
 

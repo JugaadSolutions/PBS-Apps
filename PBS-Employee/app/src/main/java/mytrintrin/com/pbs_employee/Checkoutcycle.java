@@ -19,14 +19,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
@@ -34,50 +41,43 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Checkoutcycle extends AppCompatActivity {
 
     NfcAdapter nfcAdapter;
-    String cycleid;
-    TextView assigneddockingstation;
-    //String dockingstationurl=" http://43.251.80.79:13050/api/dockingstation/";
-    String dockingstationurl=" http://43.251.80.79:3001/api/dockingstation/";
-    Spinner dockingstationspinner;
-    ArrayAdapter<String> dockingadapter;
-    List<String> dockinglist;
-    Location currentlocation;
+    String checkoutnfccycleid;
+    String checkoutnfccardid;
+
+    EditText nfccycleid,nfccardid;
+
+    public static Spinner Checkoutstation_NFC,  HA_NFC_CO_spinner, RV_NFC_CO_spinner, MC_NFC_CO_spinner,Fleet_NFC_CO_spinner;
+    public  ArrayAdapter<String> HA_NFC_CO_adapter,RV_NFC_CO_adapter,MC_NFC_CO_adapter,Fleet_NFC_CO_adapter;
+
+    String HA_NFC_CO_portid,RV_NFC_CO_portid,MC_NFC_CO_portid,Fleet_NFC_CO_portid;
+    String Holdingarea_NFC_CO,Restribution_NFC_CO,Maintenance_NFC_CO,Fleet_NFC_CO;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkoutcycle);
+        nfccycleid = (EditText) findViewById(R.id.etcheckoutnfccycleid);
+        nfccardid = (EditText) findViewById(R.id.etcheckoutnfcardid);
+        Checkoutstation_NFC = (Spinner) findViewById(R.id.checkoutnfcstationspinner);
+        HA_NFC_CO_spinner = (Spinner) findViewById(R.id.HA_NFC_CO_spinner);
+        RV_NFC_CO_spinner = (Spinner) findViewById(R.id.RV_NFC_CO_spinner);
+        MC_NFC_CO_spinner = (Spinner) findViewById(R.id.MC_NFC_CO_spinner);
+        Fleet_NFC_CO_spinner = (Spinner) findViewById(R.id.Fleet_NFC_CO_spinner);
 
-        assigneddockingstation= (TextView) findViewById(R.id.tvassigneddockingstation);
+
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
-        /*To get Location*/
-
-
-        GPSServices mGPSService = new GPSServices(this);
-        mGPSService.getLocation();
-
-        if (mGPSService.isLocationAvailable == false) {
-            Toast.makeText(this, "Your location is not available, please try again.", Toast.LENGTH_SHORT).show();
-            return;
-        } else {
-            double latitude = mGPSService.getLatitude();
-            double longitude = mGPSService.getLongitude();
-             currentlocation = new Location("");
-            currentlocation.setLatitude(latitude);
-            currentlocation.setLongitude(longitude);
-        }
-
-        mGPSService.closeGPS();
-
-
-
-        /*ends*/
 
         if(nfcAdapter==null)
         {
@@ -125,69 +125,43 @@ public class Checkoutcycle extends AppCompatActivity {
             }
         }
 
-            displaydockingstation();
+        checkinternet();
+        checkoutnfcstations();
 
     }
 
-    private void displaydockingstation() {
-        StringRequest dockingstations= new StringRequest(Request.Method.GET, dockingstationurl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-              /*  try {
-                    JSONObject dockingstation=new JSONObject(response);
-                    JSONArray stationsdetails = dockingstation.getJSONArray("data");
-                    dockinglist = new ArrayList<>();
-                    dockinglist.add("Select Docking Station");
-                    for(int i=0;i<stationsdetails.length();i++) {
-                        JSONObject togetstationname = stationsdetails.getJSONObject(i);
-                        String stationname = togetstationname.getString("name");
-                        Log.d("docking station", stationname);
-                        dockinglist.add(stationname);
-                    }
-                    dockingadapter = new ArrayAdapter<String>(getApplicationContext(),
-                            android.R.layout.simple_spinner_item, dockinglist);
-                    dockingadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                    dockingstationspinner.setAdapter(dockingadapter);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
-                try {
-                    JSONObject responsefromserver= new JSONObject(response);
-                    JSONArray alldata = responsefromserver.getJSONArray("data");
-                    JSONObject data = alldata.getJSONObject(0);
-                    JSONObject gpscordinates = data.getJSONObject("gpsCoordinates");
-
-                    String lat= gpscordinates.getString("latitude");
-                    String lon= gpscordinates.getString("longitude");
-
-                    Location dockinglocation = new Location("");
-                    dockinglocation.setLatitude(Double.parseDouble(lat));
-                    dockinglocation.setLongitude(Double.parseDouble(lon));
-                    Log.d("docking station", String.valueOf(dockinglocation));
-                    float distance = currentlocation.distanceTo(dockinglocation);
-                    Log.d("distance", String.valueOf(distance));
-                    if(distance<=100)
-                    {
-                        String stationname = data.getString("name");
-                        assigneddockingstation.setText("Your in "+stationname);
-
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
 
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+    //checking internet
+    public void checkinternet() {
+        if (AppStatus.getInstance(this).isOnline()) {
 
-            }
-        });
-        Mysingleton.getInstance(this).addtorequestqueue(dockingstations);
+            Log.d("Internet Status", "Online");
+
+        } else {
+            Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
+            Log.d("Internet Status", "Offline");
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                    Checkoutcycle.this);
+            builder.setIcon(R.drawable.ic_wifi);
+            builder.setTitle("NO INTERNET CONNECTION!!!");
+            builder.setMessage("Your offline !!! Please check your connection and come back later.");
+            builder.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            finish();
+                            //startActivity(new Intent(Settings.ACTION_NETWORK_OPERATOR_SETTINGS));
+                        }
+                    });
+            builder.show();
+        }
     }
+
+    /*ends*/
+
+
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -215,7 +189,21 @@ public class Checkoutcycle extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if(nfcAdapter==null)
+        {
+            return;
+        }
         nfcAdapter.disableForegroundDispatch(Checkoutcycle.this);
+        if (HA_NFC_CO_adapter==null||RV_NFC_CO_adapter==null||MC_NFC_CO_adapter==null||Fleet_NFC_CO_adapter==null)
+        {
+            HA_NFC_CO_adapter=RV_NFC_CO_adapter=MC_NFC_CO_adapter=Fleet_NFC_CO_adapter=null;
+        }
+        else {
+            HA_NFC_CO_adapter.clear();
+            RV_NFC_CO_adapter.clear();
+            MC_NFC_CO_adapter.clear();
+            Fleet_NFC_CO_adapter.clear();
+        }
     }
 
     private void resolveIntent(Intent intent) {
@@ -335,19 +323,288 @@ public class Checkoutcycle extends AppCompatActivity {
                 s1 = s1.substring(len1);
                 finaltagid = finaltagid + s1 + s2;
             }
-            cycleid=finaltagid+"00000000";
-            Toast.makeText(this,"Your id is"+cycleid,Toast.LENGTH_LONG).show();
-            // textView.setText(finaltagid + "00000000");
+            checkoutnfccardid=finaltagid+"00000000";
+            Toast.makeText(this,"Your id is"+checkoutnfccardid,Toast.LENGTH_LONG).show();
+            nfccardid.setText(checkoutnfccardid);
         }
         else {
             String bicyletagid= sb.toString();
             String finalbicidbicyletagid= bicyletagid.replace(" ","");
-            cycleid = finalbicidbicyletagid;
-            Toast.makeText(this,"Your cycle id is"+cycleid,Toast.LENGTH_LONG).show();
-            // textView.setText(finalbicidbicyletagid);
+            checkoutnfccycleid = finalbicidbicyletagid;
+            Toast.makeText(this,"Your cycle id is"+checkoutnfccycleid,Toast.LENGTH_LONG).show();
+            nfccycleid.setText(checkoutnfccycleid);
         }
         return sb.toString();
     }
 
 
+    private void checkoutnfcstations() {
+
+        List<String> categories = new ArrayList<String>();
+        categories.add("Select Station");
+        categories.add("Fleet");
+        categories.add("Holding Area");
+        categories.add("Redistrubution Vehicle");
+        categories.add("Maintainence Centre");
+        ArrayAdapter<String> dockingadapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, categories);
+        dockingadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Checkoutstation_NFC.setAdapter(dockingadapter);
+        Checkoutstation_NFC.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                        RV_NFC_CO_spinner.setVisibility(View.GONE);
+                        MC_NFC_CO_spinner.setVisibility(View.GONE);
+                        HA_NFC_CO_spinner.setVisibility(View.GONE);
+                        Fleet_NFC_CO_spinner.setVisibility(View.GONE);
+                        break;
+
+                    case 1:
+                        Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                        //checkoutPortid=TransactionAPI.fleetid;
+                        Fleet_NFC_CO_spinner.setVisibility(View.VISIBLE);
+                        // HAportid=RVportid=MCportid=Fleetportid=Holdingarea=Restribution=Maintenance=Fleet="";
+                        HA_NFC_CO_portid=RV_NFC_CO_portid=MC_NFC_CO_portid=Holdingarea_NFC_CO=Restribution_NFC_CO=Maintenance_NFC_CO="";
+                        Fleet_NFC_CO_adapter = new ArrayAdapter<String>(Checkoutcycle.this, android.R.layout.simple_spinner_dropdown_item, Splash.FleetNameArrayList);
+                        Fleet_NFC_CO_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        Fleet_NFC_CO_spinner.setAdapter(Fleet_NFC_CO_adapter);
+                        Fleet_NFC_CO_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                Fleet_NFC_CO=Fleet_NFC_CO_spinner.getSelectedItem().toString();
+                                Fleet_NFC_CO_portid = Splash.FleetIDArrayList.get(position);
+                                Log.d("Holding area port id", Fleet_NFC_CO_portid);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+                        RV_NFC_CO_spinner.setVisibility(View.GONE);
+                        MC_NFC_CO_spinner.setVisibility(View.GONE);
+                        HA_NFC_CO_spinner.setVisibility(View.GONE);
+                        break;
+
+                    case 2:
+                        Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                        //checkoutPortid=TransactionAPI.holdingareaid;
+                        HA_NFC_CO_spinner.setVisibility(View.VISIBLE);
+                        RV_NFC_CO_portid=MC_NFC_CO_portid=Fleet_NFC_CO_portid=Restribution_NFC_CO=Maintenance_NFC_CO=Fleet_NFC_CO="";
+                        HA_NFC_CO_adapter = new ArrayAdapter<String>(Checkoutcycle.this, android.R.layout.simple_spinner_dropdown_item, Splash.HANameArrayList);
+                        HA_NFC_CO_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        HA_NFC_CO_spinner.setAdapter(HA_NFC_CO_adapter);
+                        HA_NFC_CO_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                Holdingarea_NFC_CO=HA_NFC_CO_spinner.getSelectedItem().toString();
+                                HA_NFC_CO_portid = Splash.HAIDArrayList.get(position);
+                                Log.d("Holding area port id", HA_NFC_CO_portid);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+                        RV_NFC_CO_spinner.setVisibility(View.GONE);
+                        MC_NFC_CO_spinner.setVisibility(View.GONE);
+                        Fleet_NFC_CO_spinner.setVisibility(View.GONE);
+                        break;
+
+                    case 3:
+                        Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                        // checkoutPortid=TransactionAPI.redistrubutionid;
+                        RV_NFC_CO_spinner.setVisibility(View.VISIBLE);
+                        HA_NFC_CO_portid=MC_NFC_CO_portid=Fleet_NFC_CO_portid=Holdingarea_NFC_CO=Maintenance_NFC_CO=Fleet_NFC_CO="";
+                        RV_NFC_CO_adapter = new ArrayAdapter<String>(Checkoutcycle.this, android.R.layout.simple_spinner_dropdown_item, Splash.RVNameArrayList);
+                        RV_NFC_CO_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        //RVadapter.add("Select Redistribution Vehicle");
+                        RV_NFC_CO_spinner.setAdapter(RV_NFC_CO_adapter);
+                        RV_NFC_CO_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                Restribution_NFC_CO=RV_NFC_CO_spinner.getSelectedItem().toString();
+                                RV_NFC_CO_portid = Splash.RVIDArrayList.get(position);
+                                Log.d("Redistribution port id", RV_NFC_CO_portid);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+                        MC_NFC_CO_spinner.setVisibility(View.GONE);
+                        HA_NFC_CO_spinner.setVisibility(View.GONE);
+                        Fleet_NFC_CO_spinner.setVisibility(View.GONE);
+                        break;
+
+                    case 4:
+                        Toast.makeText(parent.getContext(), parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+                        //checkoutPortid=TransactionAPI.maintainenceid;
+                        MC_NFC_CO_spinner.setVisibility(View.VISIBLE);
+                        HA_NFC_CO_portid=RV_NFC_CO_portid=Fleet_NFC_CO_portid=Holdingarea_NFC_CO=Restribution_NFC_CO=Fleet_NFC_CO="";
+                        MC_NFC_CO_adapter = new ArrayAdapter<String>(Checkoutcycle.this, android.R.layout.simple_spinner_dropdown_item, Splash.MCNameArrayList);
+                        MC_NFC_CO_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        // MCadapter.add("Select Maintenance Center");
+                        MC_NFC_CO_spinner.setAdapter(MC_NFC_CO_adapter);
+                        MC_NFC_CO_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                Maintenance_NFC_CO=MC_NFC_CO_spinner.getSelectedItem().toString();
+                                MC_NFC_CO_portid = Splash.MCIDArrayList.get(position);
+                                Log.d("Maintenance port id", MC_NFC_CO_portid);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
+                        HA_NFC_CO_spinner.setVisibility(View.GONE);
+                        RV_NFC_CO_spinner.setVisibility(View.GONE);
+                        Fleet_NFC_CO_spinner.setVisibility(View.GONE);
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+    }
+
+    public void getcheckoutnfcdetails() {
+        //Holdingarea=HAspinner.getSelectedItem().toString();
+        if (Fleet_NFC_CO == ""||Fleet_NFC_CO_portid==null) {
+            Fleet_NFC_CO = "";
+            Fleet_NFC_CO_portid="";
+        } else {
+            Fleet_NFC_CO = Fleet_NFC_CO_spinner.getSelectedItem().toString();
+        }
+
+        if (Holdingarea_NFC_CO == ""||HA_NFC_CO_portid==null) {
+            Holdingarea_NFC_CO = "";
+            HA_NFC_CO_portid="";
+        } else {
+            Holdingarea_NFC_CO = HA_NFC_CO_spinner.getSelectedItem().toString();
+        }
+        // Maintenance=MCspinner.getSelectedItem().toString();
+        if (Maintenance_NFC_CO == ""||MC_NFC_CO_portid==null) {
+            Maintenance_NFC_CO = "";
+            MC_NFC_CO_portid="";
+        } else {
+            Maintenance_NFC_CO = MC_NFC_CO_spinner.getSelectedItem().toString();
+        }
+        // Restribution=RVspinner.getSelectedItem().toString();
+        if (Restribution_NFC_CO == ""||RV_NFC_CO_portid==null) {
+            Restribution_NFC_CO = "";
+            RV_NFC_CO_portid="";
+        } else {
+            Restribution_NFC_CO = RV_NFC_CO_spinner.getSelectedItem().toString();
+        }
+
+    }
+
+    public void sendcheckoutnfcdetails(View view)
+    {
+        checkinternet();
+        getcheckoutnfcdetails();
+        if(nfccycleid.getText().toString().trim().equals(""))
+        {
+            nfccycleid.setError("Please Scan Bicycle");
+            return;
+        }
+        if(nfccycleid.getText().toString().trim().equals(""))
+        {
+            nfccycleid.setError("Please Scan Your Card");
+            return;
+        }
+        String checkoutnfcstationvalue = Checkoutstation_NFC.getSelectedItem().toString();
+        if (checkoutnfcstationvalue.equals("Select Station")) {
+            Toast.makeText(this, "Please select the stations", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Calendar calendar = Calendar.getInstance();
+        final String checkouttime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(calendar.getTime());
+
+        StringRequest checkoutnfcrequest = new StringRequest(Request.Method.POST, TransactionAPI.checkouturl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("check out Response",response);
+                Holdingarea_NFC_CO = "";
+                HA_NFC_CO_portid="";
+                Maintenance_NFC_CO = "";
+                MC_NFC_CO_portid="";
+                Restribution_NFC_CO = "";
+                RV_NFC_CO_portid="";
+                Fleet_NFC_CO = "";
+                Fleet_NFC_CO_portid="";
+                checkoutnfcstations();
+                nfccycleid.setText("");
+                nfccardid.setText("");
+                Toast.makeText(Checkoutcycle.this,"Check out Successfully",Toast.LENGTH_LONG).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                if (error instanceof ServerError) {
+                    Toast.makeText(Checkoutcycle.this, "can't checkout try later", Toast.LENGTH_LONG).show();
+                    Log.d("Error", String.valueOf(error instanceof ServerError));
+                    error.printStackTrace();
+                } else if (error instanceof AuthFailureError) {
+                    Toast.makeText(Checkoutcycle.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Authentication Error");
+                    error.printStackTrace();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(Checkoutcycle.this, "Parse Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Parse Error");
+                    error.printStackTrace();
+                } else if (error instanceof NetworkError) {
+                    Toast.makeText(Checkoutcycle.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Network Error");
+                    error.printStackTrace();
+                } else if (error instanceof TimeoutError) {
+                    Toast.makeText(Checkoutcycle.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Timeout Error");
+                    error.printStackTrace();
+                } else if (error instanceof NoConnectionError) {
+                    Toast.makeText(Checkoutcycle.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(Checkoutcycle.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                }
+
+
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params= new HashMap<>();
+                params.put("vehicleId",nfccycleid.getText().toString().trim());
+                params.put("cardId",nfccardid.getText().toString().trim());
+                params.put("fromPort",HA_NFC_CO_portid+""+RV_NFC_CO_portid+""+MC_NFC_CO_portid+""+Fleet_NFC_CO_portid);
+                params.put("checkOutTime",checkouttime);
+                return params;
+            }
+        };
+
+        Mysingleton.getInstance(this).addtorequestqueue(checkoutnfcrequest);
+
+    }
 }

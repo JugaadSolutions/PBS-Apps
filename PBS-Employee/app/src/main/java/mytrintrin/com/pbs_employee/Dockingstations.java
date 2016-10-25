@@ -129,7 +129,7 @@ public class Dockingstations extends AppCompatActivity {
 
         alertDialog.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                // User pressed Cancel button. Write Logic Here
+
                 Toast.makeText(getApplicationContext(), "You clicked on Cancel",
                         Toast.LENGTH_SHORT).show();
             }

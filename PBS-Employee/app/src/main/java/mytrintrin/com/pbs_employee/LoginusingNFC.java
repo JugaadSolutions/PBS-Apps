@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -22,13 +23,16 @@ import android.widget.Toast;
 public class LoginusingNFC extends AppCompatActivity {
 
    private NfcAdapter nfcAdapter;
-    String Empid;
-    String cycleid;
+    public  static String Empid;
+    public  static SharedPreferences loginnfcid;
+    public  static SharedPreferences.Editor loginnfceditor;
+    //String cycleid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginusing_nfc);
+        loginnfcid = getSharedPreferences("LoginDetails", MODE_PRIVATE);
         checknfc();
     }
 
@@ -59,15 +63,6 @@ public class LoginusingNFC extends AppCompatActivity {
         else {
             if(nfcAdapter.isEnabled())
             {
-               /* AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("NFC");
-                builder.setMessage("NFC is not available in the mobile");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //finish();
-                    }
-                });*/
                 onNewIntent(getIntent());
             }
             else
@@ -97,7 +92,6 @@ public class LoginusingNFC extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        // Toast.makeText(this,"NFC Tag Detected",Toast.LENGTH_SHORT).show();
         Log.d("NFC Tag","Detected");
         resolveIntent(intent);
     }
@@ -127,8 +121,8 @@ public class LoginusingNFC extends AppCompatActivity {
             return;
         }
         nfcAdapter.disableForegroundDispatch(this);
+        Empid="";
 
-       // finish();
     }
 
 
@@ -252,14 +246,18 @@ public class LoginusingNFC extends AppCompatActivity {
                 finaltagid = finaltagid + s1 + s2;
             }
             Empid=finaltagid+"00000000";
-            Toast.makeText(this,"Your id is"+Empid,Toast.LENGTH_LONG).show();
-           // textView.setText(finaltagid + "00000000");
+            //Toast.makeText(this,"Your id is"+Empid,Toast.LENGTH_LONG).show();
+                loginnfceditor=loginnfcid.edit();
+                loginnfceditor.putString("NFC_ID",Empid);
+                loginnfceditor.commit();
+
         }
         else {
             String bicyletagid= sb.toString();
             String finalbicidbicyletagid= bicyletagid.replace(" ","");
-            cycleid = finalbicidbicyletagid;
-            Toast.makeText(this,"Your cycle id is"+cycleid,Toast.LENGTH_LONG).show();
+          //  cycleid = finalbicidbicyletagid;
+            //Toast.makeText(this,"Your cycle id is "+cycleid,Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Invalid card detected",Toast.LENGTH_LONG).show();
            // textView.setText(finalbicidbicyletagid);
         }
         return sb.toString();

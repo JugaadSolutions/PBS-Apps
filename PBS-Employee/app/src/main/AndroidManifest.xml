@@ -43,7 +43,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".checkoutmanually"></activity>
+        <activity android:name=".checkoutmanually" />
+        <activity android:name=".checkinmanually"></activity>
     </application>
 
 </manifest>

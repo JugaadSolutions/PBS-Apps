@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text=" checkout bicycle"
+        android:text=" checkout bicycle(NFC)"
         android:id="@+id/tvcheckoutcycle"
         android:textAllCaps="true"
         android:gravity="center"
@@ -26,21 +26,90 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/stationdetails"
+        android:id="@+id/checkoutnfcdetails"
         android:layout_marginTop="20dp"
         android:orientation="vertical">
 
-   <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:id="@+id/tvassigneddockingstation"
-        android:textSize="22sp"
-       android:textColor="#009746"
-       android:layout_gravity="center_horizontal"/>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/checkoutnfccycleid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#009746">
 
+            <EditText
+                android:id="@+id/etcheckoutnfccycleid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Bicyle ID"
+                android:singleLine="true"
+                android:textColor="#009746"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/checkoutnfcardid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="#009746">
+
+            <EditText
+                android:id="@+id/etcheckoutnfcardid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Card ID"
+                android:singleLine="true"
+                android:textColor="#009746"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkoutnfcstationspinner"
+            android:visibility="visible"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/HA_NFC_CO_spinner"
+            android:visibility="gone"
+            />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/MC_NFC_CO_spinner"
+            android:visibility="gone"
+            />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/RV_NFC_CO_spinner"
+            android:visibility="gone"
+            />
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Fleet_NFC_CO_spinner"
+            android:visibility="gone"
+            />
+
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Check Out"
+            android:id="@+id/bcheckoutnfc"
+            android:onClick="sendcheckoutnfcdetails"
+            android:textColor="#fff"
+            android:background="#009746"
+            android:layout_gravity="center_horizontal"/>
 
 
     </LinearLayout>
+
+
 
 </LinearLayout>

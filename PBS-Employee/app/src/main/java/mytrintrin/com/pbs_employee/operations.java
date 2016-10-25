@@ -59,4 +59,9 @@ public class operations extends AppCompatActivity {
         startActivity(new Intent(this,checkoutmanually.class));
     }
 
+    public void gotocheckinmanual(View view)
+    {
+        startActivity(new Intent(this,checkinmanually.class));
+    }
+
 }

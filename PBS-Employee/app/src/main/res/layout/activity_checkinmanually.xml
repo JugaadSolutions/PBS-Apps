@@ -7,61 +7,51 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="mytrintrin.com.pbs_employee.checkoutmanually"
-    android:orientation="vertical">
-
-<!--Check out manually layout-->
+    tools:context="mytrintrin.com.pbs_employee.checkinmanually">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/checkinmanuallayout">
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/checkoutvehicleid"
+            android:id="@+id/checkinvehicleid"
             android:hint="Bicycle ID"
             android:textColorHint="#009746"/>
 
-
-        <EditText
+        <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/checkoutcardid"
-            android:hint="Card ID"
-            android:textColorHint="#009746"/>
+            android:id="@+id/checkinspinner" />
 
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/checkoutstationspinner" />
-
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/HAspinner"
+            android:id="@+id/HAcheckinspinner"
             android:visibility="gone"
             />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/MCspinner"
+            android:id="@+id/MCcheckinspinner"
             android:visibility="gone"
             />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/RVspinner"
+            android:id="@+id/RVcheckinspinner"
             android:visibility="gone"
             />
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Fleetspinner"
+            android:id="@+id/Fleetcheckinspinner"
             android:visibility="gone"
             />
 
@@ -70,16 +60,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Check OUT"
-            android:id="@+id/bsendcheckout"
+            android:text="Check IN"
+            android:id="@+id/bsendcheckin"
             android:layout_gravity="center_horizontal"
-            android:onClick="sendcheckoutdetails"
+            android:onClick="sendcheckindetails"
             android:background="#009746"
             android:textColor="#fff"/>
 
-
     </LinearLayout>
-
-<!--Ends-->
 
 </LinearLayout>

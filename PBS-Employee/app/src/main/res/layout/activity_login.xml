@@ -27,7 +27,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Email"
                 android:singleLine="true"
-                android:textColor="#009746" />
+                android:textColor="#009746"
+                />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -42,9 +43,18 @@
                 android:layout_height="wrap_content"
                 android:hint="Password"
                 android:singleLine="true"
-                android:textColor="#009746" />
+                android:textColor="#009746"
+                android:inputType="textPassword"/>
         </android.support.design.widget.TextInputLayout>
 
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Password"
+            android:id="@+id/cbshowpassword"
+            android:textColor="#009746"
+            android:onClick="showpassword"/>
 
         <Button
             android:id="@+id/blogin"
