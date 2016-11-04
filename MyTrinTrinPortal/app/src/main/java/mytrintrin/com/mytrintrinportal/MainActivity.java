@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         if (AppStatus.getInstance(this).isOnline()) {
             Log.d("url", latitude + " " + longitude);
             //startWebView("http://user.mytrintrin.com/portal/?r_view=app&dev_lat=" + latitude + "&dev_long=" + longitude);
-            startWebView("https://mytrintrin.com/portal/?r_view=app&dev_lat=" + latitude + "&dev_long=" + longitude);
+            startWebView("https://www.mytrintrin.com/portal/?r_view=app&dev_lat=" + latitude + "&dev_long=" + longitude);
            // startWebView("https://www.google.co.in");
             webView.setWebViewClient(new WebViewClient() {
                 @Override
