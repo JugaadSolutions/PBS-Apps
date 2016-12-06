@@ -33,9 +33,11 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class checkoutmanually extends AppCompatActivity {
 
@@ -305,8 +307,16 @@ public class checkoutmanually extends AppCompatActivity {
             return;
         }
         Calendar calendar = Calendar.getInstance();
-        final String checkouttime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(calendar.getTime());
+       // final String checkouttime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(calendar.getTime());
 
+            /*GMT +5:30*/
+        // final String checkouttime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(calendar.getTime());
+        /*Ends*/
+        /*GMT 0*/
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+        final String checkouttime = dateFormatGmt.format(new Date())+"";
+        /*Ends*/
         StringRequest checkoutrequest = new StringRequest(Request.Method.POST, TransactionAPI.checkouturl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

@@ -44,7 +44,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (mGPSService.isLocationAvailable == false) {
             Toast.makeText(this, "Your location is not available, please try again.", Toast.LENGTH_SHORT).show();
-            return;
+            currentlocation = new Location("");
+            currentlocation.setLatitude(0);
+            currentlocation.setLongitude(0);
+            //return;
         } else {
             latitude = mGPSService.getLatitude();
             longitude = mGPSService.getLongitude();
@@ -68,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
         if (AppStatus.getInstance(this).isOnline()) {
             Log.d("url", latitude + " " + longitude);
             //startWebView("http://user.mytrintrin.com/portal/?r_view=app&dev_lat=" + latitude + "&dev_long=" + longitude);
-            startWebView("https://www.mytrintrin.com/portal/?r_view=app&dev_lat=" + latitude + "&dev_long=" + longitude);
-           // startWebView("https://www.google.co.in");
+             startWebView("http://mytrintrin.com/portal/?r_view=app&dev_lat=" + latitude + "&dev_long=" + longitude);
+            //startWebView("mytrintrin.com");
             webView.setWebViewClient(new WebViewClient() {
                 @Override
                 public void onReceivedSslError(final WebView view, final SslErrorHandler handler, SslError error) {
@@ -240,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void gotoprivacypolicy(View view)
     {
-        webView.loadUrl("https://www.mytrintrin.com/?page_id=6015&lang=en");
+        webView.loadUrl("http://www.mytrintrin.com/?page_id=6015&lang=en");
         //startWebView("https://www.mytrintrin.com/?page_id=6015&lang=en");
     }
 

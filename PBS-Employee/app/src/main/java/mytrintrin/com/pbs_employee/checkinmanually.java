@@ -27,9 +27,11 @@ import com.android.volley.toolbox.StringRequest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class checkinmanually extends AppCompatActivity {
 
@@ -270,7 +272,17 @@ public class checkinmanually extends AppCompatActivity {
         }
 
         Calendar calendar = Calendar.getInstance();
-        final String checkintime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(calendar.getTime());
+        //final String checkintime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(calendar.getTime());
+
+        /*GMT +5:30*/
+        // final String checkintime = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").format(calendar.getTime());
+        /*Ends*/
+        /*GMT 0*/
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+        final String checkintime = dateFormatGmt.format(new Date())+"";
+        /*Ends*/
+
         StringRequest checkinrequest = new StringRequest(Request.Method.POST,TransactionAPI.checkinurl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
