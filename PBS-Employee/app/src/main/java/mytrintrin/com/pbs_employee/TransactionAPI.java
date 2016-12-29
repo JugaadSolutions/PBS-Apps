@@ -5,15 +5,15 @@ package mytrintrin.com.pbs_employee;
  */
 public class TransactionAPI {
 
-    public static final String checkinurl ="http://43.251.80.79:13055/api/transactions/checkin/app";
-    public  static final String checkouturl="http://43.251.80.79:13055/api/transactions/checkout/app";
+    public static final String checkinurl ="http://43.251.80.79:13056/api/transactions/checkin/app";
+    public  static final String checkouturl="http://43.251.80.79:13056/api/transactions/checkout/app";
 
 
    /* To get port id dynamically*/
-    public  static final String fleetidurl="http://43.251.80.79:13055/api/fleet";
-    public  static final String RVidurl="http://43.251.80.79:13055/api/redistributionport";
-    public  static final String HAidurl="http://43.251.80.79:13055/api/holdingport";
-    public  static final String MCidurl="http://43.251.80.79:13055/api/maintenanceport";
+    public  static final String fleetidurl="http://43.251.80.79:13056/api/fleet";
+    public  static final String RVidurl="http://43.251.80.79:13056/api/redistributionport";
+    public  static final String HAidurl="http://43.251.80.79:13056/api/holdingport";
+    public  static final String MCidurl="http://43.251.80.79:13056/api/maintenanceport";
 
 
 

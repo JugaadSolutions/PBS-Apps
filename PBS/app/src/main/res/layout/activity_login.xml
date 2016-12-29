@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mytrintrin.www.pbs.Login"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/loginview">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/loginToolbar"
+            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:touchscreenBlocksFocus="true">
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/logo"
+        android:id="@+id/loginimage" />
+
+    <TextView
+        android:text="Pedal With Pride"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvtagline"
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
+        android:textColor="#009746"
+        android:textStyle="bold"/>
+
+    </LinearLayout>
+
+
+
+        <EditText
+            android:id="@+id/etloginemail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="   Email..."
+            android:textColor="#009746"
+            android:background="@drawable/input_outline"
+            android:padding="12dp"
+            android:layout_marginBottom="5dp"
+            android:textColorHint="@color/colorPrimary"
+            android:textStyle="bold"
+             android:drawableLeft="@drawable/lock"/>
+
+
+        <EditText
+            android:id="@+id/etloginpassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=" Password..."
+            android:textColor="#009746"
+            android:background="@drawable/input_outline"
+            android:padding="12dp"
+            android:textStyle="bold"
+            android:textColorHint="@color/colorPrimary"
+            android:drawableLeft="@drawable/key"
+            android:inputType="textPassword"/>
+
+
+        <CheckBox
+            android:text="Show Password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/loginshowpassword"
+            android:textColor="@color/colorPrimary"
+            android:buttonTint="@color/colorPrimary"
+            android:onClick="showpasswordlogin"
+           />
+
+        <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="login"
+        android:id="@+id/blogin"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/roundcorner"
+        android:layout_marginTop="10dp"
+        android:textColor="#fff"
+        android:onClick="verifylogin"
+        android:textStyle="bold"
+        />
+
+
+</LinearLayout>
+
+
+
+</LinearLayout>

@@ -38,7 +38,7 @@ public class Login extends AppCompatActivity {
 
     /*Login URL*/
     // String loginurl="http://43.251.80.79:3001/api/auth/login";
-    String loginurl = "http://43.251.80.79:13055/api/auth/login";
+    String loginurl = "http://43.251.80.79:13056/api/auth/login";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

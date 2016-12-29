@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.location.Location;
 import android.net.http.SslError;
 import android.provider.Settings;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,13 +29,15 @@ public class MainActivity extends AppCompatActivity {
     TextView privacypolicy;
 
 
+
+
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getlocation();
         privacypolicy= (TextView) findViewById(R.id.textView);
-        // getwebview();
+
     }
 
     private void getlocation() {

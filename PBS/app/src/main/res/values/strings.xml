@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">PBS</string>
+    <string name="title_activity_registration">Registration</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string-array name="country_arrays">
+
+        <item>India</item>
+        <item>United States</item>
+        <item>Indonesia</item>
+        <item>France</item>
+        <item>Italy</item>
+        <item>Singapore</item>
+        <item>New Zealand</item>
+        <item>Malaysia</item>
+    </string-array>
+
+
+    <string-array name="state_arrays">
+
+        <item>Karnataka</item>
+        <item>Tamil Nadu</item>
+        <item>Goa</item>
+
+    </string-array>
+
+    <string-array name="city_arrays">
+
+        <item>Mysuru</item>
+        <item>Bengaluru</item>
+        <item>Tumkur</item>
+
+    </string-array>
+
+
+    <string-array name="proof_arrays">
+
+        <item>Aadhar</item>
+        <item>Passport</item>
+        <item>Voter ID</item>
+
+    </string-array>
+
+
+    <string-array name="plan_arrays">
+
+        <item>One Year</item>
+        <item>3 Months</item>
+        <item>Test</item>
+
+    </string-array>
+
+
+    <string-array name="payment_arrays">
+
+        <item>Credit Card</item>
+        <item>Debit Card</item>
+        <item>Cash</item>
+
+    </string-array>
+
+
+</resources>
