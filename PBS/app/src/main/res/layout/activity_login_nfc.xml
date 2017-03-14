@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_login_nfc"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mytrintrin.www.pbs.LoginNFC"
-    >
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -22,19 +22,18 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Having any trouble with NFC?\n Login with your mail "
-        android:id="@+id/tvloginmail"
-        android:gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:textColor="#009746"
-        android:onClick="gotologin"/>
+       android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -49,16 +48,34 @@
         android:textStyle="bold"
         android:layout_marginTop="13dp"
         android:layout_below="@+id/loginnfcview"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:padding="16dp"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/tapcard"
+        app:srcCompat="@drawable/card_300"
         android:id="@+id/imageView4"
         android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="7dp" />
+        android:layout_alignParentEnd="false"
+        android:layout_marginEnd="7dp"
+        android:layout_centerHorizontal="true"
+        android:padding="16dp"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Having any trouble with NFC?\n Login with your mail "
+            android:id="@+id/tvloginmail"
+            android:gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#009746"
+            android:onClick="gotologin"
+            android:textStyle="bold"
+            android:padding="16dp"/>
 
-</RelativeLayout>
+    </LinearLayout>
+    </ScrollView>
+</LinearLayout>

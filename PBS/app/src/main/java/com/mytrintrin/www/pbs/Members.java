@@ -1,6 +1,8 @@
 package com.mytrintrin.www.pbs;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,6 +13,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -31,8 +34,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
@@ -45,6 +54,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Members extends AppCompatActivity {
@@ -62,6 +72,10 @@ public class Members extends AppCompatActivity {
 
     String Name, Plan, Email, Phone, Balance, Smartcard, doccopy, docid;
     Toolbar Membertoolbar;
+
+    private ProgressDialog mProgressDialog;
+
+    List<JSONObject> memberobject;
 
 
 
@@ -92,6 +106,12 @@ public class Members extends AppCompatActivity {
     }
 
     public void viewallmembers() {
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Fetching Member Details...");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.show();
         StringRequest getmembers = new StringRequest(Request.Method.GET, API.getmembersapi, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -102,10 +122,12 @@ public class Members extends AppCompatActivity {
                     Boolean error = responsefromserver.getBoolean("error");
                     String message = responsefromserver.getString("message");
                     JSONArray data = responsefromserver.getJSONArray("data");
+
                     Log.d("data", String.valueOf(data));
                     for (int i = 0; i < data.length(); i++) {
 
                         JSONObject first = data.getJSONObject(i);
+
                         Name = first.getString("Name");
                         Phone = first.getString("phoneNumber");
                        // Email = first.getString("email");
@@ -173,6 +195,12 @@ public class Members extends AppCompatActivity {
                         cardview.setVisibility(View.VISIBLE);
                         cardview.setMaxCardElevation(30);
                         cardview.setMaxCardElevation(6);
+                        cardview.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Toast.makeText(Members.this, "", Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
                         ParentLayout = new LinearLayout(context);
                         parentparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -245,6 +273,7 @@ public class Members extends AppCompatActivity {
 
 
                     }
+                    mProgressDialog.dismiss();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -254,6 +283,38 @@ public class Members extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
+                mProgressDialog.dismiss();
+
+                if (error instanceof ServerError) {
+                    Toast.makeText(Members.this, "Invalid username or password", Toast.LENGTH_LONG).show();
+                    Log.d("Error", String.valueOf(error instanceof ServerError));
+                    error.printStackTrace();
+                } else if (error instanceof AuthFailureError) {
+                    Toast.makeText(Members.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Authentication Error");
+                    error.printStackTrace();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(Members.this, "Parse Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Parse Error");
+                    error.printStackTrace();
+                } else if (error instanceof NetworkError) {
+                    Toast.makeText(Members.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Network Error");
+                    error.printStackTrace();
+                } else if (error instanceof TimeoutError) {
+                    Toast.makeText(Members.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Timeout Error");
+                    error.printStackTrace();
+                } else if (error instanceof NoConnectionError) {
+                    Toast.makeText(Members.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(Members.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                }
+
 
             }
         }) {
@@ -266,6 +327,8 @@ public class Members extends AppCompatActivity {
             }
 
         };
+
+        getmembers.setRetryPolicy(new DefaultRetryPolicy(20000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(getmembers);
 

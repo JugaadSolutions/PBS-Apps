@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_maintainence__centre"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mytrintrin.www.pbs.Maintainance_Centre"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/maintaincecentreview">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/maintainancetoolbar">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:layout_marginRight="5dp"
+            android:onClick="logoutfrommc"
+            android:src="@drawable/ic_power" />
+
+    </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/maintainencecentremainlayout"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+    <Button
+        android:text="Add Cycles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/mcaddcycles"
+        android:textColor="#ffffff"
+        android:background="@drawable/roundcorner"
+        android:textStyle="bold"
+        android:layout_marginBottom="5dp"
+        android:visibility="gone"
+        android:onClick="gotoadddcycle"/>
+
+    <Button
+        android:text="Under Maintainence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/mcundermaintainence"
+        android:textColor="#ffffff"
+        android:background="@drawable/roundcorner"
+        android:textStyle="bold"
+        android:layout_marginBottom="5dp"
+        android:onClick="gotoundermaintainance"/>
+
+        <Button
+            android:text="Maintained Cycles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mcmaintanedcycles"
+            android:textColor="#ffffff"
+            android:background="@drawable/roundcorner"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp"/>
+
+    </LinearLayout>
+</LinearLayout>

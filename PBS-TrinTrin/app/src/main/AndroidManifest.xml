@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mytrintrin.www.pbs_trintrin">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.NFC" />
+
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Login" />
+        <activity android:name=".GetStarted" />
+        <activity
+            android:name=".Registration"
+            android:parentActivityName=".GetStarted" />
+        <activity
+            android:name=".Refund"
+            android:parentActivityName=".Registration" />
+        <activity
+            android:name=".Signup"
+            android:parentActivityName=".GetStarted" />
+        <activity
+            android:name=".Topup"
+            android:parentActivityName=".Registration"
+            />
+        <activity android:name=".Redistribution" />
+        <activity
+            android:name=".Checkout_RV"
+            android:parentActivityName=".Redistribution" />
+        <activity
+            android:name=".Checkin_RV"
+            android:parentActivityName=".Redistribution" />
+        <activity
+            android:name=".Maintenance"
+            android:parentActivityName=".GetStarted_MC" />
+        <activity
+            android:name=".Vehicle_rv"
+            android:parentActivityName=".Redistribution" />
+        <activity android:name=".GetStarted_MC" />
+        <activity
+            android:name=".Repair"
+            android:parentActivityName=".GetStarted_MC" />
+        <activity
+            android:name=".Tickets_RC"
+            android:parentActivityName=".GetStarted" />
+        <activity android:name=".Addcycle"
+            android:screenOrientation="portrait"></activity>
+    </application>
+
+</manifest>

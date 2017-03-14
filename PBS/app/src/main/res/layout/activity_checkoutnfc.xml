@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_checkoutnfc"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mytrintrin.www.pbs.Checkoutnfc"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -21,6 +20,157 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkoutnfcmainlayout"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/checkoutnfcbicylelayout">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Bicycle ID"
+            android:ems="10"
+            android:id="@+id/checkoutnfccycleid"
+            android:padding="12dp"
+            android:background="@drawable/input_outline"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:textColorHint="@color/colorPrimary"
+            android:layout_marginBottom="5dp"/>
+
+        </LinearLayout>
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="Card ID"
+                android:ems="10"
+                android:id="@+id/checkoutnfcccardid"
+                android:padding="12dp"
+                android:background="@drawable/input_outline"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:textColorHint="@color/colorPrimary"
+                android:layout_marginBottom="5dp"/>
+
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkoutnfcstationspinner"
+                android:visibility="visible"
+                android:background="@drawable/input_outline"/>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/HA_NFC_CO_spinner"
+                android:visibility="gone"
+                android:background="@drawable/input_outline"/>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/MC_NFC_CO_spinner"
+                android:visibility="gone"
+                android:background="@drawable/input_outline"/>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/RV_NFC_CO_spinner"
+                android:visibility="gone"
+                android:background="@drawable/input_outline"/>
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/Fleet_NFC_CO_spinner"
+                android:visibility="gone"
+                android:background="@drawable/input_outline"/>
+
+            <Button
+                android:text="Check out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkoutnfc"
+                android:background="@drawable/roundcorner"
+                android:textStyle="bold"
+                android:textColor="#fff"
+                android:onClick="getallvalues_nfc"/>
+
+
+
+
+
+    </LinearLayout>
+
+    </ScrollView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkoutnfcerrorlayout"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:text="Checkout Error"
+                android:layout_weight="1"
+                android:textSize="20dp"
+                android:layout_gravity="center_horizontal"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Bicycle ID"
+                    android:layout_weight="1"
+                    android:textSize="20dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Reason"
+                    android:layout_weight="1"
+                    android:textSize="20dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <TextView
         android:text="Problem with NFC?\n Checkout Manually"
@@ -31,9 +181,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/tvcheckoutmanual"
         android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:gravity="bottom"
+        />
 
 
-</RelativeLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_add_cycle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mytrintrin.www.pbs.Add_Cycle"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/addcycleview">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/addcycletoolbar">
+
+
+        </android.support.v7.widget.Toolbar>
+
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/addcyclemainlayout"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/addcycledetailslayout"
+            android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Bicycle Number"
+            android:ems="10"
+            android:id="@+id/mccyclenumber"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/input_outline"
+            android:padding="12dp"
+            android:layout_marginBottom="5dp"
+            android:textColorHint="@color/colorPrimary"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Cycle RFID"
+            android:ems="10"
+            android:id="@+id/mccyclerfid"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/input_outline"
+            android:padding="12dp"
+            android:layout_marginBottom="5dp"
+            android:textColorHint="@color/colorPrimary"/>
+
+        </LinearLayout>
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="Card Number"
+            android:ems="10"
+            android:id="@+id/mccardnumber"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:background="@drawable/input_outline"
+            android:padding="12dp"
+            android:layout_marginBottom="5dp"
+            android:textColorHint="@color/colorPrimary"/>
+
+
+
+        <Button
+            android:text="Add Cycle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/mcaddcyclebutton"
+            android:background="@drawable/roundcorner"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:onClick="addcycletoserver"/>
+
+    </LinearLayout>
+
+    </ScrollView>
+
+
+
+</LinearLayout>

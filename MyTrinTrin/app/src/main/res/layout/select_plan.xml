@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/select_plan"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mytrintrin.www.mytrintrin.SelectPlan"
+    android:orientation="vertical">
+
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/selectplanview">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectplantoolbar"
+            android:theme="@style/customToolbartheme">
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/selectplanmainlayout"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectplanlayout"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/planspinner"
+                android:background="@drawable/input_outline"
+                android:layout_marginBottom="10dp"
+                android:theme="@style/customToolbartheme"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/plandetailslayout"
+                android:orientation="vertical"
+                android:background="@drawable/input_outline"
+                android:layout_marginBottom="10dp">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Plan Details"
+                    android:padding="5dp"
+                    android:layout_gravity="center_horizontal"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Plan Name"
+                    android:padding="5dp"
+                    android:id="@+id/planname"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Validity"
+                    android:padding="5dp"
+                    android:id="@+id/planvalidity"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Security Fee(Refundable)"
+                    android:padding="5dp"
+                    android:id="@+id/plansecurityfee"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Processing Fee"
+                    android:padding="5dp"
+                    android:id="@+id/planprocessingfee"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Usage Fee"
+                    android:padding="5dp"
+                    android:id="@+id/planusagefee"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Smart Card Fee"
+                    android:padding="5dp"
+                    android:id="@+id/plansmartcardfee"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="Total"
+                    android:padding="5dp"
+                    android:id="@+id/plantotalfee"/>
+
+            </LinearLayout>
+
+            <Button
+                android:text="Submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/submit_plan"
+                android:background="@drawable/roundcorner"
+                android:textColor="@color/btntextcolor"
+                android:textStyle="bold"
+                android:onClick="makeplanpayment"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

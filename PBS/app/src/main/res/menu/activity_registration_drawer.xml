@@ -15,12 +15,17 @@
             android:icon="@drawable/members_nav"
             android:title="Members" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_tickets"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:title="Tickets" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Logout" />
+
     </group>
 
-    <item android:title="Communicate">
+    <!--<item android:title="Communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
@@ -31,6 +36,6 @@
                 android:icon="@drawable/ic_menu_send"
                 android:title="Send" />
         </menu>
-    </item>
+    </item>-->
 
 </menu>

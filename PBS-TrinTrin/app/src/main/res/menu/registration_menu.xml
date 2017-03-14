@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/nav_refund"
+        android:title="Refund"
+        android:icon="@mipmap/ic_attach_money_black_24dp"/>
+
+    <item android:id="@+id/nav_topup"
+        android:title="Topup"
+        android:icon="@mipmap/ic_local_atm_black_24dp"/>
+
+    <item android:id="@+id/nav_tickets"
+        android:title="Tickets"
+        android:icon="@mipmap/ic_receipt_black_24dp"/>
+
+</menu>

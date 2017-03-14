@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refund"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.mytrintrin.www.pbs_trintrin.Refund">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/refundview">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/refundtoolbar"
+            android:theme="@style/customToolbartheme"></android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/refundmainlayout"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/refundlayout"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!--<com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/refundmemberid"
+                android:layout_weight="1"
+                android:layout_marginBottom="5dp"
+                android:paddingLeft="12dp"
+                android:background="@drawable/input_outline"
+                android:layout_marginTop="10dp"/>-->
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/name_refund"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/colorPrimary">
+
+            <EditText
+                android:id="@+id/etrefundname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Name"
+                android:inputType="textPersonName"
+                android:padding="12dp"
+                android:textColorHint="@color/colorPrimary"
+                android:textColor="@color/colorPrimary"
+                android:enabled="false"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/refundpaymentmode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:entries="@array/refund_arrays"
+                android:layout_marginBottom="5dp"
+                android:padding="12dp"
+                android:background="@drawable/input_outline"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/transactionnumber_refund"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/colorPrimary">
+
+            <EditText
+                android:id="@+id/etrefundtransactionid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Transaction Number"
+                android:inputType="textPersonName"
+                android:padding="12dp"
+                android:textColorHint="@color/colorPrimary"
+                android:textColor="@color/colorPrimary"
+                android:maxLength="40"
+                android:digits="@string/acceptcharactersandnum"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/comments_refund"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/colorPrimary">
+
+            <EditText
+                android:id="@+id/etrefundcomments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Comments"
+                android:inputType="textMultiLine"
+                android:padding="12dp"
+                android:textColorHint="@color/colorPrimary"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginBottom="5dp"
+                android:maxLength="159"
+                android:digits="@string/acceptcharactersandnum"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:text="Refund Request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/brefundrequest"
+                android:background="@drawable/roundcorner"
+                android:textColor="#fff"
+                android:onClick="Requestforrefund"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

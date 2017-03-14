@@ -38,16 +38,30 @@
             android:exported="true"
             android:label="@string/title_activity_registration"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Members"
-            android:parentActivityName=".Registration"/>
-        <activity android:name=".Refunds"
-            android:parentActivityName=".Registration"/>
+        <activity
+            android:name=".Members"
+            android:parentActivityName=".Registration" />
+        <activity
+            android:name=".Refunds"
+            android:parentActivityName=".Registration" />
         <activity android:name=".Redistribution" />
         <activity android:name=".LoginNFC" />
-        <activity android:name=".Checkoutmanually"
-            android:parentActivityName=".Redistribution"/>
-        <activity android:name=".Checkoutnfc"
-            android:parentActivityName=".Redistribution"></activity>
+        <activity
+            android:name=".Checkoutmanually"
+            android:parentActivityName=".Redistribution" />
+        <activity
+            android:name=".Checkoutnfc"
+            android:parentActivityName=".Redistribution" />
+        <activity android:name=".Maintainance_Centre" />
+        <activity
+            android:name=".UnderMaintainance"
+            android:parentActivityName=".Maintainance_Centre" />
+        <activity
+            android:name=".Add_Cycle"
+            android:parentActivityName=".Maintainance_Centre" />
+        <activity android:name=".Add_card" />
+        <activity android:name=".GetStarted" />
+        <activity android:name=".Tickets"></activity>
     </application>
 
 </manifest>

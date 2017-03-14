@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/feedback"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mytrintrin.www.mytrintrin.Feedback"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/feedbackview">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/feedbacktoolbar"
+            android:theme="@style/customToolbartheme">
+
+        </android.support.v7.widget.Toolbar>
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/feedbackmainlayout"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/feedbacklayout"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/colorPrimary">
+
+                <EditText
+                    android:id="@+id/message_feedback"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:hint="Feedback Message"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/colorPrimary"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:text="submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnfeedback"
+                android:background="@drawable/roundcorner"
+                android:textColor="@color/btntextcolor"
+                android:textStyle="bold"
+                android:layout_gravity="bottom"
+                android:onClick="sendfeedback"/>
+
+
+
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

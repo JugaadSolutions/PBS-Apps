@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">MyTrinTrin</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="Rs">\u20B9</string>
+    <!--added for welcomeslider-->
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Register</string>
+    <string name="slide_1_desc">Register</string>
+
+    <string name="slide_2_title">Release</string>
+    <string name="slide_2_desc">Release</string>
+
+    <string name="slide_3_title">Ride</string>
+    <string name="slide_3_desc">Ride</string>
+
+    <string name="slide_4_title">Return</string>
+    <string name="slide_4_desc">Return</string>
+
+    <string name="acceptcharactersandnum">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\u0020</string>
+    <string name="acceptonlycharacters">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\u0020</string>
+    <string name="email">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._-\u0020</string>
+    <string name="address">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._,#-\u0020</string>
+    <string name="comments">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,-\u0020</string>
+
+    <string name="aboutus_login">TrinTrin is the Public Bike Share (PBS) system of Mysuru, a world-renowned heritage city, the cleanest city of India and the cultural capital of the state of Karnataka in southern India. By virtue of its lifestyle, history, geography and environment-friendliness, Mysuru pre-eminently qualified for the service of such a system.
+Trin Trin is a Government of Karnataka project, partially funded by the World Bank under the Global Environment Facility (GEF) Grant. The project is planned and implemented by the Directorate of Urban Land Transport and Mysuru City corporation.\n
+This is a system where bicycles are owned and operated by a civic administration and its associates, for shared, short-term use by local residents as well as visitors, on an easy rental basis. The system involves borrowing a bicycle from any ‘docking station’ across the city and returning the borrowed bicycle after a ride to any ‘docking station’, as suits the convenience of the rider.
+“TrinTrin”, the PBS of Mysuru will be implemented and operated by <b>Green Wheel Ride</b>, an Mysuru city based enterprise engaged in manufacturing eco-friendly battery-operated bicycles, and promoting the concept and culture of cycling in Mysuru City. Currently the system features 52 hubs and 450 bicycles.</string>
+
+
+</resources>

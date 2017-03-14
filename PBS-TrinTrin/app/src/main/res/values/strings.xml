@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">PBS-TrinTrin</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="acceptcharactersandnum">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\u0020</string>
+    <string name="acceptonlycharacters">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\u0020</string>
+    <string name="email">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._-\u0020</string>
+    <string name="address">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._,#-\u0020</string>
+    <string name="comments">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,-\u0020</string>
+
+    <string-array name="country_arrays">
+        <item>India</item>
+        <item>United States</item>
+        <item>Indonesia</item>
+        <item>France</item>
+        <item>Italy</item>
+        <item>Singapore</item>
+        <item>New Zealand</item>
+        <item>Malaysia</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="state_arrays">
+        <item>Karnataka</item>
+        <item>Tamil Nadu</item>
+        <item>Goa</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="city_arrays">
+        <item>Mysuru</item>
+        <item>Bengaluru</item>
+        <item>Tumkur</item>
+        <item>Mandya</item>
+        <item>Mangalore</item>
+        <item>Hassan</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="proof_arrays">
+        <item>Aadhar</item>
+        <item>Passport</item>
+        <item>Voter ID</item>
+    </string-array>
+
+    <string-array name="plan_arrays">
+        <item>One Year</item>
+        <item>3 Months</item>
+        <item>Test</item>
+    </string-array>
+
+    <string-array name="payment_arrays">
+        <item>Credit Card</item>
+        <item>Debit Card</item>
+        <item>Cash</item>
+    </string-array>
+
+    <string-array name="refund_arrays">
+        <item>Cash</item>
+    </string-array>
+
+</resources>

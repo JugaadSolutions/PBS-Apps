@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/get_started"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mytrintrin.www.mytrintrin.GetStarted"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/getstartedview">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/Getstartedtoolbar"
+            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
+
+
+        </android.support.v7.widget.Toolbar>
+
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/getstartedmainlayout"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/trintrinlogo"
+            android:id="@+id/imageView"
+            android:layout_gravity="center_horizontal"
+            android:onClick="gotoslider"/>
+
+        <TextView
+              android:text="Pedal With Pride"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:id="@+id/tagline_getstarted"
+              android:gravity="center_horizontal"
+         android:textStyle="bold"
+         android:textColor="@color/colorPrimary"/>
+        </LinearLayout>
+
+
+        <TextView
+            android:text="Welcome to Trin Trin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/welcomemessage"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+
+        <Button
+            android:text="Login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/blogin"
+            android:textColor="@color/btntextcolor"
+            android:background="@drawable/roundcorner"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:onClick="gotologin"/>
+
+        <Button
+            android:text="Sign Up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bregister"
+            android:textColor="@color/btntextcolor"
+            android:background="@drawable/roundcorner"
+            android:textStyle="bold"
+            android:onClick="gotoregister"/>
+
+
+    </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

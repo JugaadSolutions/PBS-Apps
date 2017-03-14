@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/myaccount_myaccount"
+        android:title="My Account"
+        android:icon="@mipmap/ic_account_circle_black_24dp"/>
+
+    <item android:id="@+id/changepassword_myaccount"
+        android:title="Change Password"
+        android:icon="@mipmap/ic_edit_black_24dp"/>
+
+    <item android:id="@+id/payment_myaccount"
+        android:title="Payment History"
+        android:icon="@mipmap/ic_event_note_black_24dp"/>
+
+    <item android:id="@+id/selectplan_myaccount"
+        android:title="Select Plan"
+        android:icon="@mipmap/ic_content_paste_black_24dp"/>
+
+    <item android:id="@+id/topup_myaccount"
+        android:title="Top Up"
+        android:icon="@mipmap/ic_credit_card_black_24dp"
+        />
+
+    <item android:id="@+id/ride_myaccount"
+        android:title="Ride History"
+        android:icon="@mipmap/ic_directions_bike_black_24dp"/>
+
+    <item android:id="@+id/faq_myaccount"
+        android:title="FAQ's"
+        android:icon="@mipmap/ic_help_outline_black_24dp"/>
+
+    <item android:id="@+id/contact_myaccount"
+        android:title="Feedback"
+        android:icon="@mipmap/ic_headset_mic_black_24dp"/>
+
+    <item android:id="@+id/tickets_myaccount"
+        android:title="Tickets"
+        android:icon="@mipmap/ic_receipt_black_24dp"
+        android:visible="false"/>
+
+    <item android:id="@+id/logout_myaccount"
+        android:title="Logout"
+        android:icon="@mipmap/ic_power_settings_new_black_24dp"/>
+
+
+
+</menu>

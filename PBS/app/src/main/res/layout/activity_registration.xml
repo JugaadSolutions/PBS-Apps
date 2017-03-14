@@ -75,10 +75,11 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/input_outline"
                     android:hint="First Name"
+                    android:maxLength="18"
                     android:padding="12dp"
                     android:textColor="#009746"
                     android:textColorHint="@color/colorPrimary"
-                    android:maxLength="18"/>
+                    android:inputType="text"/>
 
 
                 <EditText
@@ -88,10 +89,11 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/input_outline"
                     android:hint="Last Name"
+                    android:maxLength="18"
                     android:padding="12dp"
                     android:textColor="#009746"
                     android:textColorHint="@color/colorPrimary"
-                    android:maxLength="18"/>
+                    android:inputType="text"/>
 
 
                 <LinearLayout
@@ -147,10 +149,11 @@
                     android:background="@drawable/input_outline"
                     android:hint="E-mail"
                     android:inputType="textEmailAddress"
+                    android:maxLength="40"
                     android:padding="12dp"
                     android:textColor="#009746"
                     android:textColorHint="@color/colorPrimary"
-                    android:maxLength="30"/>
+                    />
 
 
                 <EditText
@@ -161,20 +164,20 @@
                     android:background="@drawable/input_outline"
                     android:hint="Phone"
                     android:inputType="number"
+                    android:maxLength="14"
                     android:padding="12dp"
                     android:textColor="#009746"
-                    android:textColorHint="@color/colorPrimary"
-                    android:maxLength="14"/>
+                    android:textColorHint="@color/colorPrimary" />
 
 
                 <TextView
                     android:id="@+id/tvcountry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:text="Country"
                     android:textColor="#009746"
-                    android:textSize="18dp"
-                    android:layout_marginTop="5dp"/>
+                    android:textSize="18dp" />
 
 
                 <Spinner
@@ -189,10 +192,10 @@
                     android:id="@+id/tvstate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:text="State"
                     android:textColor="#009746"
-                    android:textSize="18dp"
-                    android:layout_marginTop="5dp"/>
+                    android:textSize="18dp" />
 
 
                 <Spinner
@@ -206,10 +209,10 @@
                     android:id="@+id/tvcity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:text="City"
                     android:textColor="#009746"
-                    android:textSize="18dp"
-                    android:layout_marginTop="5dp"/>
+                    android:textSize="18dp" />
 
 
                 <Spinner
@@ -220,19 +223,18 @@
                     android:entries="@array/city_arrays" />
 
 
-
-                    <EditText
-                        android:id="@+id/etaddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Address"
-                        android:textColor="#009746"
-                        android:layout_marginTop="5dp"
-                        android:background="@drawable/input_outline"
-                        android:padding="12dp"
-                        android:textColorHint="@color/colorPrimary"
-                        android:maxLength="40"/>
-
+                <EditText
+                    android:id="@+id/etaddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/input_outline"
+                    android:hint="Address"
+                    android:maxLength="50"
+                    android:padding="12dp"
+                    android:textColor="#009746"
+                    android:textColorHint="@color/colorPrimary"
+                    android:inputType="text"/>
 
 
                 <android.support.design.widget.FloatingActionButton
@@ -313,21 +315,36 @@
                         android:onClick="TakeProfilePic" />
                 </FrameLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/Profilebackfab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_margin="@dimen/fab_margin"
+                        android:onClick="ProfileBack"
+                        android:src="@drawable/ic_keyboard_backspace_white_24dp"
+                        app:backgroundTint="@color/colorPrimary"
+                        />
 
                     <android.support.design.widget.FloatingActionButton
                         android:id="@+id/Profilefab"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                       android:layout_gravity="end"
-                        android:layout_margin="@dimen/fab_margin"
+                        android:layout_gravity="end"
                         android:onClick="Profilenext"
                         android:src="@drawable/rightarrow"
-                        app:backgroundTint="@color/colorPrimary" />
-
-
-
+                        app:backgroundTint="@color/colorPrimary"
+                        android:layout_marginLeft="@dimen/fab_margin"
+                        android:layout_marginRight="@dimen/fab_margin"
+                        android:layout_marginTop="7dp"
+                        android:layout_alignTop="@+id/Profilebackfab"
+                        android:layout_alignParentEnd="true" />
+                </RelativeLayout>
             </LinearLayout>
 
             <!--Profile pic ends-->
@@ -393,20 +410,17 @@
                     android:entries="@array/proof_arrays" />
 
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/documentno"
+                <EditText
+                    android:id="@+id/etdocumentno"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHint="#009746">
-
-                    <EditText
-                        android:id="@+id/etdocumentno"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Document Number"
-                        android:singleLine="true"
-                        android:textColor="#009746" />
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/input_outline"
+                    android:hint="Document Number"
+                    android:padding="12dp"
+                    android:textColor="#009746"
+                    android:textColorHint="@color/colorPrimary"
+                    android:maxLength="30"/>
 
 
                 <FrameLayout
@@ -429,6 +443,11 @@
                         android:onClick="Takeproofpic" />
                 </FrameLayout>
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/Savememberfab"
                     android:layout_width="wrap_content"
@@ -436,9 +455,26 @@
                     android:layout_gravity="bottom|end"
                     android:layout_margin="@dimen/fab_margin"
                     android:onClick="Savemember"
-                    android:src="@drawable/save"
-                    app:backgroundTint="#fff" />
+                    android:src="@drawable/ic_save"
+                    app:backgroundTint="@color/colorPrimary"
+                    android:layout_alignParentEnd="true"/>
 
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/Backtoprofile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:onClick="backtoprofile"
+                        android:src="@drawable/ic_keyboard_backspace_white_24dp"
+                        app:backgroundTint="@color/colorPrimary"
+                        android:layout_marginLeft="@dimen/fab_margin"
+                        android:layout_marginRight="@dimen/fab_margin"
+                        android:layout_alignTop="@+id/Savememberfab"
+
+                        />
+
+                </RelativeLayout>
 
             </LinearLayout>
 
@@ -504,7 +540,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    />
+                    android:background="@drawable/input_outline"
+                    android:padding="12dp" />
 
 
                 <android.support.design.widget.FloatingActionButton
@@ -514,8 +551,8 @@
                     android:layout_gravity="bottom|end"
                     android:layout_margin="@dimen/fab_margin"
                     android:onClick="Updateplan"
-                    android:src="@drawable/save"
-                    app:backgroundTint="#fff" />
+                    android:src="@drawable/ic_save"
+                    app:backgroundTint="@color/colorPrimary" />
 
 
             </LinearLayout>
@@ -566,25 +603,24 @@
                     android:background="#009746" />
 
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/amount"
+                <EditText
+                    android:id="@+id/etamount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHint="#009746">
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/input_outline"
+                    android:hint="Amount"
+                    android:padding="12dp"
+                    android:textColor="#009746"
+                    android:textColorHint="@color/colorPrimary"
+                    android:inputType="number"/>
 
-                    <EditText
-                        android:id="@+id/etamount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Amount"
-                        android:singleLine="true"
-                        android:textColor="#009746" />
-                </android.support.design.widget.TextInputLayout>
 
                 <TextView
                     android:id="@+id/tvpaymentmode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:text="Mode of Payment"
                     android:textColor="#009746"
                     android:textSize="18dp" />
@@ -593,40 +629,37 @@
                     android:id="@+id/paymentmode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
                     android:layout_marginTop="10dp"
                     android:entries="@array/payment_arrays" />
 
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/transactions"
+                <EditText
+                    android:id="@+id/ettransactions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHint="#009746">
-
-                    <EditText
-                        android:id="@+id/ettransactions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Transaction Number"
-                        android:singleLine="true"
-                        android:textColor="#009746" />
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/input_outline"
+                    android:hint="Transaction Number"
+                    android:padding="12dp"
+                    android:textColor="#009746"
+                    android:textColorHint="@color/colorPrimary"
+                    android:inputType="text"
+                    android:maxLength="25"/>
 
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/comments"
+                <EditText
+                    android:id="@+id/etcomments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHint="#009746">
-
-                    <EditText
-                        android:id="@+id/etcomments"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Comments"
-                        android:singleLine="true"
-                        android:textColor="#009746" />
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/input_outline"
+                    android:hint="Comments"
+                    android:padding="12dp"
+                    android:textColor="#009746"
+                    android:textColorHint="@color/colorPrimary"
+                    android:inputType="text"
+                    android:maxLength="50"/>
 
 
                 <android.support.design.widget.FloatingActionButton
@@ -636,8 +669,8 @@
                     android:layout_gravity="bottom|end"
                     android:layout_margin="@dimen/fab_margin"
                     android:onClick="Updatepayment"
-                    android:src="@drawable/save"
-                    app:backgroundTint="#fff" />
+                    android:src="@drawable/ic_save"
+                    app:backgroundTint="@color/colorPrimary" />
 
 
             </LinearLayout>
@@ -676,7 +709,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:text="Payment"
+                        android:text="Smart Card"
                         android:textColor="#009746"
                         android:textSize="20dp"
                         android:textStyle="bold" />
@@ -687,20 +720,19 @@
                     android:layout_height="1dp"
                     android:background="#009746" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/smartcardno"
+
+                <EditText
+                    android:id="@+id/etsmartcardno"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColorHint="#009746">
-
-                    <EditText
-                        android:id="@+id/etsmartcardno"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Smartcard Number"
-                        android:singleLine="true"
-                        android:textColor="#009746" />
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/input_outline"
+                    android:hint="Smartcard Number"
+                    android:padding="12dp"
+                    android:textColor="#009746"
+                    android:textColorHint="@color/colorPrimary"
+                    android:inputType="number"
+                    android:maxLength="3"/>
 
 
                 <android.support.design.widget.FloatingActionButton
@@ -710,8 +742,8 @@
                     android:layout_gravity="bottom|end"
                     android:layout_margin="@dimen/fab_margin"
                     android:onClick="Updatecard"
-                    android:src="@drawable/save"
-                    app:backgroundTint="#fff" />
+                    android:src="@drawable/ic_save"
+                    app:backgroundTint="@color/colorPrimary" />
 
             </LinearLayout>
 
@@ -721,17 +753,17 @@
 
     </ScrollView>
 
-   <android.support.design.widget.NavigationView
-              android:id="@+id/nav_view"
-              android:layout_width="wrap_content"
-              android:layout_height="match_parent"
-              android:layout_gravity="start"
-              android:fitsSystemWindows="true"
-              app:headerLayout="@layout/nav_header_registration"
-              app:menu="@menu/activity_registration_drawer"
-               android:visibility="visible"/>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:visibility="visible"
+        app:headerLayout="@layout/nav_header_registration"
+        app:menu="@menu/activity_registration_drawer" />
 
 
-    </android.support.v4.widget.DrawerLayout>
+</android.support.v4.widget.DrawerLayout>
 
 

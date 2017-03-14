@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/splash"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.mytrintrin.www.portal.Splash">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/splashview">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/splashtoolbar"
+            android:background="@color/colorPrimary"
+            android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
+
+        </android.support.v7.widget.Toolbar>
+
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/splashmainlayout"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center">
+
+
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            app:srcCompat="@drawable/splashlogo"
+            android:id="@+id/logoview"
+            android:layout_gravity="center_horizontal" />
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

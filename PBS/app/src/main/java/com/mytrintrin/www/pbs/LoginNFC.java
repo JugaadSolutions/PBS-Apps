@@ -2,10 +2,12 @@ package com.mytrintrin.www.pbs;
 
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -14,6 +16,8 @@ import android.nfc.tech.MifareClassic;
 import android.nfc.tech.MifareUltralight;
 import android.os.Parcelable;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -43,17 +47,24 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.CAMERA;
+
 public class LoginNFC extends AppCompatActivity {
 
     Toolbar loginNFCtoolbar;
     NfcAdapter nfcAdapter;
-    public static String Empid;
+    public  String Empid;
     public static SharedPreferences loginnfcid;
     public static SharedPreferences.Editor loginnfceditor;
 
     EditText password_nfc;
     String loginnfcpassword;
     CheckBox showpassword_nfc;
+
+    public static final int RequestPermissionCode = 1;
+
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,20 +74,84 @@ public class LoginNFC extends AppCompatActivity {
         loginNFCtoolbar.setTitle("Login");
         loginnfcid = getSharedPreferences("LoginPref", MODE_PRIVATE);
         checknfc();
+        onpermision();
 
     }
+
+
+    /*Requesting for permissions*/
+    public void onpermision() {
+        if (checkPermission()) {
+            // Toast.makeText(ChildActivity.this, "All Permissions Granted Successfully", Toast.LENGTH_LONG).show();
+        } else {
+            requestPermission();
+        }
+    }
+
+    private void requestPermission() {
+
+        ActivityCompat.requestPermissions(LoginNFC.this, new String[]
+                {
+                        CAMERA,
+                        ACCESS_FINE_LOCATION
+                }, RequestPermissionCode);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+
+            case RequestPermissionCode:
+
+                if (grantResults.length > 0) {
+
+                    boolean CameraPermission = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    //  boolean CameraPermission = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean LocationPermission = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                  // boolean ReadRecordaudioPermission = grantResults[2] == PackageManager.PERMISSION_GRANTED;
+
+
+                    if (CameraPermission&& LocationPermission) {
+
+                        Toast.makeText(LoginNFC.this, "Permission Granted", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(LoginNFC.this,LoginNFC.class));
+                    } else {
+                        Toast.makeText(LoginNFC.this, "Permission Denied", Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+        }
+    }
+
+    public boolean checkPermission() {
+
+        int FirstPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA);
+        int SecondPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), ACCESS_FINE_LOCATION);
+        //int ThirdPermissionResult = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
+
+        return FirstPermissionResult == PackageManager.PERMISSION_GRANTED &&
+                SecondPermissionResult == PackageManager.PERMISSION_GRANTED ;
+
+
+    }
+
+    /*Requesting permission ends*/
+
+
 
     private void checknfc() {
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (nfcAdapter == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setIcon(R.drawable.logo);
             builder.setTitle("NFC");
             builder.setMessage("NFC is not available in the mobile");
             builder.setPositiveButton("Login using mail", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     startActivity(new Intent(LoginNFC.this, Login.class));
+                    finish();
                 }
             });
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -93,6 +168,7 @@ public class LoginNFC extends AppCompatActivity {
                 onNewIntent(getIntent());
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setIcon(R.drawable.logo);
                 builder.setTitle("NFC");
                 builder.setMessage("NFC is not enable in the mobile?");
                 builder.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
@@ -101,9 +177,15 @@ public class LoginNFC extends AppCompatActivity {
                         startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Login Using mail", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        startActivity(new Intent(LoginNFC.this,Login.class));
+                    }
+                });
+                builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
                         finish();
                     }
                 });
@@ -288,6 +370,11 @@ public class LoginNFC extends AppCompatActivity {
                     }
                     else{
                         checkinternet();
+                        mProgressDialog = new ProgressDialog(LoginNFC.this);
+                        mProgressDialog.setMessage("Please wait...");
+                        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        mProgressDialog.setCancelable(true);
+                        mProgressDialog.show();
                         StringRequest loginnfcrequest = new StringRequest(Request.Method.POST, API.loginnfcapi, new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -304,15 +391,21 @@ public class LoginNFC extends AppCompatActivity {
                                     loginnfceditor.commit();
                                     Log.d("role", role);
                                     Log.d("User-id", userid);
+                                    mProgressDialog.dismiss();
                                     if (role.equals("registration-employee")) {
                                         Toast.makeText(LoginNFC.this, role, Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(LoginNFC.this, Registration.class));
+                                        startActivity(new Intent(LoginNFC.this, GetStarted.class));
                                     }
                                     else if (role.equals("redistribution-employee"))
                                     {
                                         Toast.makeText(LoginNFC.this, role, Toast.LENGTH_LONG).show();
                                         startActivity(new Intent(LoginNFC.this, Redistribution.class));
 
+                                    }
+                                    else if (role.equals("maintenancecentre-employee"))
+                                    {
+                                        Toast.makeText(LoginNFC.this, role, Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(LoginNFC.this,Maintainance_Centre.class));
                                     }
 
                                     else {

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addcycle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mytrintrin.www.pbs_trintrin.Addcycle"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/addcycleview">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/addcycletoolbar"
+            android:theme="@style/customToolbartheme">
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/addcyclemainlayout"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/addcyclelayout"
+                android:orientation="vertical">
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Bicycle Number"
+                    android:ems="10"
+                    android:id="@+id/mccyclenumber"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/input_outline"
+                    android:padding="12dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColorHint="@color/colorPrimary"
+                    android:maxLength="3"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:hint="Cycle RFID"
+                    android:ems="10"
+                    android:id="@+id/mccyclerfid"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/input_outline"
+                    android:padding="12dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColorHint="@color/colorPrimary"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/addcycledetailslayout"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/addcyclespinner"
+                android:background="@drawable/input_outline"
+                android:layout_marginBottom="5dp"/>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fleetaddcyclespinner"
+                android:background="@drawable/input_outline"
+                android:visibility="gone"
+                android:layout_marginBottom="5dp"/>
+
+            <Button
+                android:text="Add Cycle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mcaddcyclebutton"
+                android:background="@drawable/roundcorner"
+                android:textStyle="bold"
+                android:onClick="addcycletoserver"
+                android:textColor="#ffffff"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/addcycleerrormainlayout"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/addcycleerrorlayout"
+            android:padding="16dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Cycle Number/RfID"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Reason"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:layout_weight="1"/>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/errorlayout"
+                android:orientation="vertical">
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

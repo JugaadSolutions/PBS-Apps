@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Portal</string>
+
+    <!--added for welcomeslider-->
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Register</string>
+    <string name="slide_1_desc">Register</string>
+
+    <string name="slide_2_title">Release</string>
+    <string name="slide_2_desc">Release</string>
+
+    <string name="slide_3_title">Ride</string>
+    <string name="slide_3_desc">Ride</string>
+
+    <string name="slide_4_title">Return</string>
+    <string name="slide_4_desc">Return</string>
+
+
+</resources>

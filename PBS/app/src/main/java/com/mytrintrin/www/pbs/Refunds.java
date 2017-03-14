@@ -16,8 +16,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
@@ -110,6 +115,35 @@ public class Refunds extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
+                if (error instanceof ServerError) {
+                    Toast.makeText(Refunds.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", String.valueOf(error instanceof ServerError));
+                    error.printStackTrace();
+                } else if (error instanceof AuthFailureError) {
+                    Toast.makeText(Refunds.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Authentication Error");
+                    error.printStackTrace();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(Refunds.this, "Parse Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Parse Error");
+                    error.printStackTrace();
+                } else if (error instanceof NetworkError) {
+                    Toast.makeText(Refunds.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Network Error");
+                    error.printStackTrace();
+                } else if (error instanceof TimeoutError) {
+                    Toast.makeText(Refunds.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Timeout Error");
+                    error.printStackTrace();
+                } else if (error instanceof NoConnectionError) {
+                    Toast.makeText(Refunds.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(Refunds.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                }
 
             }
         }) {
