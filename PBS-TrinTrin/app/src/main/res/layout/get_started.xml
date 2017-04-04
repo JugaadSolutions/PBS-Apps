@@ -59,10 +59,10 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="5dp"
-                    android:hint="Phone Number/Name/Card Number"
+                    android:hint="Phone Number/Name/Card Number/Email"
                     android:inputType="textPersonName"
                     android:textColor="@color/colorPrimary"
-                    android:digits="@string/acceptcharactersandnum"
+                    android:digits="@string/email"
                     android:maxLength="25"/>
 
             </android.support.design.widget.TextInputLayout>
@@ -145,7 +145,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Propestive"
+                    android:text="Prospective"
                     android:textColor="#ffeb3b"
                     android:textSize="15sp"
                     android:textStyle="bold"

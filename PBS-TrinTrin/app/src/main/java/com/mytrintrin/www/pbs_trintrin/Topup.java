@@ -1,7 +1,9 @@
 package com.mytrintrin.www.pbs_trintrin;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -70,10 +72,41 @@ public class Topup extends AppCompatActivity {
         planvalidity_topup = (TextView) findViewById(R.id.planvalidity_topup);
         planuserfee_topup = (TextView) findViewById(R.id.planusagefee_topup);
         plantotalfee_topup = (TextView) findViewById(R.id.plantotalfee_topup);
+        checkinternet();
         gettopupplans();
     }
 
+    //checking internet
+    public void checkinternet() {
+        if (AppStatus.getInstance(this).isOnline()) {
+            Log.d("Internet Status", "Online");
+        } else {
+            Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
+            Log.d("Internet Status", "Offline");
+            AlertDialog.Builder builder = new AlertDialog.Builder(Topup.this);
+            builder.setIcon(R.mipmap.logo);
+            builder.setTitle("NO INTERNET CONNECTION!!!");
+            builder.setMessage("Your offline !!! Please check your connection and come back later.");
+            builder.setPositiveButton("Exit",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            finish();
+                        }
+                    });
+            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    checkinternet();
+                }
+            });
+            builder.show();
+        }
+    }
+    /*ends*/
+
     public void Topupforuser(View view) {
+        checkinternet();
         transactionno_topup = Transactionno_topup.getText().toString().trim();
         comments_topup = Comments_topup.getText().toString().trim();
         if (transactionno_topup.isEmpty()) {
@@ -88,7 +121,18 @@ public class Topup extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 Toast.makeText(Topup.this, "Topup successfull", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Topup.this, GetStarted.class));
+                AlertDialog.Builder TopuupBuilder = new AlertDialog.Builder(Topup.this);
+                TopuupBuilder.setTitle("Top Up");
+                TopuupBuilder.setMessage("Top up Successfull");
+                TopuupBuilder.setIcon(R.mipmap.logo);
+                TopuupBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(Topup.this, GetStarted.class));
+                        finish();
+                    }
+                });
+                TopuupBuilder.show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -97,9 +141,8 @@ public class Topup extends AppCompatActivity {
                     parseVolleyError(error);
                     return;
                 }
-
                 if (error instanceof ServerError) {
-                    Toast.makeText(Topup.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Topup.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -111,7 +154,25 @@ public class Topup extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Topup.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Topup.this, "Please check your connection", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Topup.this);
+                    builder.setIcon(R.mipmap.logo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -146,7 +207,7 @@ public class Topup extends AppCompatActivity {
                 return params;
             }
         };
-        topuprequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        topuprequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(topuprequest);
     }
 
@@ -183,6 +244,7 @@ public class Topup extends AppCompatActivity {
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
                     Toast.makeText(Topup.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    checkinternet();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -207,7 +269,7 @@ public class Topup extends AppCompatActivity {
                 return headers;
             }
         };
-        getplanrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        getplanrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(getplanrequest);
     }
 
@@ -256,7 +318,7 @@ public class Topup extends AppCompatActivity {
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

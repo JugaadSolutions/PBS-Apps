@@ -65,11 +65,13 @@
         <activity
             android:name=".SelectPlan"
             android:parentActivityName=".MyAccount" />
-        <activity android:name=".Topup"
+        <activity
+            android:name=".Topup"
+            android:parentActivityName=".MyAccount" />
+        <activity android:name=".WebViewActivity" />
+        <activity android:name=".StatusActivity" />
+        <activity android:name=".Tickets"
             android:parentActivityName=".MyAccount"></activity>
-        <activity android:name=".WebViewActivity"/>
-        <activity android:name=".StatusActivity"/>
-
     </application>
 
 </manifest>

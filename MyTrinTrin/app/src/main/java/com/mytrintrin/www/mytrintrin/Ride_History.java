@@ -156,12 +156,12 @@ public class Ride_History extends AppCompatActivity {
                         RideCheckinTime.setTextColor(Color.WHITE);
 
                         RideFare = new TextView(context);
-                        RideFare.setText("Fare : "+Fare);
+                        RideFare.setText("Fare : "+Fare+"/-");
                         RideFare.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                         RideFare.setTextColor(Color.WHITE);
 
                         RideDuration = new TextView(context);
-                        RideDuration.setText("Fare : "+Duration.substring(0,4)+"/-");
+                        RideDuration.setText("Duration : "+Duration.substring(0,4));
                         RideDuration.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                         RideDuration.setTextColor(Color.WHITE);
 
@@ -227,7 +227,7 @@ public class Ride_History extends AppCompatActivity {
                 return headers;
             }
         };
-        getridedetailsrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        getridedetailsrequest.setRetryPolicy(new DefaultRetryPolicy(25000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(getridedetailsrequest);
     }
 

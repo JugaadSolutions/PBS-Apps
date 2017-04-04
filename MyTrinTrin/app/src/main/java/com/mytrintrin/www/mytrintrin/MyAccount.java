@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.media.ThumbnailUtils;
@@ -503,6 +504,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                         Stationnamearray.add(i, Stationname);
                         final int Capacity = dscoordinates.getInt("bicycleCapacity");
                         final int bicyclecount = dscoordinates.getInt("bicycleCount");
+                        final int emptyport =Capacity-bicyclecount;
                         doclatitude = Double.parseDouble(lat);
                         docllongitude = Double.parseDouble(lang);
                         Location dockinglocation = new Location("");
@@ -510,10 +512,9 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                         dockinglocation.setLongitude(docllongitude);
                         alldockinglocation.add(dockinglocation);
                         allstationname.add(Stationname);
-                        Log.d("alldockingstation", String.valueOf(alldockinglocation.get(i)));
                         mmap.addMarker(new MarkerOptions()
                                 .position(new LatLng(doclatitude, docllongitude))
-                                .title(Stationname).snippet("Available:" + bicyclecount)
+                                .title(Stationname).snippet("Cycle:" + bicyclecount+"\n"+"Empty Port:"+emptyport)
                                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_directions_bike_black_24dp)));
                         /* mmap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                             @Override
@@ -534,6 +535,35 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                       });
                       "Capacity : " + Capacity + "\n" +
                       */
+                        mmap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+                            @Override
+                            public View getInfoWindow(Marker arg0) {
+                                return null;
+                            }
+
+                            @Override
+                            public View getInfoContents(Marker marker) {
+
+                                LinearLayout info = new LinearLayout(MyAccount.this);
+                                info.setOrientation(LinearLayout.VERTICAL);
+
+                                TextView title = new TextView(MyAccount.this);
+                                title.setTextColor(Color.BLACK);
+                                title.setGravity(Gravity.CENTER);
+                                title.setTypeface(null, Typeface.BOLD);
+                                title.setText(marker.getTitle());
+
+                                TextView snippet = new TextView(MyAccount.this);
+                                snippet.setTextColor(Color.GRAY);
+                                snippet.setText(marker.getSnippet());
+
+                                info.addView(title);
+                                info.addView(snippet);
+
+                                return info;
+                            }
+                        });
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -686,6 +716,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     if ((data.has("membershipId"))) {
                         nav_Menu.findItem(R.id.topup_myaccount).setVisible(true);
                         nav_Menu.findItem(R.id.selectplan_myaccount).setVisible(false);
+                        nav_Menu.findItem(R.id.tickets_myaccount).setVisible(true);
                         String validity = data.getString("validity");
                         SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                         SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
@@ -705,6 +736,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                         nav_Menu.findItem(R.id.payment_myaccount).setVisible(false);
                         nav_Menu.findItem(R.id.faq_myaccount).setVisible(false);
                         nav_Menu.findItem(R.id.changepassword_myaccount).setVisible(true);
+                        nav_Menu.findItem(R.id.tickets_myaccount).setVisible(false);
                     }
                     if (Integer.parseInt(balance) > 0) {
                         nav_Menu.findItem(R.id.selectplan_myaccount).setVisible(false);
@@ -974,6 +1006,14 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
 
             startActivity(new Intent(MyAccount.this, SelectPlan.class));
         }
+
+        else if (id == R.id.tickets_myaccount) {
+
+            Intent tickets = new Intent(MyAccount.this, Tickets.class);
+            tickets.putExtra("Name", username);
+            startActivity(tickets);
+        }
+
         return false;
     }
 

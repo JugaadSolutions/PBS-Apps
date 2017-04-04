@@ -37,7 +37,7 @@
     <item android:id="@+id/tickets_myaccount"
         android:title="Tickets"
         android:icon="@mipmap/ic_receipt_black_24dp"
-        android:visible="false"/>
+        android:visible="true"/>
 
     <item android:id="@+id/logout_myaccount"
         android:title="Logout"

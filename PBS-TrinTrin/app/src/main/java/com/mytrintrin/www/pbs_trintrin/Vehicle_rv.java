@@ -1,6 +1,8 @@
 package com.mytrintrin.www.pbs_trintrin;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -50,8 +52,38 @@ public class Vehicle_rv extends AppCompatActivity {
         loginuserid = loginpref.getString("User-id", null);
         Cyclewithrvemp = (LinearLayout) findViewById(R.id.cyclewithrvemplayout);
         Cyclewithrv = (LinearLayout) findViewById(R.id.cyclewithrvlayout);
+        checkinternet();
         getcycleswithrvemp();
     }
+
+    //checking internet
+    public void checkinternet() {
+        if (AppStatus.getInstance(this).isOnline()) {
+            Log.d("Internet Status", "Online");
+        } else {
+            Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
+            Log.d("Internet Status", "Offline");
+            AlertDialog.Builder builder = new AlertDialog.Builder(Vehicle_rv.this);
+            builder.setIcon(R.mipmap.logo);
+            builder.setTitle("NO INTERNET CONNECTION!!!");
+            builder.setMessage("Your offline !!! Please check your connection and come back later.");
+            builder.setPositiveButton("Exit",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            finish();
+                        }
+                    });
+            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    checkinternet();
+                }
+            });
+            builder.show();
+        }
+    }
+    /*ends*/
 
     public void getcycleswithrvemp() {
 
@@ -107,7 +139,7 @@ public class Vehicle_rv extends AppCompatActivity {
                     return;
                 }
                 if (error instanceof ServerError) {
-                    Toast.makeText(Vehicle_rv.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Vehicle_rv.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -119,7 +151,25 @@ public class Vehicle_rv extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Vehicle_rv.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Vehicle_rv.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Vehicle_rv.this);
+                    builder.setIcon(R.mipmap.logo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -144,7 +194,7 @@ public class Vehicle_rv extends AppCompatActivity {
                 return headers;
             }
         };
-        cylewithrvemprequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        cylewithrvemprequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(cylewithrvemprequest);
     }
 
@@ -152,7 +202,7 @@ public class Vehicle_rv extends AppCompatActivity {
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

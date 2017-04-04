@@ -229,7 +229,7 @@ public class Login extends AppCompatActivity {
                     return;
                 }
                 if (error instanceof ServerError) {
-                    Toast.makeText(Login.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Login.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -241,7 +241,26 @@ public class Login extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Login.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Login.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Login.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -273,7 +292,7 @@ public class Login extends AppCompatActivity {
                 return params;
             }
         };
-        LoginRequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        LoginRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(LoginRequest);
     }
 
@@ -297,7 +316,7 @@ public class Login extends AppCompatActivity {
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

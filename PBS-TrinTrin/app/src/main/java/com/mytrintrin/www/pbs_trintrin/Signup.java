@@ -81,6 +81,12 @@ public class Signup extends AppCompatActivity {
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -100,10 +106,6 @@ public class Signup extends AppCompatActivity {
             FirstName.setError("First Name");
             return;
         }
-        /*if (lastname.equals("") || lastname.equals(null)) {
-            LastName.setError("Last Name");
-            return;
-        }*/
         if (phone.equals("") || phone.equals(null)) {
             Phone.setError("Phone Number");
             return;
@@ -157,13 +159,14 @@ public class Signup extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (error.networkResponse != null) {
+                    mProgressDialog.dismiss();
                     parseVolleyError(error);
                     return;
                 }
+                mProgressDialog.dismiss();
                 if (error instanceof ServerError) {
-                    Toast.makeText(Signup.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Signup.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
-                    mProgressDialog.dismiss();
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
                     Toast.makeText(Signup.this, "Authentication Error", Toast.LENGTH_LONG).show();
@@ -174,7 +177,26 @@ public class Signup extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Signup.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Signup.this, "Please check your connection", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Signup.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -209,7 +231,7 @@ public class Signup extends AppCompatActivity {
                 return params;
             }
         };
-        registerrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        registerrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(registerrequest);
     }
 
@@ -233,7 +255,7 @@ public class Signup extends AppCompatActivity {
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

@@ -5,26 +5,263 @@
     <string name="acceptcharactersandnum">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\u0020</string>
     <string name="acceptonlycharacters">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\u0020</string>
     <string name="email">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._-\u0020</string>
-    <string name="address">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._,#-\u0020</string>
+    <string name="address">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._,#/\-\u0020</string>
     <string name="comments">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,-\u0020</string>
 
     <string-array name="country_arrays">
-        <item>India</item>
-        <item>United States</item>
-        <item>Indonesia</item>
-        <item>France</item>
-        <item>Italy</item>
-        <item>Singapore</item>
-        <item>New Zealand</item>
-        <item>Malaysia</item>
-        <item>Other</item>
+        <item value="India">India</item>
+        <item value="Algeria">Algeria</item>
+        <item value="Andorra">Andorra</item>
+        <item value="Angola">Angola</item>
+        <item value="Anguilla">Anguilla</item>
+        <item value="Antigua Barbuda">Antigua Barbuda</item>
+        <item value="Argentina">Argentina</item>
+        <item value="Armenia">Armenia</item>
+        <item value="Aruba">Aruba</item>
+        <item value="Australia">Australia</item>
+        <item value="Austria">Austria</item>
+        <item value="Azerbaijan">Azerbaijan</item>
+        <item value="Bahamas">Bahamas</item>
+        <item value="Bahrain">Bahrain</item>
+        <item value="Bangladesh">Bangladesh</item>
+        <item value="Barbados">Barbados</item>
+        <item value="Belarus">Belarus</item>
+        <item value="Belgium">Belgium</item>
+        <item value="Belize">Belize</item>
+        <item value="Benin">Benin</item>
+        <item value="Bermuda">Bermuda</item>
+        <item value="Bhutan">Bhutan</item>
+        <item value="Bolivia">Bolivia</item>
+        <item value="Bosnia Herzegovina">Bosnia Herzegovina</item>
+        <item value="Botswana">Botswana</item>
+        <item value="Brazil">Brazil</item>
+        <item value="Brunei">Brunei</item>
+        <item value="Bulgaria">Bulgaria</item>
+        <item value="Burkina Faso">Burkina Faso</item>
+        <item value="Burundi">Burundi</item>
+        <item value="Cambodia">Cambodia</item>
+        <item value="Cameroon">Cameroon</item>
+        <item value="Canada">Canada</item>
+        <item value="Cape Verde Islands">Cape Verde Islands</item>
+        <item value="Cayman Islands">Cayman Islands</item>
+        <item value="Central African Republic">Central African Republic</item>
+        <item value="Chile">Chile</item>
+        <item value="China">China</item>
+        <item value="Colombia">Colombia</item>
+        <item value="Comoros">Comoros</item>
+        <item value="Congo">Congo</item>
+        <item value="Cook Islands">Cook Islands</item>
+        <item value="Costa Rica">Costa Rica</item>
+        <item value="Croatia">Croatia</item>
+        <item value="Cuba">Cuba</item>
+        <item value="Cyprus North">Cyprus North</item>
+        <item value="Cyprus South">Cyprus South</item>
+        <item value="Czech Republic">Czech Republic</item>
+        <item value="Denmark">Denmark</item>
+        <item value="Djibouti">Djibouti</item>
+        <item value="Dominica">Dominica</item>
+        <item value="Dominican Republic">Dominican Republic</item>
+        <item value="Ecuador">Ecuador</item>
+        <item value="Egypt">Egypt</item>
+        <item value="El Salvador">El Salvador</item>
+        <item value="Equatorial Guinea">Equatorial Guinea</item>
+        <item value="Eritrea">Eritrea</item>
+        <item value="Estonia">Estonia</item>
+        <item value="Ethiopia">Ethiopia</item>
+        <item value="Falkland Islands">Falkland Islands</item>
+        <item value="Faroe Islands">Faroe Islands</item>
+        <item value="Fiji">Fiji</item>
+        <item value="Finland">Finland</item>
+        <item value="France">France</item>
+        <item value="French Guiana">French Guiana</item>
+        <item value="French Polynesia">French Polynesia</item>
+        <item value="Gabon">Gabon</item>
+        <item value="Gambia">Gambia</item>
+        <item value="Georgia">Georgia</item>
+        <item value="Germany">Germany</item>
+        <item value="Ghana">Ghana</item>
+        <item value="Gibraltar">Gibraltar</item>
+        <item value="Greece">Greece</item>
+        <item value="Greenland">Greenland</item>
+        <item value="Grenada">Grenada</item>
+        <item value="Guadeloupe">Guadeloupe</item>
+        <item value="Guam">Guam</item>
+        <item value="Guatemala">Guatemala</item>
+        <item value="Guinea">Guinea</item>
+        <item value="Guinea-Bissau">Guinea - Bissau</item>
+        <item value="Guyana">Guyana</item>
+        <item value="Haiti">Haiti</item>
+        <item value="Honduras">Honduras</item>
+        <item value="Hong">Hong Kong</item>
+        <item value="Hungary">Hungary</item>
+        <item value="Iceland">Iceland</item>
+        <item value="Indonesia">Indonesia</item>
+        <item value="Iran">Iran</item>
+        <item value="Iraq">Iraq</item>
+        <item value="Ireland">Ireland</item>
+        <item value="Israel">Israel</item>
+        <item value="Italy">Italy</item>
+        <item value="Jamaica">Jamaica</item>
+        <item value="Japan">Japan</item>
+        <item value="Jordan">Jordan</item>
+        <item value="Kazakhstan">Kazakhstan</item>
+        <item value="Kenya">Kenya</item>
+        <item value="Kiribati">Kiribati</item>
+        <item value="Korea North">Korea North</item>
+        <item value="Korea South">Korea South</item>
+        <item value="Kuwait">Kuwait</item>
+        <item value="Kyrgyzstan">Kyrgyzstan</item>
+        <item value="Laos">Laos</item>
+        <item value="Latvia">Latvia</item>
+        <item value="Lebanon">Lebanon</item>
+        <item value="Lesotho">Lesotho</item>
+        <item value="Liberia">Liberia</item>
+        <item value="Libya">Libya</item>
+        <item value="Liechtenstein">Liechtenstein</item>
+        <item value="Lithuania">Lithuania</item>
+        <item value="Luxembourg">Luxembourg</item>
+        <item value="Macao">Macao</item>
+        <item value="Macedonia">Macedonia</item>
+        <item value="Madagascar">Madagascar</item>
+        <item value="Malawi">Malawi</item>
+        <item value="Malaysia">Malaysia</item>
+        <item value="Maldives">Maldives</item>
+        <item value="Mali">Mali</item>
+        <item value="Malta">Malta</item>
+        <item value="Marshall Islands">Marshall Islands</item>
+        <item value="Martinique">Martinique</item>
+        <item value="Mauritania">Mauritania</item>
+        <item value="Mayotte">Mayotte</item>
+        <item alue="Mexico">Mexico</item>
+        <item value="Micronesia">Micronesia </item>
+        <item value="Moldova">Moldova</item>
+        <item value="Monaco">Monaco</item>
+        <item value="Mongolia">Mongolia</item>
+        <item value="Montserrat">Montserrat</item>
+        <item value="Morocco">Morocco</item>
+        <item value="Mozambique">Mozambique</item>
+        <item value="Myanmar">Myanmar</item>
+        <item value="Namibia">Namibia</item>
+        <item value="Nauru">Nauru</item>
+        <item value="Nepal">Nepal</item>
+        <item value="Netherlands">Netherlands</item>
+        <item value="New Caledonia">New Caledonia</item>
+        <item value="New Zealand">New Zealand</item>
+        <item value="Nicaragua">Nicaragua</item>
+        <item value="Niger">Niger</item>
+        <item value="Nigeria">Nigeria</item>
+        <item value="Niue">Niue</item>
+        <item value="Norfolk Islands">Norfolk Islands</item>
+        <item value="Northern Marianas">Northern Marianas</item>
+        <item value="Norway">Norway</item>
+        <item value="Oman">Oman</item>
+        <item value="Palau">Palau</item>
+        <item value="Panama">Panama</item>
+        <item value="Papua New Guinea">Papua New Guinea</item>
+        <item value="Paraguay">Paraguay</item>
+        <item value="Peru">Peru</item>
+        <item value="Philippines">Philippines</item>
+        <item value="Poland">Poland</item>
+        <item value="Portugal">Portugal</item>
+        <item value="uerto Rico">Puerto Rico</item>
+        <item value="Qatar">Qatar</item>
+        <item value="Reunion">Reunion</item>
+        <item value="Romania">Romania</item>
+        <item value="Russia">Russia</item>
+        <item value="Rwanda">Rwanda</item>
+        <item value="San Marino">San Marino</item>
+        <item value="Sao Tome Principe">Sao Tome Principe</item>
+        <item value="Saudi Arabia">Saudi Arabia</item>
+        <item value="Senegal">Senegal</item>
+        <item value="Serbia">Serbia</item>
+        <item value="Seychelles">Seychelles</item>
+        <item value="Sierra Leone">Sierra Leone</item>
+        <item value="Singapore">Singapore</item>
+        <item value="Slovak Republic">Slovak Republic</item>
+        <item value="Slovenia">Slovenia</item>
+        <item value="Solomon Islands">Solomon Islands</item>
+        <item value="Somalia">Somalia</item>
+        <item value="South Africa">South Africa</item>
+        <item value="Spain">Spain</item>
+        <item value="Sri Lanka">Sri Lanka</item>
+        <item value="St. Kitts">St. Helena</item>
+        <item value="1869">St. Kitts</item>
+        <item value="St. Lucia">St. Lucia</item>
+        <item value="Sudan">Sudan</item>
+        <item value="Suriname">Suriname</item>
+        <item value="Swaziland">Swaziland</item>
+        <item value="Sweden">Sweden</item>
+        <item value="Switzerland">Switzerland</item>
+        <item value="Syria">Syria</item>
+        <item value="Taiwan">Taiwan</item>
+        <item value="Tajikstan">Tajikstan</item>
+        <item value="Thailand">Thailand</item>
+        <item value="Togo">Togo</item>
+        <item value="Tonga">Tonga</item>
+        <item value="Trinidad Tobago">Trinidad Tobago</item>
+        <item value="Tunisia">Tunisia</item>
+        <item value="Turkey">Turkey</item>
+        <item value="Turkmenistan">Turkmenistan</item>
+        <item value="Turks CaicosIslands">Turks CaicosIslands</item>
+        <item value="Tuvalu">Tuvalu</item>
+        <item value="Uganda">Uganda</item>
+        <item value="UK">UK</item>
+        <item value="Ukraine">Ukraine</item>
+        <item value="United Arab Emirates">United Arab Emirates</item>
+        <item value="Uruguay">Uruguay</item>
+        <item value="USA">USA</item>
+        <item value="Uzbekistan">Uzbekistan</item>
+        <item value="Vanuatu">Vanuatu</item>
+        <item value="Vatican City">Vatican City</item>
+        <item value="Venezuela">Venezuela</item>
+        <item value="Vietnam">Vietnam</item>
+        <item value="Virgin Islands-British">Virgin Islands-British</item>
+        <item value="Virgin Islands - US">Virgin Islands - US</item>
+        <item value="Wallis Futuna">Wallis Futuna</item>
+        <item value="Yemen (North)">Yemen (North)</item>
+        <item value="Yemen (South)">Yemen (South)</item>
+        <item value="Zambia">Zambia</item>
+        <item value="Zimbabwe">Zimbabwe</item>
     </string-array>
 
     <string-array name="state_arrays">
-        <item>Karnataka</item>
-        <item>Tamil Nadu</item>
-        <item>Goa</item>
-        <item>Other</item>
+        <item value="Karnataka">Karnataka</item>
+        <item value="Andaman and Nicobar Islands">Andaman and Nicobar
+            Islands
+        </item>
+        <item value="Andhra Pradesh">Andhra Pradesh</item>
+        <item value="Arunachal Pradesh">Arunachal Pradesh</item>
+        <item value="Assam">Assam</item>
+        <item value="Bihar">Bihar</item>
+        <item value="Chandigarh">Chandigarh</item>
+        <item value="Chhattisgarh">Chhattisgarh</item>
+        <item value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</item>
+        <item value="Daman and Diu">Daman and Diu</item>
+        <item value="Delhi">Delhi</item>
+        <item value="Goa">Goa</item>
+        <item value="Gujarat">Gujarat</item>
+        <item value="Haryana">Haryana</item>
+        <item value="Himachal Pradesh">Himachal Pradesh</item>
+        <item value="Jammu and Kashmir">Jammu and Kashmir</item>
+        <item value="Jharkhand">Jharkhand</item>
+        <item value="Kerala">Kerala</item>
+        <item value="Lakshadweep">Lakshadweep</item>
+        <item value="Madhya Pradesh">Madhya Pradesh</item>
+        <item value="Maharashtra">Maharashtra</item>
+        <item value="Manipur">Manipur</item>
+        <item value="Meghalaya">Meghalaya</item>
+        <item value="Mizoram">Mizoram</item>
+        <item value="Nagaland">Nagaland</item>
+        <item value="Orissa">Orissa</item>
+        <item value="Pondicherry">Pondicherry</item>
+        <item value="Punjab">Punjab</item>
+        <item value="Rajasthan">Rajasthan</item>
+        <item value="Sikkim">Sikkim</item>
+        <item value="Tamil Nadu">Tamil Nadu</item>
+        <item value="Tripura">Tripura</item>
+        <item value="Uttaranchal">Uttaranchal</item>
+        <item value="Uttar Pradesh">Uttar Pradesh</item>
+        <item value="West Bengal">West Bengal</item>
     </string-array>
 
     <string-array name="city_arrays">
@@ -41,6 +278,7 @@
         <item>Aadhar</item>
         <item>Passport</item>
         <item>Voter ID</item>
+        <item>Driver License</item>
     </string-array>
 
     <string-array name="plan_arrays">
@@ -57,6 +295,383 @@
 
     <string-array name="refund_arrays">
         <item>Cash</item>
+    </string-array>
+
+    <string-array name="countrycode_arrays">
+        <item data-countryCode="IN" value="91">India (+91)</item>
+        <item data-countryCode="DZ" value="213">Algeria (+213)
+        </item>
+        <item data-countryCode="AD" value="376">Andorra (+376)
+        </item>
+        <item data-countryCode="AO" value="244">Angola (+244)</item>
+        <item data-countryCode="AI" value="1264">Anguilla (+1264)
+        </item>
+        <item data-countryCode="AG" value="1268">Antigua &amp; Barbuda
+            (+1268)
+        </item>
+        <item data-countryCode="AR" value="54">Argentina (+54)
+        </item>
+        <item data-countryCode="AM" value="374">Armenia (+374)
+        </item>
+        <item data-countryCode="AW" value="297">Aruba (+297)</item>
+        <item data-countryCode="AU" value="61">Australia (+61)
+        </item>
+        <item data-countryCode="AT" value="43">Austria (+43)</item>
+        <item data-countryCode="AZ" value="994">Azerbaijan (+994)
+        </item>
+        <item data-countryCode="BS" value="1242">Bahamas (+1242)
+        </item>
+        <item data-countryCode="BH" value="973">Bahrain (+973)
+        </item>
+        <item data-countryCode="BD" value="880">Bangladesh (+880)
+        </item>
+        <item data-countryCode="BB" value="1246">Barbados (+1246)
+        </item>
+        <item data-countryCode="BY" value="375">Belarus (+375)
+        </item>
+        <item data-countryCode="BE" value="32">Belgium (+32)</item>
+        <item data-countryCode="BZ" value="501">Belize (+501)</item>
+        <item data-countryCode="BJ" value="229">Benin (+229)</item>
+        <item data-countryCode="BM" value="1441">Bermuda (+1441)
+        </item>
+        <item data-countryCode="BT" value="975">Bhutan (+975)</item>
+        <item data-countryCode="BO" value="591">Bolivia (+591)
+        </item>
+        <item data-countryCode="BA" value="387">Bosnia Herzegovina
+            (+387)
+        </item>
+        <item data-countryCode="BW" value="267">Botswana (+267)
+        </item>
+        <item data-countryCode="BR" value="55">Brazil (+55)</item>
+        <item data-countryCode="BN" value="673">Brunei (+673)</item>
+        <item data-countryCode="BG" value="359">Bulgaria (+359)
+        </item>
+        <item data-countryCode="BF" value="226">Burkina Faso (+226)
+        </item>
+        <item data-countryCode="BI" value="257">Burundi (+257)
+        </item>
+        <item data-countryCode="KH" value="855">Cambodia (+855)
+        </item>
+        <item data-countryCode="CM" value="237">Cameroon (+237)
+        </item>
+        <item data-countryCode="CA" value="1">Canada (+1)</item>
+        <item data-countryCode="CV" value="238">Cape Verde Islands
+            (+238)
+        </item>
+        <item data-countryCode="KY" value="1345">Cayman Islands
+            (+1345)
+        </item>
+        <item data-countryCode="CF" value="236">Central African
+            Republic
+            (+236)
+        </item>
+        <item data-countryCode="CL" value="56">Chile (+56)</item>
+        <item data-countryCode="CN" value="86">China (+86)</item>
+        <item data-countryCode="CO" value="57">Colombia (+57)</item>
+        <item data-countryCode="KM" value="269">Comoros (+269)
+        </item>
+        <item data-countryCode="CG" value="242">Congo (+242)</item>
+        <item data-countryCode="CK" value="682">Cook Islands (+682)
+        </item>
+        <item data-countryCode="CR" value="506">Costa Rica (+506)
+        </item>
+        <item data-countryCode="HR" value="385">Croatia (+385)
+        </item>
+        <item data-countryCode="CU" value="53">Cuba (+53)</item>
+        <item data-countryCode="CY" value="90392">Cyprus North
+            (+90392)
+        </item>
+        <item data-countryCode="CY" value="357">Cyprus South (+357)
+        </item>
+        <item data-countryCode="CZ" value="42">Czech Republic (+42)
+        </item>
+        <item data-countryCode="DK" value="45">Denmark (+45)</item>
+        <item data-countryCode="DJ" value="253">Djibouti (+253)
+        </item>
+        <item data-countryCode="DM" value="1809">Dominica (+1809)
+        </item>
+        <item data-countryCode="DO" value="1809">Dominican Republic
+            (+1809)
+        </item>
+        <item data-countryCode="EC" value="593">Ecuador (+593)
+        </item>
+        <item data-countryCode="EG" value="20">Egypt (+20)</item>
+        <item data-countryCode="SV" value="503">El Salvador (+503)
+        </item>
+        <item data-countryCode="GQ" value="240">Equatorial Guinea
+            (+240)
+        </item>
+        <item data-countryCode="ER" value="291">Eritrea (+291)
+        </item>
+        <item data-countryCode="EE" value="372">Estonia (+372)
+        </item>
+        <item data-countryCode="ET" value="251">Ethiopia (+251)
+        </item>
+        <item data-countryCode="FK" value="500">Falkland Islands
+            (+500)
+        </item>
+        <item data-countryCode="FO" value="298">Faroe Islands (+298)
+        </item>
+        <item data-countryCode="FJ" value="679">Fiji (+679)</item>
+        <item data-countryCode="FI" value="358">Finland (+358)
+        </item>
+        <item data-countryCode="FR" value="33">France (+33)</item>
+        <item data-countryCode="GF" value="594">French Guiana (+594)
+        </item>
+        <item data-countryCode="PF" value="689">French Polynesia
+            (+689)
+        </item>
+        <item data-countryCode="GA" value="241">Gabon (+241)</item>
+        <item data-countryCode="GM" value="220">Gambia (+220)</item>
+        <item data-countryCode="GE" value="7880">Georgia (+7880)
+        </item>
+        <item data-countryCode="DE" value="49">Germany (+49)</item>
+        <item data-countryCode="GH" value="233">Ghana (+233)</item>
+        <item data-countryCode="GI" value="350">Gibraltar (+350)
+        </item>
+        <item data-countryCode="GR" value="30">Greece (+30)</item>
+        <item data-countryCode="GL" value="299">Greenland (+299)
+        </item>
+        <item data-countryCode="GD" value="1473">Grenada (+1473)
+        </item>
+        <item data-countryCode="GP" value="590">Guadeloupe (+590)
+        </item>
+        <item data-countryCode="GU" value="671">Guam (+671)</item>
+        <item data-countryCode="GT" value="502">Guatemala (+502)
+        </item>
+        <item data-countryCode="GN" value="224">Guinea (+224)</item>
+        <item data-countryCode="GW" value="245">Guinea - Bissau (+245)
+        </item>
+        <item data-countryCode="GY" value="592">Guyana (+592)</item>
+        <item data-countryCode="HT" value="509">Haiti (+509)</item>
+        <item data-countryCode="HN" value="504">Honduras (+504)
+        </item>
+        <item data-countryCode="HK" value="852">Hong Kong (+852)
+        </item>
+        <item data-countryCode="HU" value="36">Hungary (+36)</item>
+        <item data-countryCode="IS" value="354">Iceland (+354)
+        </item>
+        <item data-countryCode="ID" value="62">Indonesia (+62)
+        </item>
+        <item data-countryCode="IR" value="98">Iran (+98)</item>
+        <item data-countryCode="IQ" value="964">Iraq (+964)</item>
+        <item data-countryCode="IE" value="353">Ireland (+353)
+        </item>
+        <item data-countryCode="IL" value="972">Israel (+972)</item>
+        <item data-countryCode="IT" value="39">Italy (+39)</item>
+        <item data-countryCode="JM" value="1876">Jamaica (+1876)
+        </item>
+        <item data-countryCode="JP" value="81">Japan (+81)</item>
+        <item data-countryCode="JO" value="962">Jordan (+962)</item>
+        <item data-countryCode="KZ" value="7">Kazakhstan (+7)</item>
+        <item data-countryCode="KE" value="254">Kenya (+254)</item>
+        <item data-countryCode="KI" value="686">Kiribati (+686)
+        </item>
+        <item data-countryCode="KP" value="850">Korea North (+850)
+        </item>
+        <item data-countryCode="KR" value="82">Korea South (+82)
+        </item>
+        <item data-countryCode="KW" value="965">Kuwait (+965)</item>
+        <item data-countryCode="KG" value="996">Kyrgyzstan (+996)
+        </item>
+        <item data-countryCode="LA" value="856">Laos (+856)</item>
+        <item data-countryCode="LV" value="371">Latvia (+371)</item>
+        <item data-countryCode="LB" value="961">Lebanon (+961)
+        </item>
+        <item data-countryCode="LS" value="266">Lesotho (+266)
+        </item>
+        <item data-countryCode="LR" value="231">Liberia (+231)
+        </item>
+        <item data-countryCode="LY" value="218">Libya (+218)</item>
+        <item data-countryCode="LI" value="417">Liechtenstein (+417)
+        </item>
+        <item data-countryCode="LT" value="370">Lithuania (+370)
+        </item>
+        <item data-countryCode="LU" value="352">Luxembourg (+352)
+        </item>
+        <item data-countryCode="MO" value="853">Macao (+853)</item>
+        <item data-countryCode="MK" value="389">Macedonia (+389)
+        </item>
+        <item data-countryCode="MG" value="261">Madagascar (+261)
+        </item>
+        <item data-countryCode="MW" value="265">Malawi (+265)</item>
+        <item data-countryCode="MY" value="60">Malaysia (+60)</item>
+        <item data-countryCode="MV" value="960">Maldives (+960)
+        </item>
+        <item data-countryCode="ML" value="223">Mali (+223)</item>
+        <item data-countryCode="MT" value="356">Malta (+356)</item>
+        <item data-countryCode="MH" value="692">Marshall Islands
+            (+692)
+        </item>
+        <item data-countryCode="MQ" value="596">Martinique (+596)
+        </item>
+        <item data-countryCode="MR" value="222">Mauritania (+222)
+        </item>
+        <item data-countryCode="YT" value="269">Mayotte (+269)
+        </item>
+        <item data-countryCode="MX" value="52">Mexico (+52)</item>
+        <item data-countryCode="FM" value="691">Micronesia (+691)
+        </item>
+        <item data-countryCode="MD" value="373">Moldova (+373)
+        </item>
+        <item data-countryCode="MC" value="377">Monaco (+377)</item>
+        <item data-countryCode="MN" value="976">Mongolia (+976)
+        </item>
+        <item data-countryCode="MS" value="1664">Montserrat (+1664)
+        </item>
+        <item data-countryCode="MA" value="212">Morocco (+212)
+        </item>
+        <item data-countryCode="MZ" value="258">Mozambique (+258)
+        </item>
+        <item data-countryCode="MN" value="95">Myanmar (+95)</item>
+        <item data-countryCode="NA" value="264">Namibia (+264)
+        </item>
+        <item data-countryCode="NR" value="674">Nauru (+674)</item>
+        <item data-countryCode="NP" value="977">Nepal (+977)</item>
+        <item data-countryCode="NL" value="31">Netherlands (+31)
+        </item>
+        <item data-countryCode="NC" value="687">New Caledonia (+687)
+        </item>
+        <item data-countryCode="NZ" value="64">New Zealand (+64)
+        </item>
+        <item data-countryCode="NI" value="505">Nicaragua (+505)
+        </item>
+        <item data-countryCode="NE" value="227">Niger (+227)</item>
+        <item data-countryCode="NG" value="234">Nigeria (+234)
+        </item>
+        <item data-countryCode="NU" value="683">Niue (+683)</item>
+        <item data-countryCode="NF" value="672">Norfolk Islands (+672)
+        </item>
+        <item data-countryCode="NP" value="670">Northern Marianas
+            (+670)
+        </item>
+        <item data-countryCode="NO" value="47">Norway (+47)</item>
+        <item data-countryCode="OM" value="968">Oman (+968)</item>
+        <item data-countryCode="PW" value="680">Palau (+680)</item>
+        <item data-countryCode="PA" value="507">Panama (+507)</item>
+        <item data-countryCode="PG" value="675">Papua New Guinea
+            (+675)
+        </item>
+        <item data-countryCode="PY" value="595">Paraguay (+595)
+        </item>
+        <item data-countryCode="PE" value="51">Peru (+51)</item>
+        <item data-countryCode="PH" value="63">Philippines (+63)
+        </item>
+        <item data-countryCode="PL" value="48">Poland (+48)</item>
+        <item data-countryCode="PT" value="351">Portugal (+351)
+        </item>
+        <item data-countryCode="PR" value="1787">Puerto Rico (+1787)
+        </item>
+        <item data-countryCode="QA" value="974">Qatar (+974)</item>
+        <item data-countryCode="RE" value="262">Reunion (+262)
+        </item>
+        <item data-countryCode="RO" value="40">Romania (+40)</item>
+        <item data-countryCode="RU" value="7">Russia (+7)</item>
+        <item data-countryCode="RW" value="250">Rwanda (+250)</item>
+        <item data-countryCode="SM" value="378">San Marino (+378)
+        </item>
+        <item data-countryCode="ST" value="239">Sao Tome &amp;
+            Principe
+            (+239)
+        </item>
+        <item data-countryCode="SA" value="966">Saudi Arabia (+966)
+        </item>
+        <item data-countryCode="SN" value="221">Senegal (+221)
+        </item>
+        <item data-countryCode="CS" value="381">Serbia (+381)</item>
+        <item data-countryCode="SC" value="248">Seychelles (+248)
+        </item>
+        <item data-countryCode="SL" value="232">Sierra Leone (+232)
+        </item>
+        <item data-countryCode="SG" value="65">Singapore (+65)
+        </item>
+        <item data-countryCode="SK" value="421">Slovak Republic (+421)
+        </item>
+        <item data-countryCode="SI" value="386">Slovenia (+386)
+        </item>
+        <item data-countryCode="SB" value="677">Solomon Islands (+677)
+        </item>
+        <item data-countryCode="SO" value="252">Somalia (+252)
+        </item>
+        <item data-countryCode="ZA" value="27">South Africa (+27)
+        </item>
+        <item data-countryCode="ES" value="34">Spain (+34)</item>
+        <item data-countryCode="LK" value="94">Sri Lanka (+94)
+        </item>
+        <item data-countryCode="SH" value="290">St. Helena (+290)
+        </item>
+        <item data-countryCode="KN" value="1869">St. Kitts (+1869)
+        </item>
+        <item data-countryCode="SC" value="1758">St. Lucia (+1758)
+        </item>
+        <item data-countryCode="SD" value="249">Sudan (+249)</item>
+        <item data-countryCode="SR" value="597">Suriname (+597)
+        </item>
+        <item data-countryCode="SZ" value="268">Swaziland (+268)
+        </item>
+        <item data-countryCode="SE" value="46">Sweden (+46)</item>
+        <item data-countryCode="CH" value="41">Switzerland (+41)
+        </item>
+        <item data-countryCode="SI" value="963">Syria (+963)</item>
+        <item data-countryCode="TW" value="886">Taiwan (+886)</item>
+        <item data-countryCode="TJ" value="7">Tajikstan (+7)</item>
+        <item data-countryCode="TH" value="66">Thailand (+66)</item>
+        <item data-countryCode="TG" value="228">Togo (+228)</item>
+        <item data-countryCode="TO" value="676">Tonga (+676)</item>
+        <item data-countryCode="TT" value="1868">Trinidad &amp; Tobago
+            (+1868)
+        </item>
+        <item data-countryCode="TN" value="216">Tunisia (+216)
+        </item>
+        <item data-countryCode="TR" value="90">Turkey (+90)</item>
+        <item data-countryCode="TM" value="7">Turkmenistan (+7)
+        </item>
+        <item data-countryCode="TM" value="993">Turkmenistan (+993)
+        </item>
+        <item data-countryCode="TC" value="1649">Turks &amp; Caicos
+            Islands (+1649)
+        </item>
+        <item data-countryCode="TV" value="688">Tuvalu (+688)</item>
+        <item data-countryCode="UG" value="256">Uganda (+256)</item>
+        <item data-countryCode="GB" value="44">UK (+44)</item>
+        <item data-countryCode="UA" value="380">Ukraine (+380)
+        </item>
+        <item data-countryCode="AE" value="971">United Arab Emirates
+            (+971)
+        </item>
+        <item data-countryCode="UY" value="598">Uruguay (+598)
+        </item>
+        <item data-countryCode="US" value="1">USA (+1)</item>
+        <item data-countryCode="UZ" value="7">Uzbekistan (+7)</item>
+        <item data-countryCode="VU" value="678">Vanuatu (+678)
+        </item>
+        <item data-countryCode="VA" value="379">Vatican City (+379)
+        </item>
+        <item data-countryCode="VE" value="58">Venezuela (+58)
+        </item>
+        <item data-countryCode="VN" value="84">Vietnam (+84)</item>
+        <item data-countryCode="VG" value="84">Virgin Islands -
+            British
+            (+1284)
+        </item>
+        <item data-countryCode="VI" value="84">Virgin Islands - US
+            (+1340)
+        </item>
+        <item data-countryCode="WF" value="681">Wallis &amp; Futuna
+            (+681)
+        </item>
+        <item data-countryCode="YE" value="969">Yemen (North)(+969)
+        </item>
+        <item data-countryCode="YE" value="967">Yemen (South)(+967)
+        </item>
+        <item data-countryCode="ZM" value="260">Zambia (+260)</item>
+        <item data-countryCode="ZW" value="263">Zimbabwe (+263)
+        </item>
+
+    </string-array>
+
+    <string-array name="otherproofarray">
+        <item value="Passport">Passport</item>
     </string-array>
 
 </resources>

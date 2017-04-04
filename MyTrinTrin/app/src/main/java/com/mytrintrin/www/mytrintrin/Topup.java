@@ -222,7 +222,7 @@ public class Topup extends AppCompatActivity {
                         Topupname = TopupPlans.getSelectedItem().toString();
                         Topupid = TopupIDArrayList.get(position);
 
-                        planname_topup.setText("Plane Name : " + Topupname);
+                        planname_topup.setText("Plan Name : " + Topupname);
                         planvalidity_topup.setText("Validity : " + TopupValidityArrayList.get(position) + " days");
                         planuserfee_topup.setText("Usage Fee : " + Totalamountoftopup.get(position) + "/-");
                         plantotalfee_topup.setText("Total : " + Totalamountoftopup.get(position) + "/-");

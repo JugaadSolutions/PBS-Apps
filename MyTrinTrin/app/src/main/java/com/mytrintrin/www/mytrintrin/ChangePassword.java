@@ -182,7 +182,7 @@ public class ChangePassword extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(ChangePassword.this, "Please chek you connection.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ChangePassword.this, "Please check you connection.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {

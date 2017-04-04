@@ -2,4 +2,5 @@
 <resources>
     <integer name="bicycleno">4</integer>
     <integer name="cardno">6</integer>
+    <integer name="otpno">6</integer>
 </resources>

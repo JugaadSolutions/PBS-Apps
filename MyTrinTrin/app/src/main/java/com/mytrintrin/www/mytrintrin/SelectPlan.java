@@ -166,7 +166,7 @@ public class SelectPlan extends AppCompatActivity {
                                 Plansecurityfee = MembershipSecurityFeeArrayList.get(position);
                                 Plansmartcardfee = MembershipSmartcardFeeArrayList.get(position);
                                 Planprocessingfee = MembershipProcessingFeeArrayList.get(position);
-                                planname.setText("Plane Name : " + Planname);
+                                planname.setText("Plan Name : " + Planname);
                                 planvalidity.setText("Validity : " + Planvalidity + " days");
                                 plansecurityfee.setText("Security Fee(Refundable) : " + Plansecurityfee + "/-");
                                 planprocessingfee.setText("Processing Fee : " + Planprocessingfee + "/-");

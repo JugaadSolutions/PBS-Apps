@@ -235,7 +235,7 @@ public class Payment_History extends AppCompatActivity {
                 return headers;
             }
         };
-        paymentdetailsrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        paymentdetailsrequest.setRetryPolicy(new DefaultRetryPolicy(25000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(paymentdetailsrequest);
     }
 

@@ -117,6 +117,7 @@ public class Addcycle extends AppCompatActivity {
         Alldetailslist = new ArrayList<LinearLayout>();
 
         checknfc();
+        checkinternet();
         getFleetdetails();
 
         AddCycleSpinner = (Spinner) findViewById(R.id.addcyclespinner);
@@ -155,6 +156,36 @@ public class Addcycle extends AppCompatActivity {
         loginuserid = loginpref.getString("User-id", null);
     }
 
+    //checking internet
+    public void checkinternet() {
+        if (AppStatus.getInstance(this).isOnline()) {
+            //Log.d("Internet Status", "Online");
+        } else {
+            Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                    Addcycle.this);
+            builder.setIcon(R.drawable.splashlogo);
+            builder.setTitle("NO INTERNET CONNECTION!!!");
+            builder.setMessage("Your offline !!! Please check your connection and come back later.");
+            builder.setPositiveButton("Exit",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            finish();
+                        }
+                    });
+            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    checkinternet();
+                }
+            });
+            builder.show();
+        }
+    }
+    /*ends*/
+
+
     public void getFleetdetails() {
         StringRequest fleetrequest = new StringRequest(Request.Method.GET, API.fleetidurl, new Response.Listener<String>() {
             @Override
@@ -187,6 +218,25 @@ public class Addcycle extends AppCompatActivity {
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
                     Toast.makeText(Addcycle.this, "Cannot connect to Internet...Please check your connection!/Server is under maintainence...", Toast.LENGTH_LONG).show();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            Addcycle.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -211,7 +261,7 @@ public class Addcycle extends AppCompatActivity {
                 return headers;
             }
         };
-        fleetrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        fleetrequest.setRetryPolicy(new DefaultRetryPolicy(25000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(this).addtorequestqueue(fleetrequest);
     }
 
@@ -563,6 +613,7 @@ public class Addcycle extends AppCompatActivity {
 
     public  void addcycletoserver(View view)
     {
+        checkinternet();
         if (BicycleNum.getText().toString().trim().equals("") || BicycleNum.getText().toString().trim().equals(null)) {
             BicycleNum.setError("Bicycle Number");
             return;
@@ -625,7 +676,7 @@ public class Addcycle extends AppCompatActivity {
                 }
 
                 if (error instanceof ServerError) {
-                    Toast.makeText(Addcycle.this, "can't add cycle try later", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Addcycle.this, "Server is under maintenance.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -637,7 +688,7 @@ public class Addcycle extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Addcycle.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Addcycle.this, "Please check your connection/Server is under maintenance.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -747,7 +798,6 @@ public class Addcycle extends AppCompatActivity {
             addcycleerror.addView(errorcycleid);
             addcycleerror.addView(errormess);
             ErrorLayout.addView(addcycleerror);
-
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {
         }

@@ -40,8 +40,7 @@
             android:parentActivityName=".GetStarted" />
         <activity
             android:name=".Topup"
-            android:parentActivityName=".Registration"
-            />
+            android:parentActivityName=".Registration" />
         <activity android:name=".Redistribution" />
         <activity
             android:name=".Checkout_RV"
@@ -62,8 +61,11 @@
         <activity
             android:name=".Tickets_RC"
             android:parentActivityName=".GetStarted" />
-        <activity android:name=".Addcycle"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".Addcycle"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Rides" />
+        <activity android:name=".Payment_History"></activity>
     </application>
 
 </manifest>

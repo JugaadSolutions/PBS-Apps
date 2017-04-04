@@ -110,13 +110,19 @@ public class Repair extends AppCompatActivity {
             builder.setIcon(R.mipmap.logo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("OK",
+            builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                        checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -171,7 +177,7 @@ public class Repair extends AppCompatActivity {
                     return;
                 }
                 if (error instanceof ServerError) {
-                    Toast.makeText(Repair.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Repair.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -183,7 +189,26 @@ public class Repair extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Repair.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Repair.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Repair.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -208,7 +233,7 @@ public class Repair extends AppCompatActivity {
                 return headers;
             }
         };
-        alldockingstationrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        alldockingstationrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(alldockingstationrequest);
     }
 
@@ -262,7 +287,7 @@ public class Repair extends AppCompatActivity {
                     return;
                 }
                 if (error instanceof ServerError) {
-                    Toast.makeText(Repair.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Repair.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -274,7 +299,26 @@ public class Repair extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Repair.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Repair.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Repair.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -300,7 +344,7 @@ public class Repair extends AppCompatActivity {
                 return headers;
             }
         };
-        mcemplistrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        mcemplistrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(mcemplistrequest);
     }
 
@@ -345,7 +389,7 @@ public class Repair extends AppCompatActivity {
                     return;
                 }
                 if (error instanceof ServerError) {
-                    Toast.makeText(Repair.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Repair.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -357,7 +401,8 @@ public class Repair extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Repair.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Repair.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                    checkinternet();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -382,7 +427,7 @@ public class Repair extends AppCompatActivity {
                 return headers;
             }
         };
-        maintainencechecklistrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        maintainencechecklistrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(maintainencechecklistrequest);
     }
 
@@ -429,6 +474,7 @@ public class Repair extends AppCompatActivity {
 
     public void submitdetails(View view)
     {
+        checkinternet();
         CycleNumber = cycleno.getText().toString().trim();
         if(CycleNumber.isEmpty()||CycleNumber.equals("")||CycleNumber.equals(null))
         {
@@ -455,7 +501,7 @@ public class Repair extends AppCompatActivity {
         JsonObjectRequest maintenancerequest = new JsonObjectRequest(Request.Method.POST, API.repairedcycleinDS,Repairobject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Toast.makeText(Repair.this, "Details updated succesfully", Toast.LENGTH_LONG).show();
+                Toast.makeText(Repair.this, "Details updated successfully", Toast.LENGTH_LONG).show();
                 DockingStationName_MC.setSelection(0);
                 cycleno.setText("");
                 selectedStrings.clear();
@@ -469,7 +515,7 @@ public class Repair extends AppCompatActivity {
                     return;
                 }
                 if (error instanceof ServerError) {
-                    Toast.makeText(Repair.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Repair.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -481,7 +527,26 @@ public class Repair extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Repair.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Repair.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Repair.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -499,14 +564,14 @@ public class Repair extends AppCompatActivity {
             }
         }){
         };
-        maintenancerequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        maintenancerequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(maintenancerequest);
     }
     public void parseVolleyError(VolleyError error) {
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

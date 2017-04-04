@@ -13,4 +13,12 @@
         android:title="Tickets"
         android:icon="@mipmap/ic_receipt_black_24dp"/>
 
+    <item android:id="@+id/nav_rides"
+        android:title="Ride History"
+        android:icon="@mipmap/ic_directions_bike_black_24dp"/>
+
+    <item android:id="@+id/nav_payments"
+        android:title="Payment History"
+        android:icon="@mipmap/ic_attach_money_black_24dp"/>
+
 </menu>

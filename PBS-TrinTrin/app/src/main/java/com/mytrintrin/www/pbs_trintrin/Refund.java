@@ -61,16 +61,47 @@ public class Refund extends AppCompatActivity {
         Refundtoolbar = (Toolbar) findViewById(R.id.refundtoolbar);
         Refundtoolbar.setTitle("Refund");
         setSupportActionBar(Refundtoolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       /* getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
 
         UserName=getIntent().getStringExtra("Name");
         memberid=getIntent().getIntExtra("userid",0);
         Refund_Username.setText(UserName);
         Log.d("Member ID", String.valueOf(memberid));
+        checkinternet();
 
     }
 
+    //checking internet
+    public void checkinternet() {
+        if (AppStatus.getInstance(this).isOnline()) {
+            //Log.d("Internet Status", "Online");
+        } else {
+            Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    Refund.this);
+            builder.setIcon(R.drawable.splashlogo);
+            builder.setTitle("NO INTERNET CONNECTION!!!");
+            builder.setMessage("Your offline !!! Please check your connection and come back later.");
+            builder.setPositiveButton("Exit",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            finish();
+                        }
+                    });
+            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    checkinternet();
+                }
+            });
+            builder.show();
+        }
+    }
+    /*ends*/
+
     public void Requestforrefund(View view) {
+        checkinternet();
         TransationId = Refund_Transactionid.getText().toString().trim();
         Comments = Refund_Comments.getText().toString().trim();
         Payment_mode = Refund_Paymentmode.getSelectedItem().toString();
@@ -103,6 +134,7 @@ public class Refund extends AppCompatActivity {
                             RefundRequestBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    checkinternet();
                                     StringRequest cancelmembership = new StringRequest(Request.Method.POST, API.cancelmembership + memberid + "/cancelmembership", new Response.Listener<String>() {
                                         @Override
                                         public void onResponse(String response) {
@@ -110,6 +142,7 @@ public class Refund extends AppCompatActivity {
                                             Refund_Transactionid.setText("");
                                             Refund_Comments.setText("");
                                             startActivity(new Intent(Refund.this, GetStarted.class));
+                                            finish();
                                         }
                                     }, new Response.ErrorListener() {
                                         @Override
@@ -121,7 +154,7 @@ public class Refund extends AppCompatActivity {
                                             }
 
                                             if (error instanceof ServerError) {
-                                                Toast.makeText(Refund.this, "Server Error", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(Refund.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                                                 Log.d("Error", String.valueOf(error instanceof ServerError));
                                                 error.printStackTrace();
                                             } else if (error instanceof AuthFailureError) {
@@ -133,7 +166,26 @@ public class Refund extends AppCompatActivity {
                                                 Log.d("Error", "Parse Error");
                                                 error.printStackTrace();
                                             } else if (error instanceof NetworkError) {
-                                                Toast.makeText(Refund.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(Refund.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(
+                                                        Refund.this);
+                                                builder.setIcon(R.drawable.splashlogo);
+                                                builder.setTitle("NO INTERNET CONNECTION!!!");
+                                                builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                                                builder.setPositiveButton("Exit",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog,
+                                                                                int which) {
+                                                                finish();
+                                                            }
+                                                        });
+                                                builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        checkinternet();
+                                                    }
+                                                });
+                                                builder.show();
                                                 Log.d("Error", "Network Error");
                                                 error.printStackTrace();
                                             } else if (error instanceof TimeoutError) {
@@ -166,14 +218,14 @@ public class Refund extends AppCompatActivity {
                                             return params;
                                         }
                                     };
-                                    cancelmembership.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                                    cancelmembership.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                                     PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(cancelmembership);
                                 }
                             });
                             RefundRequestBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Toast.makeText(Refund.this, "Cancelled the refund request", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(Refund.this, "Refund Request Cancelled.", Toast.LENGTH_SHORT).show();
                                 }
                             });
                             RefundRequestBuilder.show();
@@ -190,7 +242,7 @@ public class Refund extends AppCompatActivity {
                             return;
                         }
                         if (error instanceof ServerError) {
-                            Toast.makeText(Refund.this, "Server Error", Toast.LENGTH_LONG).show();
+                            Toast.makeText(Refund.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                             Log.d("Error", String.valueOf(error instanceof ServerError));
                             error.printStackTrace();
                         } else if (error instanceof AuthFailureError) {
@@ -202,7 +254,26 @@ public class Refund extends AppCompatActivity {
                             Log.d("Error", "Parse Error");
                             error.printStackTrace();
                         } else if (error instanceof NetworkError) {
-                            Toast.makeText(Refund.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(Refund.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(
+                                    Refund.this);
+                            builder.setIcon(R.drawable.splashlogo);
+                            builder.setTitle("NO INTERNET CONNECTION!!!");
+                            builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                            builder.setPositiveButton("Exit",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            finish();
+                                        }
+                                    });
+                            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    checkinternet();
+                                }
+                            });
+                            builder.show();
                             Log.d("Error", "Network Error");
                             error.printStackTrace();
                         } else if (error instanceof TimeoutError) {
@@ -227,14 +298,14 @@ public class Refund extends AppCompatActivity {
                         return headers;
                     }
                 };
-                refundrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                refundrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
                 PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(refundrequest);
             }
         });
         RefundBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Toast.makeText(Refund.this, "Cancelled the refund request", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Refund.this, "Refund Request Cancelled", Toast.LENGTH_SHORT).show();
             }
         });
         RefundBuilder.show();
@@ -244,7 +315,7 @@ public class Refund extends AppCompatActivity {
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

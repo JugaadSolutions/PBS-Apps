@@ -130,7 +130,37 @@ public class Redistribution extends AppCompatActivity implements LocationListene
         {
             getfleetnames();
         }
+        checkinternet();
     }
+
+    //checking internet
+    public void checkinternet() {
+        if (AppStatus.getInstance(this).isOnline()) {
+            //Log.d("Internet Status", "Online");
+        } else {
+            Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    Redistribution.this);
+            builder.setIcon(R.drawable.splashlogo);
+            builder.setTitle("NO INTERNET CONNECTION!!!");
+            builder.setMessage("Your offline !!! Please check your connection and come back later.");
+            builder.setPositiveButton("Exit",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            finish();
+                        }
+                    });
+            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    checkinternet();
+                }
+            });
+            builder.show();
+        }
+    }
+    /*ends*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -157,7 +187,7 @@ public class Redistribution extends AppCompatActivity implements LocationListene
 
 
     private void getfleetnames() {
-
+        checkinternet();
         StringRequest fleetrequest = new StringRequest(Request.Method.GET, API.fleetidurl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -204,7 +234,7 @@ public class Redistribution extends AppCompatActivity implements LocationListene
                 }
 
                 if (error instanceof ServerError) {
-                    Toast.makeText(Redistribution.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Redistribution.this, "Server is under maintainence", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -216,7 +246,26 @@ public class Redistribution extends AppCompatActivity implements LocationListene
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Redistribution.this, "Cannot connect to Internet...Please check your connection!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Redistribution.this, "Please check your connection!", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Redistribution.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -241,7 +290,7 @@ public class Redistribution extends AppCompatActivity implements LocationListene
                 return headers;
             }
         };
-        fleetrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        fleetrequest.setRetryPolicy(new DefaultRetryPolicy(25000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(this).addtorequestqueue(fleetrequest);
     }
 
@@ -308,7 +357,7 @@ public class Redistribution extends AppCompatActivity implements LocationListene
                 }
 
                 if (error instanceof ServerError) {
-                    Toast.makeText(Redistribution.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Redistribution.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -320,7 +369,26 @@ public class Redistribution extends AppCompatActivity implements LocationListene
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Redistribution.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Redistribution.this, "Please Check your connection.", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Redistribution.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -354,7 +422,7 @@ public class Redistribution extends AppCompatActivity implements LocationListene
                 return params;
             }
         };
-        sendlocation.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        sendlocation.setRetryPolicy(new DefaultRetryPolicy(25000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(sendlocation);
     }
 
@@ -409,7 +477,7 @@ public class Redistribution extends AppCompatActivity implements LocationListene
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

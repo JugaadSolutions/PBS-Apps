@@ -2,6 +2,7 @@ package com.mytrintrin.www.pbs_trintrin;
 
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -125,18 +126,24 @@ public class Checkin_RV extends AppCompatActivity {
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
             Log.d("Internet Status", "Offline");
-            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+            AlertDialog.Builder builder = new AlertDialog.Builder(
                     Checkin_RV.this);
             builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("OK",
+            builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -313,7 +320,7 @@ public class Checkin_RV extends AppCompatActivity {
                     return;
                 }
                 if (error instanceof ServerError) {
-                    Toast.makeText(Checkin_RV.this, "can't checkin try later", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Checkin_RV.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -325,7 +332,26 @@ public class Checkin_RV extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Checkin_RV.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Checkin_RV.this, "Please check your connection", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Checkin_RV.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -405,6 +431,25 @@ public class Checkin_RV extends AppCompatActivity {
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
                     Toast.makeText(Checkin_RV.this, "Cannot connect to Internet...Please check your connection!", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Checkin_RV.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -429,7 +474,7 @@ public class Checkin_RV extends AppCompatActivity {
                 return headers;
             }
         };
-        restributionrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        restributionrequest.setRetryPolicy(new DefaultRetryPolicy(25000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(this).addtorequestqueue(restributionrequest);
     }
 
@@ -474,6 +519,25 @@ public class Checkin_RV extends AppCompatActivity {
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
                     Toast.makeText(Checkin_RV.this, "Cannot connect to Internet...Please check your connection!", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Checkin_RV.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -543,6 +607,25 @@ public class Checkin_RV extends AppCompatActivity {
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
                     Toast.makeText(Checkin_RV.this, "Cannot connect to Internet...Please check your connection!", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Checkin_RV.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -672,7 +755,7 @@ public class Checkin_RV extends AppCompatActivity {
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {
