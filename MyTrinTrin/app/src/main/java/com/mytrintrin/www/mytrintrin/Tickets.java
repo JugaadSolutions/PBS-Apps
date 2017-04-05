@@ -52,6 +52,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+import android.view.WindowManager.LayoutParams;
 
 public class Tickets extends AppCompatActivity {
 
@@ -60,7 +61,7 @@ public class Tickets extends AppCompatActivity {
     int Userid;
     EditText Name_ticketrc,Subject_ticketrc,Description_ticketrc;
     private ProgressDialog mProgressDialog;
-    JSONObject Ticketobject;
+    JSONObject Ticketobject,Ticketsdetails;
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
 
@@ -71,7 +72,6 @@ public class Tickets extends AppCompatActivity {
     TextView TicketStatus,TicketId,TicketCreatedDate,TicketDescription,PreviousTickets;
     JSONArray TicketArray;
     int i=0,ticketposition;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +158,6 @@ public class Tickets extends AppCompatActivity {
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         String ticketdate = dateFormatGmt.format(new Date()) + "";
-
         try {
             Ticketobject.put("name",Name);
             Ticketobject.put("createdBy", Loginid);
@@ -413,14 +412,14 @@ public class Tickets extends AppCompatActivity {
     public void ticketdetailsdialog()
     {
         try {
-            JSONObject Ticketdetails = TicketArray.getJSONObject(ticketposition);
-            String TicketID = Ticketdetails.getString("uuId");
-            String Name = Ticketdetails.getString("name");
-            String Subject=Ticketdetails.getString("subject");
-            String Description = Ticketdetails.getString("description");
-            String Date = Ticketdetails.getString("ticketdate");
-            String Status = Ticketdetails.getString("status");
-            final LinearLayout TicketLayout = new LinearLayout(Tickets.this);
+            Ticketsdetails = TicketArray.getJSONObject(ticketposition);
+            String TicketID = Ticketsdetails.getString("uuId");
+            String Name = Ticketsdetails.getString("name");
+            String Subject=Ticketsdetails.getString("subject");
+            String Description = Ticketsdetails.getString("description");
+            String Date = Ticketsdetails.getString("ticketdate");
+            String Status = Ticketsdetails.getString("status");
+            LinearLayout TicketLayout = new LinearLayout(Tickets.this);
             TicketLayout.setPadding(8,8,8,8);
             TicketLayout.setOrientation(LinearLayout.VERTICAL);
 
@@ -456,48 +455,14 @@ public class Tickets extends AppCompatActivity {
             status.setText("Status: "+Status);
             status.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
-            TextView reply = new TextView(Tickets.this);
-            reply.setText("Click here to reply");
-            reply.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    /*EditText reply = new EditText(Tickets.this);
-                    LinearLayout.LayoutParams replyparams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    reply.setLayoutParams(replyparams);
-                    reply.setHint("Reply");
-                    reply.setBackgroundResource(R.drawable.input_outline);
-                    reply.setHintTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                    reply.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                    reply.setTypeface(null, Typeface.BOLD);
-                    reply.setPadding(15, 15, 15, 15);
-                    replyparams.setMargins(0, 0, 0, 15);
-                    TicketLayout.addView(reply);*/
-                    LayoutInflater replyinflate = LayoutInflater.from(Tickets.this);
-                    View replyview = replyinflate.inflate(R.layout.replytickets, null);
-                    final EditText replyet = (EditText) replyview.findViewById(R.id.etreplytickets);
-                    replyet.requestFocus();
-                    replyet.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                        @Override
-                        public void onFocusChange(View view, boolean b) {
-                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-                        }
-                    });
-                    TicketLayout.addView(replyview);
-                }
-            });
-
             TicketLayout.addView(ID);
             TicketLayout.addView(name);
             TicketLayout.addView(subject);
             TicketLayout.addView(description);
             TicketLayout.addView(date);
             TicketLayout.addView(status);
-            TicketLayout.addView(reply);
 
-            Toast.makeText(Tickets.this, TicketID, Toast.LENGTH_SHORT).show();
             AlertDialog.Builder TicketBuilder = new AlertDialog.Builder(Tickets.this);
-            AlertDialog dialog = TicketBuilder.create();
             TicketBuilder.setTitle("Ticket Details");
             TicketBuilder.setIcon(R.drawable.splashlogo);
             TicketBuilder.setView(TicketLayout);
@@ -507,18 +472,22 @@ public class Tickets extends AppCompatActivity {
                     dialogInterface.dismiss();
                 }
             });
-            TicketBuilder.setNegativeButton("Reply", new DialogInterface.OnClickListener() {
+            TicketBuilder.setNegativeButton("View Details/Reply", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-
+                            Intent ticketdetails = new Intent(Tickets.this,TicketDetails.class);
+                            ticketdetails.putExtra("TicketObject",Ticketsdetails.toString());
+                            startActivity(ticketdetails);
                 }
             });
-            //TicketBuilder.setCancelable(false);
-            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            TicketBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            TicketBuilder.setCancelable(false);
             TicketBuilder.show();
-
-
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

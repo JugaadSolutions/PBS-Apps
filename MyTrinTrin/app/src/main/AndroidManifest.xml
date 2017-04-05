@@ -70,8 +70,10 @@
             android:parentActivityName=".MyAccount" />
         <activity android:name=".WebViewActivity" />
         <activity android:name=".StatusActivity" />
-        <activity android:name=".Tickets"
-            android:parentActivityName=".MyAccount"></activity>
+        <activity
+            android:name=".Tickets"
+            android:parentActivityName=".MyAccount" />
+        <activity android:name=".TicketDetails"></activity>
     </application>
 
 </manifest>

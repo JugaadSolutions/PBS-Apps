@@ -26,6 +26,7 @@ public class API {
     public static final String gettopupplans =Baseurl+"topups";
     public static final String ticketsfromuser =Baseurl+"tickets";
     public static final String getusertickets =Baseurl+"tickets/user/";
+    public static final String replytotickets =Baseurl+"tickets/";
 
 
     /*without https*/
