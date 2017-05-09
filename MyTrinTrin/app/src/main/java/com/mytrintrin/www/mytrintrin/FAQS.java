@@ -27,6 +27,12 @@ public class FAQS extends AppCompatActivity {
         FaqToolbar.setTitle("FAQ's");
         setSupportActionBar(FaqToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         getwebview();
     }
 

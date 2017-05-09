@@ -3,13 +3,20 @@ package com.mytrintrin.www.mytrintrin;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.provider.MediaStore;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,18 +37,29 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class TicketDetails extends AppCompatActivity {
 
     String Ticketdetails,TicketId,Ticketstatus,Ticketdescription,Loginid;
     JSONObject Ticketobject;
-    TextView TicketID,TicketStatus,TicketDescription,TicketSubject,Ticketcreated;
+    TextView TicketID,TicketStatus,TicketDescription,TicketSubject,Ticketcreated,TickeReplies;
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
     EditText ReplyforTicket;
     LinearLayout TicketConversations;
+    private Toolbar Ticketsdetailstoolbar;
+    CheckBox CloseTicket;
+    Button CloseorReply;
+    TextInputLayout CloseorReplyTI;
+    ScrollView TicketsScrollLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +75,21 @@ public class TicketDetails extends AppCompatActivity {
         Loginid = loginpref.getString("User-id", null);
         ReplyforTicket = (EditText) findViewById(R.id.replyticket);
         TicketConversations = (LinearLayout) findViewById(R.id.ticketconverstationlayout);
+        TicketsScrollLayout = (ScrollView) findViewById(R.id.ticketconverstationscroll);
+        Ticketsdetailstoolbar = (Toolbar) findViewById(R.id.ticketdetailstoolbar);
+        CloseTicket= (CheckBox) findViewById(R.id.cbcloseticket);
+        TickeReplies = (TextView) findViewById(R.id.replies_ticketdetails);
+        Ticketsdetailstoolbar.setTitle("Tickets");
+        setSupportActionBar(Ticketsdetailstoolbar);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        CloseorReply = (Button) findViewById(R.id.btncloseorreply);
+        CloseorReplyTI = (TextInputLayout) findViewById(R.id.ticketreply);
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         if (getIntent().getExtras() != null) {
             Intent intent = getIntent();
             Ticketdetails = intent.getStringExtra("TicketObject");
@@ -75,44 +108,79 @@ public class TicketDetails extends AppCompatActivity {
             Ticketobject = new JSONObject(Ticketdetails);
             TicketId = Ticketobject.getString("uuId");
             String Name = Ticketobject.getString("name");
-            String Subject=Ticketobject.getString("subject");
+            String Subject = Ticketobject.getString("subject");
             Ticketdescription = Ticketobject.getString("description");
             String Date = Ticketobject.getString("ticketdate");
             Ticketstatus = Ticketobject.getString("status");
-            TicketID.setText("Ticket No : UT"+TicketId);
-            Ticketcreated.setText("Created at : "+Date);
-            TicketSubject.setText("Subject : "+Subject);
-            TicketDescription.setText("Description : "+Ticketdescription);
-            TicketStatus.setText("Status : "+Ticketstatus);
-            JSONArray transactions = Ticketobject.getJSONArray("transactions");
-            for(int i=0;i<transactions.length();i++)
+            TicketID.setText("Ticket No : UT" + TicketId);
+            SimpleDateFormat ticketinFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            SimpleDateFormat ticketoutFormat = new SimpleDateFormat("MMM dd, yyyy");
+            Calendar ticketcal = Calendar.getInstance();
+            try {
+                ticketcal.setTime(ticketinFormat.parse(Date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            Ticketcreated.setText("Created at : " + ticketoutFormat.format(ticketcal.getTime()));
+            TicketSubject.setText("Subject : " + Subject);
+            TicketDescription.setText("Description : " + Ticketdescription);
+            TicketStatus.setText("Status : " + Ticketstatus);
+            if(Ticketstatus.equals("Close"))
             {
-                JSONObject transactionobject = transactions.getJSONObject(i);
-                String replydescription = transactionobject.getString("description");
-                String replyat = transactionobject.getString("replydate");
-                JSONObject replierobject = transactionobject.getJSONObject("replierId");
-                String repliername =replierobject.getString("Name");
-                Toast.makeText(this, repliername, Toast.LENGTH_SHORT).show();
+                CloseTicket.setVisibility(View.GONE);
+                ReplyforTicket.setEnabled(false);
+                CloseorReply.setEnabled(false);
+            }
+            else {
+                CloseTicket.setVisibility(View.VISIBLE);
+            }
+            JSONArray transactions = Ticketobject.getJSONArray("transactions");
+            if (transactions.length() > 0)
+            {
+                for (int i = 0; i < transactions.length(); i++) {
+                    JSONObject transactionobject = transactions.getJSONObject(i);
+                    String replydescription = transactionobject.getString("description");
+                    String replyat = transactionobject.getString("replydate");
+                    SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                    Calendar c = Calendar.getInstance();
+                    try {
+                        c.setTime(inFormat.parse(replyat));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    JSONObject replierobject = transactionobject.getJSONObject("replierId");
+                    String repliername = replierobject.getString("Name");
+                    String replierid = replierobject.getString("UserID");
 
-                TextView Description = new TextView(TicketDetails.this);
-                Description.setText(replydescription);
-                Description.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                Description.setTextSize(16);
+                    TextView Description = new TextView(TicketDetails.this);
+                    Description.setText(replydescription);
+                    Description.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                    Description.setTextSize(16);
 
-                TextView ReplierName = new TextView(TicketDetails.this);
-                ReplierName.setText(repliername);
-                ReplierName.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                ReplierName.setTextSize(12);
+                    TextView ReplierName = new TextView(TicketDetails.this);
+                    if (replierid.equals(Loginid)) {
+                        ReplierName.setText("By : You"+ " | " + "On :" + outFormat.format(c.getTime()));
+                    } else {
+                        ReplierName.setText("By : " + repliername + " | " + "On :" + outFormat.format(c.getTime()));
+                    }
+                    ReplierName.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
+                    ReplierName.setTextSize(12);
 
-                TextView ReplierDate = new TextView(TicketDetails.this);
-                ReplierDate.setText(replyat);
-                ReplierDate.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
-                ReplierDate.setTextSize(12);
+                    View v = new View(this);
+                    v.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 1));
+                    v.setPadding(5, 5, 5, 5);
+                    v.setBackgroundColor(Color.parseColor("#009746"));
 
-                TicketConversations.addView(Description);
-                TicketConversations.addView(ReplierName);
-                TicketConversations.addView(ReplierDate);
-
+                    TicketConversations.addView(Description);
+                    TicketConversations.addView(ReplierName);
+                    TicketConversations.addView(v);
+                }
+        }
+            else
+            {
+                TicketsScrollLayout.setVisibility(View.GONE);
+                TickeReplies.setVisibility(View.GONE);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -156,6 +224,9 @@ public class TicketDetails extends AppCompatActivity {
             ReplyforTicket.setError("Reply");
             return;
         }
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+        final String replytime = dateFormatGmt.format(new Date()) + "";
         StringRequest ticketreplyrequest = new StringRequest(Request.Method.POST, API.replytotickets+TicketId+"/addreply", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -167,7 +238,7 @@ public class TicketDetails extends AppCompatActivity {
                 replybuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        startActivity(new Intent(TicketDetails.this,Tickets.class));
+                        startActivity(new Intent(TicketDetails.this,MyAccount.class));
                         finish();
                     }
                 });
@@ -242,6 +313,7 @@ public class TicketDetails extends AppCompatActivity {
                 params.put("description",ReplyforTicket.getText().toString().trim() );
                 params.put("status", Ticketstatus);
                 params.put("replierId", Loginid);
+                params.put("replydate", replytime);
                 return params;
             }
         };
@@ -258,5 +330,132 @@ public class TicketDetails extends AppCompatActivity {
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {
         }
+    }
+
+    public void itemClicked(View v) {
+        if(CloseTicket.isChecked()){
+            CloseorReplyTI.setHint("Reason");
+            CloseorReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    closeticket();
+                }
+            });
+        }
+        else
+        {
+            CloseorReplyTI.setHint("Reply");
+            CloseorReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ticketreply(view);
+                }
+            });
+        }
+    }
+
+    public void closeticket()
+    {
+        checkinternet();
+        if(ReplyforTicket.getText().toString().equals("")||ReplyforTicket.getText().toString().equals(null))
+        {
+            ReplyforTicket.setError("Reason");
+            return;
+        }
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+        final String replytime = dateFormatGmt.format(new Date()) + "";
+        StringRequest Closeteicketrequest = new StringRequest(Request.Method.POST, API.replytotickets+TicketId+"/addreply", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                AlertDialog.Builder closeticketbuilder = new AlertDialog.Builder(TicketDetails.this);
+                closeticketbuilder.setIcon(R.drawable.splashlogo);
+                closeticketbuilder.setTitle("Ticket");
+                closeticketbuilder.setMessage("Ticket closed successfully");
+                closeticketbuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(TicketDetails.this,MyAccount.class));
+                        finish();
+                    }
+                });
+                closeticketbuilder.setCancelable(false);
+                closeticketbuilder.show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                if (error.networkResponse != null) {
+                    parseVolleyError(error);
+                    return;
+                }
+                if (error instanceof ServerError) {
+                    Toast.makeText(TicketDetails.this, "Server is under maintenance.please try later", Toast.LENGTH_LONG).show();
+                    Log.d("Error", String.valueOf(error instanceof ServerError));
+                    error.printStackTrace();
+                } else if (error instanceof AuthFailureError) {
+                    Toast.makeText(TicketDetails.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Authentication Error");
+                    error.printStackTrace();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(TicketDetails.this, "Parse Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Parse Error");
+                    error.printStackTrace();
+                } else if (error instanceof NetworkError) {
+                    Toast.makeText(TicketDetails.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            TicketDetails.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
+                    Log.d("Error", "Network Error");
+                    error.printStackTrace();
+                } else if (error instanceof TimeoutError) {
+                    Toast.makeText(TicketDetails.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Timeout Error");
+                    error.printStackTrace();
+                } else if (error instanceof NoConnectionError) {
+                    Toast.makeText(TicketDetails.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(TicketDetails.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                }
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                return headers;
+            }
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("description",ReplyforTicket.getText().toString().trim() );
+                params.put("status", "Close");
+                params.put("replierId", Loginid);
+                params.put("replydate", replytime);
+                return params;
+            }
+        };
+        Closeteicketrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(Closeteicketrequest);
     }
 }

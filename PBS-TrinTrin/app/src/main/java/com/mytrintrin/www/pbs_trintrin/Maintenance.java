@@ -91,6 +91,12 @@ public class Maintenance extends AppCompatActivity {
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
         loginuserid = loginpref.getString("User-id", null);
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         checkinternet();
         getalldockingstations();
         getmcemplist();
@@ -345,7 +351,7 @@ public class Maintenance extends AppCompatActivity {
                 return headers;
             }
         };
-        mcemplistrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        mcemplistrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(mcemplistrequest);
     }
 
@@ -402,7 +408,25 @@ public class Maintenance extends AppCompatActivity {
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
                     Toast.makeText(Maintenance.this, "Please check your connection", Toast.LENGTH_LONG).show();
-                    checkinternet();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Maintenance.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {

@@ -18,19 +18,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-
-
         <LinearLayout
             android:id="@+id/myaccountmainlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="8dp">
 
                 <TextView
                     android:id="@+id/MarqueeText"
@@ -46,7 +44,6 @@
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:text="" />
-
 
                 <TextView
                     android:id="@+id/validity"
@@ -85,7 +82,8 @@
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:padding="5dp">
 
                     <LinearLayout
                         android:id="@+id/ridesinmyaacount"
@@ -97,12 +95,10 @@
 
                 </HorizontalScrollView>
 
-
                 <LinearLayout
                     android:id="@+id/mapsinmyaccount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 

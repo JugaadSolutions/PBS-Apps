@@ -51,6 +51,11 @@ public class ForgotPassword extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         EmailForgot = (EditText) findViewById(R.id.email_forgotpassword);
         checkinternet();
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
     }
 
     //checking internet
@@ -107,6 +112,7 @@ public class ForgotPassword extends AppCompatActivity {
                         finish();
                     }
                 });
+                ForgotBuilder.setCancelable(false);
                 ForgotBuilder.show();
             }
         }, new Response.ErrorListener() {
@@ -171,10 +177,11 @@ public class ForgotPassword extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("email", emailforgot);
+                params.put("origin", "app");
                 return params;
             }
         };
-        forgotpasswordrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        forgotpasswordrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(forgotpasswordrequest);
     }
 
@@ -182,7 +189,7 @@ public class ForgotPassword extends AppCompatActivity {
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

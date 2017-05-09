@@ -72,6 +72,12 @@ public class Tickets_RC extends AppCompatActivity {
         Subject_ticketrc = (EditText) findViewById(R.id.subject_ticketrc);
         Description_ticketrc = (EditText) findViewById(R.id.description_ticketrc);
         Departmentspinner = (Spinner) findViewById(R.id.departmentspinner);
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         checkinternet();
         getdepartments();
 

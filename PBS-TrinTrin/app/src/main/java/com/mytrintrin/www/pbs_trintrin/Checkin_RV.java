@@ -108,6 +108,11 @@ public class Checkin_RV extends AppCompatActivity {
 
         fleetname = getIntent().getStringExtra("fleetname");
 
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         getRestributiondetails();
         getMCdetails();
         getHAdetails();
@@ -385,7 +390,7 @@ public class Checkin_RV extends AppCompatActivity {
                 return params;
             }
         };
-        checkinrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        checkinrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(checkinrequest);
     }
 
@@ -474,7 +479,7 @@ public class Checkin_RV extends AppCompatActivity {
                 return headers;
             }
         };
-        restributionrequest.setRetryPolicy(new DefaultRetryPolicy(25000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        restributionrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(this).addtorequestqueue(restributionrequest);
     }
 
@@ -563,7 +568,7 @@ public class Checkin_RV extends AppCompatActivity {
             }
 
         };
-        maintenancerequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        maintenancerequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(this).addtorequestqueue(maintenancerequest);
     }
 
@@ -650,7 +655,7 @@ public class Checkin_RV extends AppCompatActivity {
                 return headers;
             }
         };
-        holdingarearequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        holdingarearequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(this).addtorequestqueue(holdingarearequest);
     }
 

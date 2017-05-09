@@ -8,6 +8,16 @@
     <string name="address">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._,#/\-\u0020</string>
     <string name="comments">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,-\u0020</string>
 
+
+    <string-array name="zonearray">
+        <item>Select Zone</item>
+        <item>Zone 1</item>
+        <item>Zone 2</item>
+        <item>Zone 3</item>
+        <item>Zone 4</item>
+        <item>Zone 5</item>
+    </string-array>
+
     <string-array name="country_arrays">
         <item value="India">India</item>
         <item value="Algeria">Algeria</item>

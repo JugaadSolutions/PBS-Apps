@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/add_leave"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mytrintrin.www.pbs_admin.AddLeave"
+    android:orientation="vertical">
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/addleaveview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/addleavetoolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/customToolbartheme">
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/addleavemainlayout"
+    android:orientation="vertical">
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/addleavelayout"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:text="Select Employee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectemptv"
+            android:textSize="16dp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/employeespinner"
+            android:background="@drawable/input_outline"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:text="Select Shift"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selectshifttv"
+            android:textSize="16dp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/shiftsspinner"
+            android:background="@drawable/input_outline"
+            android:layout_marginBottom="5dp"
+            android:entries="@array/shifts"
+            android:padding="14dp"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/reason_leave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorHint="@color/colorPrimary">
+
+            <EditText
+                android:id="@+id/leavereason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:hint="Reason"
+                android:inputType="text"
+                android:textColor="@color/colorPrimary"
+                android:maxLength="50"
+                android:digits="@string/address"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:text="Submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button"
+            android:background="@drawable/roundcorner"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
+
+</LinearLayout>

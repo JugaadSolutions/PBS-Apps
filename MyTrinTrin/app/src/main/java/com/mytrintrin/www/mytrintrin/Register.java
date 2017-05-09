@@ -50,6 +50,12 @@ public class Register extends AppCompatActivity {
         RegisterToolbar.setTitle("Sign Up");
         setSupportActionBar(RegisterToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         Intialize();
 
     }
@@ -133,7 +139,7 @@ public class Register extends AppCompatActivity {
             return;
         }
 
-        password = md5(password);
+        //password = md5(password);
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Please wait...");
@@ -160,6 +166,7 @@ public class Register extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 
+                mProgressDialog.dismiss();
                 if (error.networkResponse != null) {
                     parseVolleyError(error);
                     return;
@@ -168,7 +175,6 @@ public class Register extends AppCompatActivity {
                 if (error instanceof ServerError) {
                     Toast.makeText(Register.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
-                    mProgressDialog.dismiss();
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
                     Toast.makeText(Register.this, "Authentication Error", Toast.LENGTH_LONG).show();
@@ -211,6 +217,7 @@ public class Register extends AppCompatActivity {
                 params.put("email", email);
                 params.put("phoneNumber","91-"+phone);
                 params.put("password", password);
+                params.put("cpassword",confirmpassword);
                 return params;
             }
         };

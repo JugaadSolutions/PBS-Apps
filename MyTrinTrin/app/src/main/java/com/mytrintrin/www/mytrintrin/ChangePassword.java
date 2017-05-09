@@ -65,6 +65,13 @@ public class ChangePassword extends AppCompatActivity {
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
         loginuserid = loginpref.getString("User-id",null);
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
+
         checkinternet();
     }
 
@@ -79,12 +86,19 @@ public class ChangePassword extends AppCompatActivity {
             builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("OK",
+            builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -142,8 +156,8 @@ public class ChangePassword extends AppCompatActivity {
             return;
         }
 
-        oldpassword = md5(oldpassword);
-        newpassword = md5(newpassword);
+        /*oldpassword = md5(oldpassword);
+        newpassword = md5(newpassword);*/
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Changing Password...");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -211,10 +225,11 @@ public class ChangePassword extends AppCompatActivity {
                 Map<String, String> params = new HashMap<>();
                 params.put("newPassword", newpassword);
                 params.put("currentPassword", oldpassword);
+                params.put("cpassword", confirmpassword);
                 return params;
             }
         };
-        changepasswordrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        changepasswordrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(changepasswordrequest);
     }
 
@@ -241,6 +256,18 @@ public class ChangePassword extends AppCompatActivity {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
             String message = data.getString("description");
+            AlertDialog.Builder ErrorBuilder = new AlertDialog.Builder(ChangePassword.this);
+            ErrorBuilder.setIcon(R.drawable.splashlogo);
+            ErrorBuilder.setTitle("Change Password");
+            ErrorBuilder.setMessage(message);
+            ErrorBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                }
+            });
+            ErrorBuilder.setCancelable(false);
+            ErrorBuilder.show();
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

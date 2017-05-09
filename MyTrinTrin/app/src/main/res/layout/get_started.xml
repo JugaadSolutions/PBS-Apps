@@ -5,69 +5,56 @@
     android:id="@+id/get_started"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mytrintrin.www.mytrintrin.GetStarted"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.mytrintrin.www.mytrintrin.GetStarted">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/getstartedview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/getstartedview">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
+            android:id="@+id/Getstartedtoolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/Getstartedtoolbar"
             android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
 
-
         </android.support.v7.widget.Toolbar>
-
-
 
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
+        android:id="@+id/getstartedmainlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/getstartedmainlayout"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_weight="1"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:onClick="gotoslider"
+                android:padding="16dp"
+                app:srcCompat="@drawable/splashlogo" />
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/trintrinlogo"
-            android:id="@+id/imageView"
-            android:layout_gravity="center_horizontal"
-            android:onClick="gotoslider"/>
-
-        <TextView
-              android:text="Pedal With Pride"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:id="@+id/tagline_getstarted"
-              android:gravity="center_horizontal"
-         android:textStyle="bold"
-         android:textColor="@color/colorPrimary"/>
         </LinearLayout>
 
-
         <TextView
-            android:text="Welcome to Trin Trin"
+            android:id="@+id/welcomemessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/welcomemessage"
             android:gravity="center_horizontal"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"/>
+            android:text="Welcome to Trin Trin"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -75,30 +62,29 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <Button
+                android:id="@+id/blogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/roundcorner"
+                android:onClick="gotologin"
+                android:text="Login"
+                android:textColor="@color/btntextcolor"
+                android:textStyle="bold" />
 
-        <Button
-            android:text="Login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/blogin"
-            android:textColor="@color/btntextcolor"
-            android:background="@drawable/roundcorner"
-            android:layout_marginBottom="5dp"
-            android:textStyle="bold"
-            android:onClick="gotologin"/>
+            <Button
+                android:id="@+id/bregister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/roundcorner"
+                android:onClick="gotoregister"
+                android:text="Sign Up"
+                android:textColor="@color/btntextcolor"
+                android:textStyle="bold" />
 
-        <Button
-            android:text="Sign Up"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/bregister"
-            android:textColor="@color/btntextcolor"
-            android:background="@drawable/roundcorner"
-            android:textStyle="bold"
-            android:onClick="gotoregister"/>
+        </LinearLayout>
 
-
-    </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

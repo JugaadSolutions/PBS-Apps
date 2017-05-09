@@ -58,6 +58,11 @@ public class Feedback extends AppCompatActivity {
         loginuserid = loginpref.getString("User-id",null);
         username = getIntent().getStringExtra("Name");
         checkinternet();
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
     }
 
     //checking internet
@@ -71,12 +76,19 @@ public class Feedback extends AppCompatActivity {
             builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("OK",
+            builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -119,6 +131,7 @@ public class Feedback extends AppCompatActivity {
                         finish();
                     }
                 });
+                feedbackalert.setCancelable(false);
                     feedbackalert.show();
             }
         }, new Response.ErrorListener() {
@@ -176,10 +189,11 @@ public class Feedback extends AppCompatActivity {
                 params.put("channel", "2");
                 params.put("description",feedbackmessage);
                 params.put("priority","2");
+                params.put("user",loginuserid);
                 return params;
             }
         };
-        feedbackrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        feedbackrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(feedbackrequest);
     }
 
@@ -187,7 +201,7 @@ public class Feedback extends AppCompatActivity {
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

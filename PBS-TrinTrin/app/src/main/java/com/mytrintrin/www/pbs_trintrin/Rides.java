@@ -59,6 +59,12 @@ public class Rides extends AppCompatActivity {
         RideHistory = (LinearLayout) findViewById(R.id.ridehistorylayout);
         checkinternet();
         MemberId = getIntent().getIntExtra("userid",0);
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         getridedetails();
     }
 

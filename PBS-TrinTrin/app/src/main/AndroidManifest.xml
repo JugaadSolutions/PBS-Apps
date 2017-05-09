@@ -65,7 +65,9 @@
             android:name=".Addcycle"
             android:screenOrientation="portrait" />
         <activity android:name=".Rides" />
-        <activity android:name=".Payment_History"></activity>
+        <activity android:name=".Payment_History" />
+        <activity android:name=".ZoneAlert"
+            android:parentActivityName=".Redistribution"></activity>
     </application>
 
 </manifest>

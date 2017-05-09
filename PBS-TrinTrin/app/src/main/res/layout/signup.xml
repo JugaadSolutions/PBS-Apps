@@ -111,51 +111,13 @@
                         android:digits="@string/email"/>
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/newpassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColorHint="@color/colorPrimary"
-                    app:passwordToggleEnabled="true"
-                    app:passwordToggleTint="@color/colorPrimary">
-
-                    <EditText
-                        android:id="@+id/newpassword_register"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:textColor="@color/colorPrimary"
-                        android:maxLength="40"/>
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/confirmpassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColorHint="@color/colorPrimary"
-                    app:passwordToggleEnabled="true"
-                    app:passwordToggleTint="@color/colorPrimary">
-
-                    <EditText
-                        android:id="@+id/confirmpassword_register"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:hint=" Confirm Password"
-                        android:inputType="textPassword"
-                        android:textColor="@color/colorPrimary"
-                        android:maxLength="40"/>
-                </android.support.design.widget.TextInputLayout>
-
                 <Button
                     android:id="@+id/confirmregister"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/roundcorner"
                     android:onClick="Registeruser"
-                    android:text="SignUp"
+                    android:text="Sign Up"
                     android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 

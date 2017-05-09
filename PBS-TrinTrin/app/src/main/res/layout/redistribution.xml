@@ -77,6 +77,12 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+
             <Button
                 android:id="@+id/rvcylcleswithuser"
                 android:layout_width="match_parent"
@@ -87,8 +93,23 @@
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:onClick="vehicleposition"
-                android:layout_marginTop="5dp"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                android:layout_marginRight="4dp"/>
+
+                <Button
+                    android:id="@+id/zonealert"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/roundcorner"
+                    android:text="Zone Alert"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:onClick="gotozonealert"
+                    android:visibility="visible"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

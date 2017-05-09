@@ -73,7 +73,10 @@
         <activity
             android:name=".Tickets"
             android:parentActivityName=".MyAccount" />
-        <activity android:name=".TicketDetails"></activity>
+        <activity
+            android:name=".TicketDetails"
+            android:parentActivityName=".Tickets" />
+        <activity android:name=".ClosedTickets"></activity>
     </application>
 
 </manifest>

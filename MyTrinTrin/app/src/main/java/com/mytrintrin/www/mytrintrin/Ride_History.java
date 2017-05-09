@@ -3,6 +3,7 @@ package com.mytrintrin.www.mytrintrin;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
@@ -50,7 +51,7 @@ public class Ride_History extends AppCompatActivity {
     Context context;
     LinearLayout RideHistory, RideDetailsLayout;
     LinearLayout.LayoutParams ridecardparams,ridedetailsparams;
-    TextView RideDate,RideFromStation,RideToStation,RideCheckinTime,RideFare,RideDuration;
+    TextView RideDate,RideFromStation,RideToStation,RideCheckinTime,RideFare,RideDuration,RideBalance;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -67,6 +68,12 @@ public class Ride_History extends AppCompatActivity {
         context = getApplicationContext();
         RideHistory = (LinearLayout) findViewById(R.id.ridehistorylayout);
         checkinternet();
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         getridedetails();
     }
 
@@ -108,6 +115,7 @@ public class Ride_History extends AppCompatActivity {
                     JSONArray data = responsefromserver.getJSONArray("data");
                     int datalength = data.length();
                     mProgressDialog.dismiss();
+                    RideHistory.removeAllViews();
                     for (int i=0; i< datalength ;i++)
                     {
                         JSONObject ridedata = data.getJSONObject(i);
@@ -117,6 +125,7 @@ public class Ride_History extends AppCompatActivity {
                         String CheckinTime = ridedata.getString("checkInTime");
                         String Fare = ridedata.getString("fare");
                         String Duration = ridedata.getString("duration");
+                        String Balance = ridedata.getString("balance");
 
                         Ridecardview = new CardView(context);
                         ridecardparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -165,12 +174,18 @@ public class Ride_History extends AppCompatActivity {
                         RideDuration.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                         RideDuration.setTextColor(Color.WHITE);
 
+                        RideBalance = new TextView(context);
+                        RideBalance.setText("Balance : "+Balance+"/-");
+                        RideBalance.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
+                        RideBalance.setTextColor(Color.WHITE);
+
                         RideDetailsLayout.addView(RideDate);
                         RideDetailsLayout.addView(RideFromStation);
                         RideDetailsLayout.addView(RideCheckinTime);
                         RideDetailsLayout.addView(RideToStation);
                         RideDetailsLayout.addView(RideDuration);
                         RideDetailsLayout.addView(RideFare);
+                        RideDetailsLayout.addView(RideBalance);
 
                         Ridecardview.addView(RideDetailsLayout);
                         RideHistory.addView(Ridecardview);
@@ -186,6 +201,7 @@ public class Ride_History extends AppCompatActivity {
                 mProgressDialog.dismiss();
 
                 if (error.networkResponse != null) {
+                    Toast.makeText(Ride_History.this, "No Rides Found", Toast.LENGTH_LONG).show();
                     parseVolleyError(error);
                     return;
                 }
@@ -227,7 +243,7 @@ public class Ride_History extends AppCompatActivity {
                 return headers;
             }
         };
-        getridedetailsrequest.setRetryPolicy(new DefaultRetryPolicy(25000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        getridedetailsrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(getridedetailsrequest);
     }
 
@@ -237,6 +253,18 @@ public class Ride_History extends AppCompatActivity {
             JSONObject data = new JSONObject(responseBody);
             String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            AlertDialog.Builder RideBuilder = new AlertDialog.Builder(Ride_History.this);
+            RideBuilder.setIcon(R.drawable.splashlogo);
+            RideBuilder.setTitle("Rides");
+            RideBuilder.setMessage("No Rides Found");
+            RideBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    startActivity(new Intent(Ride_History.this,MyAccount.class));
+                    finish();
+                }
+            });
+            RideBuilder.show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {
         }

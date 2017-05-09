@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/card_from"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/colorPrimary"
+        app:counterEnabled="true"
+        app:counterMaxLength="4">
+
+        <EditText
+            android:id="@+id/cardfrom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:hint="From"
+            android:inputType="number"
+            android:textColor="@color/colorPrimary"
+            android:maxLength="4" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/card_to"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/colorPrimary"
+        app:counterEnabled="true"
+        app:counterMaxLength="4">
+
+        <EditText
+            android:id="@+id/cardto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:hint="To"
+            android:inputType="number"
+            android:textColor="@color/colorPrimary"
+            android:maxLength="4"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

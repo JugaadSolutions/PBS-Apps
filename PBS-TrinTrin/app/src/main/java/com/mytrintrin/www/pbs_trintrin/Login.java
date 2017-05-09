@@ -34,10 +34,21 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
@@ -67,6 +78,9 @@ public class Login extends AppCompatActivity {
         loginuserid = loginpref.getString("User-id", null);
         checkinternet();
         onpermision();
+        NukeSSLCerts nukeSSLCerts = new NukeSSLCerts();
+        nukeSSLCerts.nuke();
+
     }
 
     //checking internet
@@ -168,7 +182,7 @@ public class Login extends AppCompatActivity {
         mProgressDialog.setCancelable(true);
         mProgressDialog.show();
 
-        Enteredpassword = md5(Enteredpassword);
+        //Enteredpassword = md5(Enteredpassword);
 
         StringRequest LoginRequest = new StringRequest(Request.Method.POST, API.loginapi, new Response.Listener<String>() {
             @Override
@@ -292,7 +306,7 @@ public class Login extends AppCompatActivity {
                 return params;
             }
         };
-        LoginRequest.setRetryPolicy(new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        LoginRequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(LoginRequest);
     }
 
@@ -318,8 +332,55 @@ public class Login extends AppCompatActivity {
             JSONObject data = new JSONObject(responseBody);
             String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            AlertDialog.Builder loginErrorBuilder = new AlertDialog.Builder(Login.this);
+            loginErrorBuilder.setIcon(R.mipmap.logo);
+            loginErrorBuilder.setTitle("Login");
+            loginErrorBuilder.setMessage(message);
+            loginErrorBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            loginErrorBuilder.show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {
         }
     }
+
+    public static class NukeSSLCerts {
+        protected static final String TAG = "NukeSSLCerts";
+
+        public static void nuke() {
+            try {
+                TrustManager[] trustAllCerts = new TrustManager[] {
+                        new X509TrustManager() {
+                            public X509Certificate[] getAcceptedIssuers() {
+                                X509Certificate[] myTrustedAnchors = new X509Certificate[0];
+                                return myTrustedAnchors;
+                            }
+
+                            @Override
+                            public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+
+                            @Override
+                            public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+                        }
+                };
+
+                SSLContext sc = SSLContext.getInstance("SSL");
+                sc.init(null, trustAllCerts, new SecureRandom());
+                HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+                HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String arg0, SSLSession arg1) {
+                        return true;
+                    }
+                });
+            } catch (Exception e) {
+            }
+        }
+    }
+
+
 }

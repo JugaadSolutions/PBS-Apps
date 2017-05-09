@@ -38,8 +38,8 @@ import java.util.Map;
 public class Signup extends AppCompatActivity {
 
     Toolbar RegisterToolbar;
-    EditText FirstName, LastName, Phone, Email, Password, ConfirmPassword;
-    String firstname, lastname, phone, email, password, confirmpassword;
+    EditText FirstName, LastName, Phone, Email;
+    String firstname, lastname, phone, email;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -51,6 +51,11 @@ public class Signup extends AppCompatActivity {
         setSupportActionBar(RegisterToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intialize();
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
     }
     private void Intialize() {
 
@@ -58,8 +63,6 @@ public class Signup extends AppCompatActivity {
         LastName = (EditText) findViewById(R.id.lastname_register);
         Phone = (EditText) findViewById(R.id.phonenumber_register);
         Email = (EditText) findViewById(R.id.email_register);
-        Password = (EditText) findViewById(R.id.newpassword_register);
-        ConfirmPassword = (EditText) findViewById(R.id.confirmpassword_register);
     }
 
     //checking internet
@@ -99,42 +102,17 @@ public class Signup extends AppCompatActivity {
         lastname = LastName.getText().toString().trim();
         phone = Phone.getText().toString().trim();
         email = Email.getText().toString().trim();
-        password = Password.getText().toString().trim();
-        confirmpassword = ConfirmPassword.getText().toString().trim();
-
         if (firstname.equals("") || firstname.equals(null)) {
             FirstName.setError("First Name");
             return;
         }
-        if (phone.equals("") || phone.equals(null)) {
-            Phone.setError("Phone Number");
-            return;
+        if(phone.length()>9)
+        {
+            phone= "91-"+phone;
         }
-        if (email.equals("") || email.equals(null)) {
-            Email.setError("Email");
-            return;
+        else {
+            phone="";
         }
-        if (!email.matches("[a-zA-Z0-9._-]+@[a-z]+.[a-z]+")) {
-            Email.setError("Invalid Email Address");
-            return;
-        }
-        if (!password.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$")) {
-            Password.setError("Invalid Password");
-            Toast.makeText(this, "Password must contain minimum 6 characters at least 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character ", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (!confirmpassword.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$")) {
-            ConfirmPassword.setError("Invalid Password");
-            return;
-        }
-        if (!password.equals(confirmpassword)) {
-            Password.setError("Password didn't match");
-            ConfirmPassword.setError("Password didn't match");
-            return;
-        }
-
-        password = md5(password);
-
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Please wait...");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -148,8 +126,6 @@ public class Signup extends AppCompatActivity {
                 LastName.setText("");
                 Phone.setText("");
                 Email.setText("");
-                Password.setText("");
-                ConfirmPassword.setText("");
                 Toast.makeText(Signup.this, "Sign Up successfull", Toast.LENGTH_LONG).show();
                 mProgressDialog.dismiss();
                 startActivity(new Intent(Signup.this, GetStarted.class));
@@ -226,29 +202,12 @@ public class Signup extends AppCompatActivity {
                 params.put("Name", firstname);
                 params.put("lastName", lastname);
                 params.put("email", email);
-                params.put("phoneNumber","91-"+phone);
-                params.put("password", password);
+                params.put("phoneNumber",phone);
                 return params;
             }
         };
         registerrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(registerrequest);
-    }
-
-    public String md5(String s) {
-
-        MessageDigest digest;
-        try {
-            digest = MessageDigest.getInstance("MD5");
-            digest.update(s.getBytes(Charset.forName("US-ASCII")), 0, s.length());
-            byte[] magnitude = digest.digest();
-            BigInteger bi = new BigInteger(1, magnitude);
-            String hash = String.format("%0" + (magnitude.length << 1) + "x", bi);
-            return hash;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return "";
     }
 
     public void parseVolleyError(VolleyError error) {

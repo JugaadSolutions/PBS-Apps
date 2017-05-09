@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/addcard_getstarted"
+        android:icon="@mipmap/ic_credit_card_black_24dp"
+        android:title="Add Smart Card" />
+
+    <item
+        android:id="@+id/addleave_getstarted"
+        android:icon="@mipmap/ic_add_circle_outline_black_24dp"
+        android:title="Add Leave" />
+
+    <item
+        android:id="@+id/leavetracking"
+        android:icon="@mipmap/ic_content_paste_black_24dp"
+        android:title="Leave Tracking" />
+
+    <item
+        android:id="@+id/logout_myaccount"
+        android:icon="@mipmap/ic_power_settings_new_black_24dp"
+        android:title="Logout" />
+
+</menu>

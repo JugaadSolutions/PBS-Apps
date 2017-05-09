@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/changeha_getstarted"
+        android:title="Change Holding Area">CHange Fleet</item>
+
+    <item android:id="@+id/changefleet_getstarted"
+        android:title="Change Fleet"></item>
+
+    <item android:id="@+id/logout_ha"
+        android:title="Logout"></item>
+
+</menu>

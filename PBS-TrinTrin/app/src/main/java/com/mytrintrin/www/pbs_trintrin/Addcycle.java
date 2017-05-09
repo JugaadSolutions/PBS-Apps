@@ -53,10 +53,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class Addcycle extends AppCompatActivity {
 
@@ -115,7 +124,10 @@ public class Addcycle extends AppCompatActivity {
         Allcycleclear = new ArrayList<ImageView>();
 
         Alldetailslist = new ArrayList<LinearLayout>();
-
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
         checknfc();
         checkinternet();
         getFleetdetails();
@@ -194,7 +206,6 @@ public class Addcycle extends AppCompatActivity {
                     JSONObject fleetresponsefronserver = new JSONObject(response);
                     JSONArray fleetdataarray = fleetresponsefronserver.getJSONArray("data");
                     Fleetarray = fleetdataarray;
-                    Log.d("fleet details", String.valueOf(fleetdataarray));
                     fleetdetails();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -261,7 +272,7 @@ public class Addcycle extends AppCompatActivity {
                 return headers;
             }
         };
-        fleetrequest.setRetryPolicy(new DefaultRetryPolicy(25000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        fleetrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(this).addtorequestqueue(fleetrequest);
     }
 
@@ -688,7 +699,26 @@ public class Addcycle extends AppCompatActivity {
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Addcycle.this, "Please check your connection/Server is under maintenance.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Addcycle.this, "Please check your connection-.", Toast.LENGTH_LONG).show();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            Addcycle.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -723,7 +753,7 @@ public class Addcycle extends AppCompatActivity {
                 return params;
             }
         };
-        addcycle.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        addcycle.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(addcycle);
         mProgressDialog.dismiss();
     }

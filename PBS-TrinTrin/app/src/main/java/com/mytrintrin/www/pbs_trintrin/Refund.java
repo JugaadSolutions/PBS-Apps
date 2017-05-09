@@ -67,6 +67,12 @@ public class Refund extends AppCompatActivity {
         memberid=getIntent().getIntExtra("userid",0);
         Refund_Username.setText(UserName);
         Log.d("Member ID", String.valueOf(memberid));
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         checkinternet();
 
     }
@@ -228,6 +234,7 @@ public class Refund extends AppCompatActivity {
                                     Toast.makeText(Refund.this, "Refund Request Cancelled.", Toast.LENGTH_SHORT).show();
                                 }
                             });
+                            RefundRequestBuilder.setCancelable(false);
                             RefundRequestBuilder.show();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -308,6 +315,7 @@ public class Refund extends AppCompatActivity {
                 Toast.makeText(Refund.this, "Refund Request Cancelled", Toast.LENGTH_SHORT).show();
             }
         });
+        RefundBuilder.setCancelable(false);
         RefundBuilder.show();
     }
 

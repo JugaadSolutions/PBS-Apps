@@ -179,6 +179,11 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         mProgressDialog.setCancelable(true);
         mProgressDialog.show();
 
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         checkinternet();
         getlocation();
         getalldockingstations();
@@ -302,7 +307,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                 .tilt(45)
                 .build();
 
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentloc), 5000, null);
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(currentloc), 2000, null);
         googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setZoomControlsEnabled(true);
         mmap = googleMap;
@@ -516,25 +521,6 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                                 .position(new LatLng(doclatitude, docllongitude))
                                 .title(Stationname).snippet("Cycle:" + bicyclecount+"\n"+"Empty Port:"+emptyport)
                                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_directions_bike_black_24dp)));
-                        /* mmap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                            @Override
-                          public void onInfoWindowClick(Marker marker) {
-
-                              AlertDialog.Builder Docdetails = new AlertDialog.Builder(MyAccount.this);
-                              Docdetails.setIcon(R.drawable.trintrinlogo);
-                              Docdetails.setTitle("Docking Station Details");
-                              Docdetails.setMessage("Name :"+Stationname+"\n"+"Capacity :"+ Capacity+"\n"+"Available :"+bicyclecount);
-                              Docdetails.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                  @Override
-                                  public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.dismiss();
-                                  }
-                              });
-                            Docdetails.show();
-                          }
-                      });
-                      "Capacity : " + Capacity + "\n" +
-                      */
                         mmap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
                             @Override
@@ -616,7 +602,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                 return headers;
             }
         };
-        alldockingstationrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        alldockingstationrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(alldockingstationrequest);
     }
 
@@ -639,7 +625,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                         reglongitude = Double.parseDouble(reglong);
                         mmap.addMarker(new MarkerOptions()
                                 .position(new LatLng(reglatitude, reglongitude))
-                                .title(regname)
+                                .title(regname).snippet("Registration Centre")
                                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_store_mall_directory_black_24dp)));
                     }
                 } catch (JSONException e) {
@@ -693,7 +679,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                 return headers;
             }
         };
-        allregistrationcentrerequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        allregistrationcentrerequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(allregistrationcentrerequest);
     }
 
@@ -813,7 +799,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                 return headers;
             }
         };
-        getmemberdetailsrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        getmemberdetailsrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(getmemberdetailsrequest);
     }
 
@@ -912,12 +898,12 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
             @Override
             public void onErrorResponse(VolleyError error) {
 
+                mProgressDialog.dismiss();
                 if (error.networkResponse != null) {
+                    LatestRides.setVisibility(View.GONE);
                     parseVolleyError(error);
                     return;
                 }
-
-                mProgressDialog.dismiss();
                 if (error instanceof ServerError) {
                     Toast.makeText(MyAccount.this, "Server Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
@@ -955,7 +941,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                 return headers;
             }
         };
-        getridedetailsrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        getridedetailsrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(getridedetailsrequest);
     }
 
@@ -1021,7 +1007,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

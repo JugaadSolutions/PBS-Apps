@@ -75,6 +75,12 @@ public class Payment_History extends AppCompatActivity {
         context = getApplicationContext();
         PaymentHistory = (LinearLayout) findViewById(R.id.paymenthistorylayout);
         checkinternet();
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         getpaymentdetails();
     }
 

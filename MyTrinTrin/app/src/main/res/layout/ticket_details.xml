@@ -86,10 +86,23 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Replies :"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp"
+            android:paddingLeft="16dp"
+            android:id="@+id/replies_ticketdetails"/>
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:id="@+id/ticketconverstationscroll">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -101,6 +114,16 @@
 
         </LinearLayout>
         </ScrollView>
+
+        <CheckBox
+            android:id="@+id/cbcloseticket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/colorPrimary"
+            android:text="Close Ticket"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:onClick="itemClicked"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/ticketreply"
@@ -127,7 +150,7 @@
             android:text="submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnraiseticket"
+            android:id="@+id/btncloseorreply"
             android:background="@drawable/roundcorner"
             android:textColor="#ffffff"
             android:textStyle="bold"

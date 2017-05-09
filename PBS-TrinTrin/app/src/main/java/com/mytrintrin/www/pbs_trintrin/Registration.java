@@ -22,6 +22,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.method.DigitsKeyListener;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -78,13 +81,13 @@ public class Registration extends AppCompatActivity implements NavigationView.On
     DrawerLayout RegistrationDrawer;
 
     LinearLayout Basicdetails, Profilepic, Proofpic, Selectplan, Payment, Smartcard;
-    EditText Firstname, Lastname, Email, Phone, Address, DocNo, Amount, TransactionNo, Comments, CardNum, OtpNum;
+    EditText Firstname, Lastname, Email, Phone, Address, DocNo, Amount, TransactionNo, Comments, CardNum, OtpNum,Age,EmergencyContact;
     CheckBox male, female, others;
     Spinner Country, State, City, DocType, Plans, Paymentmode, CountryCode;
     TextView statetv, citytv;
     ImageView profilepic, proofpic, proofpic_2;
     ImageButton Takeprofilepic, Takeproofpic, Takeproofpic_2;
-    String Fname, Lname, email, phone, address, gender, country, state, city, doctype, docno, uid, Planname, Planid, LoginId, userdetails,cardno;
+    String Fname, Lname, email, phone, address, gender, country, state, city, doctype, docno, uid, Planname, Planid, LoginId, userdetails, cardno,age,emergencycontact;
     Bitmap profilephoto = null, proofphoto = null, proofphoto_2 = null;
     int Userid, CreditBalance, Usagefee, OTP;
     Menu nav_menu;
@@ -104,7 +107,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
     public static ArrayList<Integer> Totalamountofmembership = new ArrayList<Integer>();
     public ArrayAdapter<String> Membernameadapter;
 
-    JSONObject Memberobject, Documentobject, Docresultobject, Profileobject, Prospectiveobject;
+    JSONObject Memberobject, Documentobject, Docresultobject, Profileobject, Prospectiveobject,Emergencyobject;
     JSONArray Documentarray;
 
     SharedPreferences loginpref;
@@ -126,6 +129,12 @@ public class Registration extends AppCompatActivity implements NavigationView.On
         mToogle.syncState();
         Registration_navigation = (NavigationView) findViewById(R.id.registration_navigationview);
         nav_menu = Registration_navigation.getMenu();
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         onpermision();
         getplans();
         Memberobject = new JSONObject();
@@ -133,6 +142,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
         Docresultobject = new JSONObject();
         Profileobject = new JSONObject();
         Documentarray = new JSONArray();
+        Emergencyobject = new JSONObject();
 
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
@@ -207,6 +217,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
         statetv = (TextView) findViewById(R.id.tvstate);
         citytv = (TextView) findViewById(R.id.tvcity);
         CountryCode = (Spinner) findViewById(R.id.countrycodespinner);
+        Age = (EditText) findViewById(R.id.etage);
+        EmergencyContact = (EditText) findViewById(R.id.etemergencycontact);
         /*Ends*/
 
         /*Profile pic*/
@@ -329,6 +341,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     Selectplan.setVisibility(View.VISIBLE);
                     Payment.setVisibility(View.VISIBLE);
                     Smartcard.setVisibility(View.VISIBLE);
+                    DocNo.setFilters(new InputFilter[] {new InputFilter.LengthFilter(12)});
+                    DocNo.setInputType(InputType.TYPE_CLASS_NUMBER);
                     AddMembers.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -339,6 +353,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     Selectplan.setVisibility(View.VISIBLE);
                     Payment.setVisibility(View.VISIBLE);
                     Smartcard.setVisibility(View.VISIBLE);
+                    DocNo.setInputType(InputType.TYPE_CLASS_TEXT);
+                    DocNo.setFilters(new InputFilter[] {new InputFilter.LengthFilter(30)});
                     AddMembers.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -349,6 +365,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     Selectplan.setVisibility(View.GONE);
                     Payment.setVisibility(View.GONE);
                     Smartcard.setVisibility(View.GONE);
+                    DocNo.setInputType(InputType.TYPE_CLASS_TEXT);
+                    DocNo.setFilters(new InputFilter[] {new InputFilter.LengthFilter(30)});
                     AddMembers.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -479,11 +497,39 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             return;
         }
 
-        if(Phone.getText().toString().trim().length()<10)
-        {
+        if (Phone.getText().toString().trim().length() < 10) {
             Phone.setError("Phone Number");
             return;
         }
+
+        if(Age.getText().toString().trim().equals("")||Age.getText().toString().trim().equals(null))
+        {
+            Age.setError("Age");
+            Age.requestFocus();
+            return;
+        }
+
+        if(EmergencyContact.getText().toString().trim().equals("")||EmergencyContact.getText().toString().trim().equals(null))
+        {
+            EmergencyContact.setError("Emergency Contact");
+            EmergencyContact.requestFocus();
+            return;
+        }
+
+        if(EmergencyContact.getText().toString().trim().length()<10)
+        {
+            EmergencyContact.setError("Emergency Contact");
+            EmergencyContact.requestFocus();
+            return;
+        }
+
+        if(Age.getText().toString().trim().length()<2)
+        {
+            Age.setError("Age");
+            Age.requestFocus();
+            return;
+        }
+
 
         boolean hasproof = (proofpic.getDrawable() != null);
         if (hasproof) {
@@ -512,13 +558,10 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             mProgressDialog.show();
             Lname = Lastname.getText().toString().trim();
             phone = Phone.getText().toString().trim();
-            if(phone.equals(""))
-            {
-                phone="";
-            }
-            else
-            {
-                phone="91-"+phone;
+            if (phone.equals("")) {
+                phone = "";
+            } else {
+                phone = "91-" + phone;
             }
             address = Address.getText().toString().trim();
             email = Email.getText().toString().trim();
@@ -551,6 +594,10 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 Documentobject.put("documentNumber", docno);
                 Docresultobject.put("result", getStringImage(proofphoto));
 
+                Emergencyobject.put("countryCode","91");
+                Emergencyobject.put("contactName","");
+                Emergencyobject.put("contactNumber",EmergencyContact.getText().toString().trim());
+
                 boolean hasproofpic_2 = (proofpic_2.getDrawable() != null);
                 if (hasproofpic_2) {
                     // imageView has image in it
@@ -583,7 +630,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 Memberobject.put("lastName", Lname);
                 Memberobject.put("sex", "Male");
                 Memberobject.put("email", email);
-                Memberobject.put("phoneNumber",phone);
+                Memberobject.put("phoneNumber", phone);
                 Memberobject.put("country", country);
                 Memberobject.put("state", state);
                 Memberobject.put("city", city);
@@ -595,6 +642,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 Memberobject.put("documents", Documentarray);
                 Memberobject.put("UserID", Userid);
                 Memberobject.put("createdBy", LoginId);
+                Memberobject.put("age",Age.getText().toString().trim());
+                Memberobject.put("emergencyContact",Emergencyobject);
                 sendprospectivedetailstoserver();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -609,6 +658,35 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             Firstname.requestFocus();
             return;
         }
+
+        if(Age.getText().toString().trim().equals("")||Age.getText().toString().trim().equals(null))
+        {
+            Age.setError("Age");
+            Age.requestFocus();
+            return;
+        }
+
+        if(EmergencyContact.getText().toString().trim().equals("")||EmergencyContact.getText().toString().trim().equals(null))
+        {
+            EmergencyContact.setError("Emergency Contact");
+            EmergencyContact.requestFocus();
+            return;
+        }
+
+        if(EmergencyContact.getText().toString().trim().length()<10)
+        {
+            EmergencyContact.setError("Emergency Contact");
+            EmergencyContact.requestFocus();
+            return;
+        }
+
+        if(Age.getText().toString().trim().length()<2)
+        {
+            Age.setError("Age");
+            Age.requestFocus();
+            return;
+        }
+
         docno = DocNo.getText().toString();
         if (docno.equals("") || docno.equals(null)) {
             DocNo.setError("Document Number");
@@ -634,20 +712,20 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             CardNum.setError("Card Number");
             return;
         } else {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("Registration is in progress...");
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            mProgressDialog.setCancelable(true);
-            mProgressDialog.show();
             Lname = Lastname.getText().toString().trim();
             phone = Phone.getText().toString().trim();
-            if(phone.equals(""))
-            {
-                phone="";
+            if (phone.equals("")) {
+                phone = "";
+            } else {
+                phone = "91-" + phone;
             }
-            else
+            doctype = DocType.getSelectedItem().toString();
+            docno = DocNo.getText().toString();
+            if(doctype.equals("Aadhar")&&docno.length()<12)
             {
-                phone="91-"+phone;
+                DocNo.setError("Aadhar Card");
+                DocNo.requestFocus();
+                return;
             }
             address = Address.getText().toString().trim();
             email = Email.getText().toString().trim();
@@ -661,6 +739,10 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 Documentobject.put("description", "Documents of " + Fname);
                 Documentobject.put("documentNumber", docno);
                 Docresultobject.put("result", getStringImage(proofphoto));
+
+                Emergencyobject.put("countryCode","91");
+                Emergencyobject.put("contactName","");
+                Emergencyobject.put("contactNumber",EmergencyContact.getText().toString().trim());
 
                 boolean hasproofpic_2 = (proofpic_2.getDrawable() != null);
                 if (hasproofpic_2) {
@@ -690,8 +772,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 }
                 Documentarray.put(Documentobject);
 
-                if(TransactionNo.getText().toString().trim().equals("")||TransactionNo.getText().toString().trim().equals(null))
-                {
+                if (TransactionNo.getText().toString().trim().equals("") || TransactionNo.getText().toString().trim().equals(null)) {
                     TransactionNo.setError("Transaction Number");
                     return;
                 }
@@ -702,7 +783,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 Memberobject.put("lastName", Lname);
                 Memberobject.put("sex", "Male");
                 Memberobject.put("email", email);
-                Memberobject.put("phoneNumber",phone);
+                Memberobject.put("phoneNumber", phone);
                 Memberobject.put("country", country);
                 Memberobject.put("state", state);
                 Memberobject.put("city", city);
@@ -714,13 +795,23 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 Memberobject.put("documents", Documentarray);
                 Memberobject.put("membershipId", Planid);
                 //Memberobject.put("credit", Amount.getText().toString().trim());
+
                 Memberobject.put("creditMode", Paymentmode.getSelectedItem().toString());
                 Memberobject.put("transactionNumber", TransactionNo.getText().toString().trim());
                 Memberobject.put("comments", Comments.getText().toString().trim());
                 Memberobject.put("cardNumber", CardNum.getText().toString().trim());
                 Memberobject.put("UserID", Userid);
                 Memberobject.put("createdBy", LoginId);
+
+                Memberobject.put("age",Age.getText().toString().trim());
+                Memberobject.put("emergencyContact",Emergencyobject);
+
                 int getpostion = Plans.getSelectedItemPosition();
+                mProgressDialog = new ProgressDialog(this);
+                mProgressDialog.setMessage("Registration is in progress...");
+                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                mProgressDialog.setCancelable(true);
+                mProgressDialog.show();
                 AlertDialog.Builder Summary = new AlertDialog.Builder(Registration.this);
                 Summary.setIcon(R.mipmap.logo);
                 Summary.setTitle("Member summary");
@@ -894,6 +985,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                             finish();
                         }
                     });
+                    SuccessBuilder.setCancelable(false);
                     SuccessBuilder.show();
                     String creditbalance = data.getString("creditBalance");
                     Boolean processingfee = data.getBoolean("processingFeesDeducted");
@@ -1006,7 +1098,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(Registration.this, "Please check your connection/Server is under maintenance.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Registration.this, "Please check your connection.", Toast.LENGTH_LONG).show();
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             Registration.this);
                     builder.setIcon(R.drawable.splashlogo);
@@ -1049,6 +1141,11 @@ public class Registration extends AppCompatActivity implements NavigationView.On
 
 
     public void setmemberdetails() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Please wait...");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.show();
         try {
             if (!userdetails.equals(null) || !userdetails.equals("")) {
                 Memberobject = new JSONObject(userdetails);
@@ -1060,6 +1157,12 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             Firstname.setEnabled(false);
             Lname = Memberobject.getString("lastName");
             Lastname.setText(Lname);
+            if(Memberobject.has("age")) {
+                age = Memberobject.getString("age");
+                Age.setText(age);
+                Age.setEnabled(false);
+            }
+
             if (Memberobject.has("email")) {
                 email = Memberobject.getString("email");
                 Email.setText(email);
@@ -1069,20 +1172,24 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     Email.setEnabled(true);
                 }
             }
-            if (Memberobject.has("phoneNumber"))
-            {
+            if (Memberobject.has("phoneNumber")) {
                 phone = Memberobject.getString("phoneNumber");
-            phone = phone.substring(3);
-            Phone.setText(phone);
-            if (phone.length() > 1) {
-                Phone.setEnabled(false);
-            } else {
-                Phone.setEnabled(true);
+                if (phone.equals("") || phone.equals(null)) {
+                    Phone.setEnabled(true);
+                } else {
+                    phone = phone.substring(3);
+                    Phone.setText(phone);
+                    if (phone.length() > 5) {
+                        Phone.setEnabled(false);
+                    } else {
+                        Phone.setEnabled(true);
+                    }
+                }
             }
-        }
             if (Memberobject.has("address")) {
                 address = Memberobject.getString("address");
                 Address.setText(address);
+                Address.setEnabled(false);
             } else {
                 Address.setText("");
             }
@@ -1106,9 +1213,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                         Amount.setText(String.valueOf(CreditBalance));
                         Amount.setEnabled(false);
                     }
-                }
-                else if(CreditBalance>0 && processingfee.equals(true))
-                {
+                } else if (CreditBalance > 0 && processingfee.equals(true)) {
                     if (MembershipUsageArrayList.contains(CreditBalance)) {
                         int getindex = MembershipUsageArrayList.indexOf(CreditBalance);
                         Toast.makeText(this, String.valueOf(MembershipUsageArrayList.indexOf(CreditBalance)), Toast.LENGTH_SHORT).show();
@@ -1121,8 +1226,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     }
                 }
             }
-            if(Memberobject.has("documents"))
-            {
+            if (Memberobject.has("documents")) {
                 JSONArray docsarray = Memberobject.getJSONArray("documents");
                 JSONObject docobj = docsarray.getJSONObject(0);
                 String docnos = docobj.getString("documentNumber");
@@ -1133,35 +1237,35 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 try {
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                     StrictMode.setThreadPolicy(policy);
-                    URL url = new URL("http://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + doccopy + ".png");
+                    URL url = new URL("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + doccopy + ".png");
+                    //URL url = new URL("http://43.251.80.79/mytrintrin/Member/" + Userid + "/" + doccopy + ".png");
                     proofphoto = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     proofpic.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));
                     Takeprofilepic.setEnabled(false);
                 } catch (IOException e) {
                     Log.e("TAG", e.getMessage());
                 }
-                if(docsarray.length()>1)
-                {
-                        JSONObject docobj_2 = docsarray.getJSONObject(1);
-                        String docnos_2 = docobj_2.getString("documentNumber");
-                        String doccopy_2 = docobj_2.getString("documentCopy");
-                        DocNo.setText(docnos_2);
-                        DocNo.setEnabled(false);
+                if (docsarray.length() > 1) {
+                    JSONObject docobj_2 = docsarray.getJSONObject(1);
+                    String docnos_2 = docobj_2.getString("documentNumber");
+                    String doccopy_2 = docobj_2.getString("documentCopy");
+                    DocNo.setText(docnos_2);
+                    DocNo.setEnabled(false);
+                    Takeproofpic_2.setEnabled(false);
+                    try {
+                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                        StrictMode.setThreadPolicy(policy);
+                       URL url = new URL("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + doccopy_2 + ".png");
+                        //URL url = new URL("http://43.251.80.79/mytrintrin/Member/" + Userid + "/" + doccopy_2 + ".png");
+                        proofphoto_2 = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        proofpic_2.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));
                         Takeproofpic_2.setEnabled(false);
-                        try {
-                            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                            StrictMode.setThreadPolicy(policy);
-                            URL url = new URL("http://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + doccopy_2 + ".png");
-                            proofphoto_2 = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                            proofpic_2.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));
-                            Takeproofpic_2.setEnabled(false);
-                        } catch (IOException e) {
-                            Log.e("TAG", e.getMessage());
-                        }
+                    } catch (IOException e) {
+                        Log.e("TAG", e.getMessage());
+                    }
                 }
             }
-            if(Memberobject.has("cardNum"))
-            {
+            if (Memberobject.has("cardNum")) {
                 cardno = Memberobject.getString("cardNum");
                 CardNum.setText(cardno);
                 CardNum.setEnabled(false);
@@ -1179,7 +1283,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                 StrictMode.setThreadPolicy(policy);
                 try {
-                    URL url = new URL("http://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + profilepics + ".png");
+                    URL url = new URL("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + profilepics + ".png");
+                   // URL url = new URL("http://43.251.80.79/mytrintrin/Member/" + Userid + "/" + profilepics + ".png");
                     profilephoto = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     profilepic.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));
                     Takeprofilepic.setEnabled(false);
@@ -1187,29 +1292,29 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     Log.e("TAG", e.getMessage());
                 }
             }
-            if(Memberobject.has("sex"))
-            {
+            if (Memberobject.has("sex")) {
                 String gender = Memberobject.getString("sex");
-                if(gender.equals("Male"))
-                {
+                if (gender.equals("Male")) {
                     male.setChecked(true);
-                }
-                else if(gender.equals("Female"))
-                {
+                    female.setEnabled(false);
+                    others.setEnabled(false);
+                } else if (gender.equals("Female")) {
                     female.setChecked(true);
-                }
-                else {
+                    male.setEnabled(false);
+                } else {
                     others.setChecked(true);
+                    male.setEnabled(false);
+                    female.setEnabled(false);
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        if(Memberobject.has("documents")&&Memberobject.has("membershipId")&&Memberobject.has("cardNum"))
-        {
+        if (Memberobject.has("documents") && Memberobject.has("membershipId") && Memberobject.has("cardNum")) {
             AddMembers.setEnabled(false);
         }
+        mProgressDialog.dismiss();
     }
 
     @Override
@@ -1246,16 +1351,12 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             ticketsintent.putExtra("userid", Userid);
             startActivity(ticketsintent);
             finish();
-        }
-        else if(id == R.id.nav_rides)
-        {
+        } else if (id == R.id.nav_rides) {
             Intent ridesintent = new Intent(this, Rides.class);
             ridesintent.putExtra("userid", Userid);
             startActivity(ridesintent);
             finish();
-        }
-        else if(id == R.id.nav_payments)
-        {
+        } else if (id == R.id.nav_payments) {
             Intent paymentintent = new Intent(this, Payment_History.class);
             paymentintent.putExtra("userid", Userid);
             startActivity(paymentintent);
@@ -1340,7 +1441,26 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                             Log.d("Error", "Parse Error");
                             error.printStackTrace();
                         } else if (error instanceof NetworkError) {
-                            Toast.makeText(Registration.this, "Please check your connection/Server is under maintenance.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(Registration.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(
+                                    Registration.this);
+                            builder.setIcon(R.drawable.splashlogo);
+                            builder.setTitle("NO INTERNET CONNECTION!!!");
+                            builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                            builder.setPositiveButton("Exit",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            finish();
+                                        }
+                                    });
+                            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    checkinternet();
+                                }
+                            });
+                            builder.show();
                             Log.d("Error", "Network Error");
                             error.printStackTrace();
                         } else if (error instanceof TimeoutError) {
@@ -1407,7 +1527,26 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                             Log.d("Error", "Parse Error");
                             error.printStackTrace();
                         } else if (error instanceof NetworkError) {
-                            Toast.makeText(Registration.this, "Please check your connection/Server is under maintenance.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(Registration.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(
+                                    Registration.this);
+                            builder.setIcon(R.drawable.splashlogo);
+                            builder.setTitle("NO INTERNET CONNECTION!!!");
+                            builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                            builder.setPositiveButton("Exit",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            finish();
+                                        }
+                                    });
+                            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    checkinternet();
+                                }
+                            });
+                            builder.show();
                             Log.d("Error", "Network Error");
                             error.printStackTrace();
                         } else if (error instanceof TimeoutError) {
@@ -1450,6 +1589,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 dialogInterface.dismiss();
             }
         });
+        OTPbuilder.setCancelable(false);
         OTPbuilder.show();
     }
 

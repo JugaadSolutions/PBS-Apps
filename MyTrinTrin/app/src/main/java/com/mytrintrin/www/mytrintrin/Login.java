@@ -43,8 +43,17 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.CAMERA;
@@ -74,6 +83,14 @@ public class Login extends AppCompatActivity {
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
         loginuserid = loginpref.getString("User-id", null);
+
+
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         checkinternet();
         onpermision();
         // checkalreadylogin();
@@ -176,7 +193,6 @@ public class Login extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.about_login) {
-            Toast.makeText(this, "About Us", Toast.LENGTH_SHORT).show();
             LayoutInflater passwordinflate = LayoutInflater.from(this);
             View aboutusview = passwordinflate.inflate(R.layout.aboutus, null);
             final android.app.AlertDialog.Builder aboutusbuilder = new android.app.AlertDialog.Builder(this);
@@ -222,7 +238,7 @@ public class Login extends AppCompatActivity {
         mProgressDialog.setCancelable(true);
         mProgressDialog.show();
 
-        Enteredpassword = md5(Enteredpassword);
+        //Enteredpassword = md5(Enteredpassword);
 
         StringRequest LoginRequest = new StringRequest(Request.Method.POST, API.login, new Response.Listener<String>() {
             @Override
@@ -315,7 +331,7 @@ public class Login extends AppCompatActivity {
                 return params;
             }
         };
-        LoginRequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        LoginRequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(LoginRequest);
     }
 
@@ -350,10 +366,57 @@ public class Login extends AppCompatActivity {
         try {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
-            String message = data.getString("message");
+            String message = data.getString("description");
+            AlertDialog.Builder ErrorBuilder = new AlertDialog.Builder(Login.this);
+            ErrorBuilder.setIcon(R.drawable.splashlogo);
+            ErrorBuilder.setTitle("Login");
+            ErrorBuilder.setMessage(message);
+            ErrorBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            ErrorBuilder.show();
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {
         }
     }
+
+
+    public static class NukeSSLCerts {
+        protected static final String TAG = "NukeSSLCerts";
+
+        public static void nuke() {
+            try {
+                TrustManager[] trustAllCerts = new TrustManager[] {
+                        new X509TrustManager() {
+                            public X509Certificate[] getAcceptedIssuers() {
+                                X509Certificate[] myTrustedAnchors = new X509Certificate[0];
+                                return myTrustedAnchors;
+                            }
+
+                            @Override
+                            public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+
+                            @Override
+                            public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+                        }
+                };
+
+                SSLContext sc = SSLContext.getInstance("SSL");
+                sc.init(null, trustAllCerts, new SecureRandom());
+                HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+                HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String arg0, SSLSession arg1) {
+                        return true;
+                    }
+                });
+            } catch (Exception e) {
+            }
+        }
+    }
+
 }

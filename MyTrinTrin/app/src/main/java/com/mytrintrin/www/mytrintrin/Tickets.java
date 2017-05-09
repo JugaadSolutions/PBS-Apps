@@ -61,7 +61,7 @@ public class Tickets extends AppCompatActivity {
     int Userid;
     EditText Name_ticketrc,Subject_ticketrc,Description_ticketrc;
     private ProgressDialog mProgressDialog;
-    JSONObject Ticketobject,Ticketsdetails;
+    JSONObject Ticketobject,Ticketsdetails,TicketResponsefromserver;
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
 
@@ -69,9 +69,10 @@ public class Tickets extends AppCompatActivity {
     Context context;
     LinearLayout Ticketslayout, TicketDetailsLayout;
     LinearLayout.LayoutParams Ticketcardparams,Ticketlayoutparams;
-    TextView TicketStatus,TicketId,TicketCreatedDate,TicketDescription,PreviousTickets;
+    TextView TicketStatus,TicketId,TicketCreatedDate,TicketDescription,PreviousTickets,Closedtickets;
     JSONArray TicketArray;
     int i=0,ticketposition;
+    int closedtickets=0,opentickets=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,7 @@ public class Tickets extends AppCompatActivity {
         Subject_ticketrc = (EditText) findViewById(R.id.subject_ticketrc);
         Description_ticketrc = (EditText) findViewById(R.id.description_ticketrc);
         PreviousTickets = (TextView) findViewById(R.id.previoustickets);
+        Closedtickets= (TextView) findViewById(R.id.switchtoclose);
         checkinternet();
         context = getApplicationContext();
         TicketDetailsLayout = (LinearLayout) findViewById(R.id.getticketslayout);
@@ -97,7 +99,14 @@ public class Tickets extends AppCompatActivity {
             Name_ticketrc.setText(Name);
             Name_ticketrc.setEnabled(false);
         }
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         getusertickets();
+
     }
 
     //checking internet
@@ -176,10 +185,27 @@ public class Tickets extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 mProgressDialog.dismiss();
-                Subject_ticketrc.setError("Subject");
-                Description_ticketrc.setError("Description");
-                startActivity(new Intent(Tickets.this,MyAccount.class));
-                finish();
+                Toast.makeText(Tickets.this, "Ticket Raised Successfully", Toast.LENGTH_SHORT).show();
+                JSONObject responsefromserver = response;
+                try {
+                    JSONObject data = responsefromserver.getJSONObject("data");
+                    String TicketID = data.getString("uuId");
+                    AlertDialog.Builder TicketBuilder = new AlertDialog.Builder(Tickets.this);
+                    TicketBuilder.setIcon(R.drawable.splashlogo);
+                    TicketBuilder.setTitle("Ticket");
+                    TicketBuilder.setMessage("Ticket Raised Successfully\n Your Ticket Number is UT"+TicketID);
+                    TicketBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(new Intent(Tickets.this,MyAccount.class));
+                            finish();
+                        }
+                    });
+                    TicketBuilder.setCancelable(false);
+                    TicketBuilder.show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -260,12 +286,11 @@ public class Tickets extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-                    JSONObject responsefromserver = new JSONObject(response);
-                    JSONArray data = responsefromserver.getJSONArray("data");
+                    TicketResponsefromserver = new JSONObject(response);
+                    JSONArray data = TicketResponsefromserver.getJSONArray("data");
                     if(data.length()>0)
                     {
                         TicketArray = new JSONArray();
-                        PreviousTickets.setVisibility(View.VISIBLE);
                         for(i=0;i<data.length();i++)
                         {
                             JSONObject ticketobject = data.getJSONObject(i);
@@ -327,7 +352,33 @@ public class Tickets extends AppCompatActivity {
                             Ticketslayout.addView(TicketStatus);
 
                             Ticketcardview.addView(Ticketslayout);
+                            if(Ticketstatus.equals("Close"))
+                            {
+                                Ticketcardview.setVisibility(View.GONE);
+                                closedtickets++;
+                                if(closedtickets>0)
+                                {
+                                    Closedtickets.setVisibility(View.VISIBLE);
+                                }
+                                else
+                                {
+                                    Closedtickets.setEnabled(false);
+                                }
+                            }
+                            else{
+                                opentickets++;
+                                if(opentickets>0)
+                                {
+                                    PreviousTickets.setVisibility(View.VISIBLE);
+                                }
+                                else
+                                {
+                                    PreviousTickets.setVisibility(View.GONE);
+                                }
+
+                            }
                             TicketDetailsLayout.addView(Ticketcardview);
+
                         }
                     }
                     else
@@ -491,5 +542,13 @@ public class Tickets extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void gotoclosedtickets(View view)
+    {
+        Intent closedtickets = new Intent(Tickets.this,ClosedTickets.class);
+        closedtickets.putExtra("closedticketobject",TicketResponsefromserver.toString());
+        startActivity(closedtickets);
+        finish();
     }
 }

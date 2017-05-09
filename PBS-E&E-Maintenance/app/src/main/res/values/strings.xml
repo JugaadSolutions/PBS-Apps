@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">PBS-E&amp;E-Maintenance</string>
+    <string name="app_name">PBS-E-Maintenance</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="acceptcharactersandnum">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890\u0020</string>
+    <string name="acceptonlycharacters">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz\u0020</string>
+    <string name="email">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._-\u0020</string>
+    <string name="address">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890@._,#/\-\u0020</string>
+    <string name="comments">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.,-\u0020</string>
+    <string name="acceptonlynumbers">1234567890</string>
+
 </resources>

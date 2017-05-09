@@ -57,9 +57,13 @@ public class SelectPlan extends AppCompatActivity {
     public static final String access_code ="AVUM66DI93AY80MUYA";
     public static final String working_key="5F8405032B54AF1400A79BB0B92D2ECC";
     public static final String currency="INR";
-    public static final String redirect_url="http://www.mytrintrin.com/app/ccavResponseHandler.php";
+   /* public static final String redirect_url="http://www.mytrintrin.com/app/ccavResponseHandler.php";
     public static final String cancel_url="http://www.mytrintrin.com/app/ccavResponseHandler.php";
-    public static final String rsa_url="http://www.mytrintrin.com/app/GetRSA.php";
+    public static final String rsa_url="http://www.mytrintrin.com/app/GetRSA.php";*/
+
+    public static final String redirect_url="http://43.251.80.79:13070/app/ccavResponseHandler.php";
+    public static final String cancel_url="http://43.251.80.79:13070/app/ccavResponseHandler.php";
+    public static final String rsa_url="http://43.251.80.79/app/GetRSA.php";
 
     public static ArrayAdapter<String> Memberplanadapter;
     Spinner Plans;
@@ -93,6 +97,12 @@ public class SelectPlan extends AppCompatActivity {
         loginuserid = loginpref.getString("User-id", null);
 
         checkinternet();
+
+        //To bypass ssl
+        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
+        nukeSSLCerts.nuke();
+        //ends
+
         GetallPlans();
     }
 
