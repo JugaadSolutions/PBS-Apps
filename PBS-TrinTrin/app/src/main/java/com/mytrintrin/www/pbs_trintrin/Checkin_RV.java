@@ -108,11 +108,6 @@ public class Checkin_RV extends AppCompatActivity {
 
         fleetname = getIntent().getStringExtra("fleetname");
 
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         getRestributiondetails();
         getMCdetails();
         getHAdetails();

@@ -116,11 +116,6 @@ public class Redistribution extends AppCompatActivity implements LocationListene
         });
         loginuserid = loginpref.getString("User-id", null);
 
-       //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         Fleetnamelayout = new LinearLayout(Redistribution.this);
         if (fleetpref.contains("FleetName")) {
             fleetname= fleetpref.getString("FleetName", null);

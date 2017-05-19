@@ -74,11 +74,6 @@ public class Topup extends AppCompatActivity {
         plantotalfee_topup = (TextView) findViewById(R.id.plantotalfee_topup);
         checkinternet();
 
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         gettopupplans();
     }
 
@@ -138,6 +133,7 @@ public class Topup extends AppCompatActivity {
                         finish();
                     }
                 });
+                TopuupBuilder.setCancelable(false);
                 TopuupBuilder.show();
             }
         }, new Response.ErrorListener() {

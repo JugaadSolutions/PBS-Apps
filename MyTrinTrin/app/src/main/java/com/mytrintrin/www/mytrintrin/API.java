@@ -9,7 +9,7 @@ public class API {
     //public static  String Baseurl ="https://test.mytrintrin.com:13065/api/";
    // public static  String Baseurl ="http://43.251.80.79:13070/api/";
    //public static  String Baseurl ="http://43.251.80.79:13060/api/";
-   public static  final String Baseurl="https://www.mytrintrin.com:13070/api/";   //SDC Test Instance
+   public static  final String Baseurl="https://www.mytrintrin.com:13060/api/";   //SDC Test Instance
 
     public static String login = Baseurl+"auth/login";
     public static String register =Baseurl+"member";
@@ -29,20 +29,4 @@ public class API {
     public static final String getusertickets =Baseurl+"tickets/user/";
     public static final String replytotickets =Baseurl+"tickets/";
 
-
-    /*without https*/
-   /* public static String login = "http://43.251.80.79:13065/api/auth/login";
-    public static String register ="http://43.251.80.79:13065/api/member";
-    public static String alldockingstation ="http://43.251.80.79:13065/api/dockstation";
-    public static String allregistrationcentre ="http://43.251.80.79:13065/api/registrationcenter";
-    public static String changepassword ="http://43.251.80.79:13065/api/users/";
-    public static String forgotpassword ="http://43.251.80.79:13065/api/users/forgotpassword";
-    public static String getmemberdetail ="http://43.251.80.79:13065/api/member/";
-    public static String paymenthistory ="http://43.251.80.79:13065/api/paymenttransaction/member/";
-    public static String ridehistory ="http://43.251.80.79:13065/api/transactions/myrides/member/";
-    public static String feedback ="http://43.251.80.79:13065/api/tickets";
-    public static String updatepic ="http://43.251.80.79:13065/api/member/";
-    public static String getplans ="http://43.251.80.79:13065/api/membership/";
-    public static String topup ="http://43.251.80.79:13065/api/member/";
-    */
 }

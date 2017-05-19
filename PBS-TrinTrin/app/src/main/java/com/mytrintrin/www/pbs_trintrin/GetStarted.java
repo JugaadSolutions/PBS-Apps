@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import android.graphics.Color;
 
 public class GetStarted extends AppCompatActivity {
 
@@ -59,10 +61,6 @@ public class GetStarted extends AppCompatActivity {
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
         checkinternet();
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
     }
 
     //checking internet
@@ -95,6 +93,7 @@ public class GetStarted extends AppCompatActivity {
     /*ends*/
 
     public void searchmemberbyphone(View view) {
+        SearchResults.removeAllViews();
         searchby_phone = Searchby_Phone.getText().toString().trim();
         if (searchby_phone.equals("") || (searchby_phone.equals(null))) {
             Searchby_Phone.setError("Enter search credential");
@@ -113,6 +112,19 @@ public class GetStarted extends AppCompatActivity {
                     if (data.length() > 0) {
                         SearchResults.removeAllViews();
                         Toast.makeText(GetStarted.this, "User Found", Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(
+                                GetStarted.this);
+                        builder.setIcon(R.drawable.splashlogo);
+                        builder.setTitle("Search Results");
+                        builder.setMessage("User Found");
+                        builder.setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        builder.show();
                         for (int i = 0; i < data.length(); i++) {
                             final JSONObject resultobject = data.getJSONObject(i);
                             String name = resultobject.getString("Name");
@@ -124,28 +136,33 @@ public class GetStarted extends AppCompatActivity {
                             int status = resultobject.getInt("status");
                             if(status==1) {
                                 usernamebutton.setBackgroundResource(R.drawable.roundcorner);
+                                usernamebutton.setTextColor(Color.WHITE);
                             }
                             else if(status==0)
                             {
                                 usernamebutton.setBackgroundResource(R.drawable.roundcorner_yellow);
+                                usernamebutton.setTextColor(Color.BLACK);
                             }
                             else if(status==2)
                             {
                                 usernamebutton.setBackgroundResource(R.drawable.roundcorner);
+                                usernamebutton.setTextColor(Color.WHITE);
                             }
                             else if(status==-1)
                             {
                                 usernamebutton.setBackgroundResource(R.drawable.roundcorner_red);
+                                usernamebutton.setTextColor(Color.WHITE);
                             }
                             else if(status==-2)
                             {
                                 usernamebutton.setBackgroundResource(R.drawable.roundcorner_black);
+                                usernamebutton.setTextColor(Color.WHITE);
                             }
                             else if(status==-3)
                             {
                                 usernamebutton.setBackgroundResource(R.drawable.roundcorner_blue);
+                                usernamebutton.setTextColor(Color.WHITE);
                             }
-                            usernamebutton.setTextColor(Color.WHITE);
                             usernamebutton.setText(name+" "+lname);
                             SearchResults.addView(usernamebutton);
                             usernamebutton.setOnClickListener(new View.OnClickListener() {
@@ -159,6 +176,21 @@ public class GetStarted extends AppCompatActivity {
                         }
                     } else {
                         Toast.makeText(GetStarted.this, "No User Found", Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(
+                                GetStarted.this);
+                        builder.setIcon(R.drawable.splashlogo);
+                        builder.setTitle("Search Results");
+                        builder.setMessage("No User Found");
+                        builder.setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                        Searchby_Phone.setText("");
+                                        dialog.dismiss();
+                                    }
+                                });
+                        builder.setCancelable(false);
+                        builder.show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

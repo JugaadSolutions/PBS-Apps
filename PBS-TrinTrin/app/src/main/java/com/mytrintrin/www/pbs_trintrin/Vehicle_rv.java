@@ -53,11 +53,6 @@ public class Vehicle_rv extends AppCompatActivity {
         Cyclewithrvemp = (LinearLayout) findViewById(R.id.cyclewithrvemplayout);
         Cyclewithrv = (LinearLayout) findViewById(R.id.cyclewithrvlayout);
 
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         checkinternet();
         getcycleswithrvemp();
     }

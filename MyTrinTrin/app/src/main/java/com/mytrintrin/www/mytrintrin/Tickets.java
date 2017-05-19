@@ -52,33 +52,34 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+
 import android.view.WindowManager.LayoutParams;
 
 public class Tickets extends AppCompatActivity {
 
     private Toolbar Ticketstoolbar;
-    String Name,Loginid,Subject,Description,Department;
+    String Name, Loginid, Subject, Description, Department;
     int Userid;
-    EditText Name_ticketrc,Subject_ticketrc,Description_ticketrc;
+    EditText Name_ticketrc, Subject_ticketrc, Description_ticketrc;
     private ProgressDialog mProgressDialog;
-    JSONObject Ticketobject,Ticketsdetails,TicketResponsefromserver;
+    JSONObject Ticketobject, Ticketsdetails, TicketResponsefromserver;
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
 
     CardView Ticketcardview;
     Context context;
     LinearLayout Ticketslayout, TicketDetailsLayout;
-    LinearLayout.LayoutParams Ticketcardparams,Ticketlayoutparams;
-    TextView TicketStatus,TicketId,TicketCreatedDate,TicketDescription,PreviousTickets,Closedtickets;
+    LinearLayout.LayoutParams Ticketcardparams, Ticketlayoutparams;
+    TextView TicketStatus, TicketId, TicketCreatedDate, TicketDescription, PreviousTickets, Closedtickets;
     JSONArray TicketArray;
-    int i=0,ticketposition;
-    int closedtickets=0,opentickets=0;
+    int i = 0, ticketposition;
+    int closedtickets = 0, opentickets = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tickets);
-        Ticketstoolbar= (Toolbar) findViewById(R.id.ticketstoolbar);
+        Ticketstoolbar = (Toolbar) findViewById(R.id.ticketstoolbar);
         Ticketstoolbar.setTitle("Tickets");
         setSupportActionBar(Ticketstoolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -89,7 +90,7 @@ public class Tickets extends AppCompatActivity {
         Subject_ticketrc = (EditText) findViewById(R.id.subject_ticketrc);
         Description_ticketrc = (EditText) findViewById(R.id.description_ticketrc);
         PreviousTickets = (TextView) findViewById(R.id.previoustickets);
-        Closedtickets= (TextView) findViewById(R.id.switchtoclose);
+        Closedtickets = (TextView) findViewById(R.id.switchtoclose);
         checkinternet();
         context = getApplicationContext();
         TicketDetailsLayout = (LinearLayout) findViewById(R.id.getticketslayout);
@@ -99,23 +100,16 @@ public class Tickets extends AppCompatActivity {
             Name_ticketrc.setText(Name);
             Name_ticketrc.setEnabled(false);
         }
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         getusertickets();
-
     }
 
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            //Log.d("Internet Status", "Online");
+           // Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            AlertDialog.Builder builder = new AlertDialog.Builder(
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
                     Tickets.this);
             builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
@@ -124,12 +118,14 @@ public class Tickets extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
-            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -138,24 +134,20 @@ public class Tickets extends AppCompatActivity {
     }
     /*ends*/
 
-    public void raiseticket(View view)
-    {
+    public void raiseticket(View view) {
         checkinternet();
         Name = Name_ticketrc.getText().toString().trim();
         Subject = Subject_ticketrc.getText().toString().trim();
         Description = Description_ticketrc.getText().toString().trim();
-        if(Name.equals("")||Name.equals(null))
-        {
+        if (Name.equals("") || Name.equals(null)) {
             Name_ticketrc.setError("Name");
             return;
         }
-        if(Subject.equals("")||Subject.equals(null))
-        {
+        if (Subject.equals("") || Subject.equals(null)) {
             Subject_ticketrc.setError("Subject");
             return;
         }
-        if(Description.equals("")||Description.equals(null))
-        {
+        if (Description.equals("") || Description.equals(null)) {
             Description_ticketrc.setError("Description");
             return;
         }
@@ -168,20 +160,20 @@ public class Tickets extends AppCompatActivity {
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         String ticketdate = dateFormatGmt.format(new Date()) + "";
         try {
-            Ticketobject.put("name",Name);
+            Ticketobject.put("name", Name);
             Ticketobject.put("createdBy", Loginid);
             Ticketobject.put("ticketdate", ticketdate);
-            Ticketobject.put("subject",Subject);
+            Ticketobject.put("subject", Subject);
             Ticketobject.put("channel", "4");
-            Ticketobject.put("description",Description);
-            Ticketobject.put("priority","3");
-            Ticketobject.put("department",Department);
-            Ticketobject.put("user",Loginid);
+            Ticketobject.put("description", Description);
+            Ticketobject.put("priority", "3");
+            Ticketobject.put("department", Department);
+            Ticketobject.put("user", Loginid);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        JsonObjectRequest ticketsrcrequest = new JsonObjectRequest(Request.Method.POST, API.ticketsfromuser,Ticketobject, new Response.Listener<JSONObject>() {
+        JsonObjectRequest ticketsrcrequest = new JsonObjectRequest(Request.Method.POST, API.ticketsfromuser, Ticketobject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 mProgressDialog.dismiss();
@@ -193,11 +185,12 @@ public class Tickets extends AppCompatActivity {
                     AlertDialog.Builder TicketBuilder = new AlertDialog.Builder(Tickets.this);
                     TicketBuilder.setIcon(R.drawable.splashlogo);
                     TicketBuilder.setTitle("Ticket");
-                    TicketBuilder.setMessage("Ticket Raised Successfully\n Your Ticket Number is UT"+TicketID);
+                    TicketBuilder.setMessage("Ticket Raised Successfully\n Your Ticket Number is UT" + TicketID);
                     TicketBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            startActivity(new Intent(Tickets.this,MyAccount.class));
+                            dialogInterface.dismiss();
+                            startActivity(new Intent(Tickets.this, MyAccount.class));
                             finish();
                         }
                     });
@@ -239,12 +232,14 @@ public class Tickets extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
-                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -280,19 +275,16 @@ public class Tickets extends AppCompatActivity {
         }
     }
 
-    public void getusertickets()
-    {
-        StringRequest getticketsrequest = new StringRequest(Request.Method.GET, API.getusertickets+Loginid, new Response.Listener<String>() {
+    public void getusertickets() {
+        StringRequest getticketsrequest = new StringRequest(Request.Method.GET, API.getusertickets + Loginid, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     TicketResponsefromserver = new JSONObject(response);
                     JSONArray data = TicketResponsefromserver.getJSONArray("data");
-                    if(data.length()>0)
-                    {
+                    if (data.length() > 0) {
                         TicketArray = new JSONArray();
-                        for(i=0;i<data.length();i++)
-                        {
+                        for (i = 0; i < data.length(); i++) {
                             JSONObject ticketobject = data.getJSONObject(i);
                             TicketArray.put(ticketobject);
                             String TicketID = ticketobject.getString("uuId");
@@ -320,7 +312,7 @@ public class Tickets extends AppCompatActivity {
                             Ticketcardview.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                   ticketposition= TicketDetailsLayout.indexOfChild(view);
+                                    ticketposition = TicketDetailsLayout.indexOfChild(view);
                                     ticketdetailsdialog();
                                 }
                             });
@@ -333,17 +325,17 @@ public class Tickets extends AppCompatActivity {
                             Ticketslayout.setLayoutParams(Ticketlayoutparams);
 
                             TicketId = new TextView(context);
-                            TicketId.setText("Ticket Id: UT"+TicketID);
+                            TicketId.setText("Ticket Id: UT" + TicketID);
                             TicketId.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                             TicketId.setTextColor(Color.WHITE);
 
                             TicketDescription = new TextView(context);
-                            TicketDescription.setText("Subject: "+Subject);
+                            TicketDescription.setText("Subject: " + Subject);
                             TicketDescription.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                             TicketDescription.setTextColor(Color.WHITE);
 
-                            TicketStatus= new TextView(context);
-                            TicketStatus.setText("Status : "+Ticketstatus);
+                            TicketStatus = new TextView(context);
+                            TicketStatus.setText("Status : " + Ticketstatus);
                             TicketStatus.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                             TicketStatus.setTextColor(Color.WHITE);
 
@@ -352,27 +344,19 @@ public class Tickets extends AppCompatActivity {
                             Ticketslayout.addView(TicketStatus);
 
                             Ticketcardview.addView(Ticketslayout);
-                            if(Ticketstatus.equals("Close"))
-                            {
+                            if (Ticketstatus.equals("Close")) {
                                 Ticketcardview.setVisibility(View.GONE);
                                 closedtickets++;
-                                if(closedtickets>0)
-                                {
+                                if (closedtickets > 0) {
                                     Closedtickets.setVisibility(View.VISIBLE);
-                                }
-                                else
-                                {
+                                } else {
                                     Closedtickets.setEnabled(false);
                                 }
-                            }
-                            else{
+                            } else {
                                 opentickets++;
-                                if(opentickets>0)
-                                {
+                                if (opentickets > 0) {
                                     PreviousTickets.setVisibility(View.VISIBLE);
-                                }
-                                else
-                                {
+                                } else {
                                     PreviousTickets.setVisibility(View.GONE);
                                 }
 
@@ -380,9 +364,7 @@ public class Tickets extends AppCompatActivity {
                             TicketDetailsLayout.addView(Ticketcardview);
 
                         }
-                    }
-                    else
-                    {
+                    } else {
                         AlertDialog.Builder TicketBuilder = new AlertDialog.Builder(Tickets.this);
                         TicketBuilder.setIcon(R.drawable.splashlogo);
                         TicketBuilder.setTitle("Tickets");
@@ -430,12 +412,14 @@ public class Tickets extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -460,34 +444,33 @@ public class Tickets extends AppCompatActivity {
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(getticketsrequest);
     }
 
-    public void ticketdetailsdialog()
-    {
+    public void ticketdetailsdialog() {
         try {
             Ticketsdetails = TicketArray.getJSONObject(ticketposition);
             String TicketID = Ticketsdetails.getString("uuId");
             String Name = Ticketsdetails.getString("name");
-            String Subject=Ticketsdetails.getString("subject");
+            String Subject = Ticketsdetails.getString("subject");
             String Description = Ticketsdetails.getString("description");
             String Date = Ticketsdetails.getString("ticketdate");
             String Status = Ticketsdetails.getString("status");
             LinearLayout TicketLayout = new LinearLayout(Tickets.this);
-            TicketLayout.setPadding(8,8,8,8);
+            TicketLayout.setPadding(8, 8, 8, 8);
             TicketLayout.setOrientation(LinearLayout.VERTICAL);
 
             TextView ID = new TextView(Tickets.this);
-            ID.setText("Ticket No: UT"+TicketID);
+            ID.setText("Ticket No: UT" + TicketID);
             ID.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
             TextView name = new TextView(Tickets.this);
-            name.setText("Name: "+Name);
+            name.setText("Name: " + Name);
             name.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
             TextView subject = new TextView(Tickets.this);
-            subject.setText("Subject: "+Subject);
+            subject.setText("Subject: " + Subject);
             subject.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
             TextView description = new TextView(Tickets.this);
-            description.setText("Description: "+Description);
+            description.setText("Description: " + Description);
             description.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
             TextView date = new TextView(Tickets.this);
@@ -499,11 +482,11 @@ public class Tickets extends AppCompatActivity {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            date.setText("Date: "+outFormat.format(c.getTime()));
+            date.setText("Date: " + outFormat.format(c.getTime()));
             date.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
             TextView status = new TextView(Tickets.this);
-            status.setText("Status: "+Status);
+            status.setText("Status: " + Status);
             status.setTextColor(getResources().getColorStateList(R.color.colorPrimary));
 
             TicketLayout.addView(ID);
@@ -526,9 +509,9 @@ public class Tickets extends AppCompatActivity {
             TicketBuilder.setNegativeButton("View Details/Reply", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent ticketdetails = new Intent(Tickets.this,TicketDetails.class);
-                            ticketdetails.putExtra("TicketObject",Ticketsdetails.toString());
-                            startActivity(ticketdetails);
+                    Intent ticketdetails = new Intent(Tickets.this, TicketDetails.class);
+                    ticketdetails.putExtra("TicketObject", Ticketsdetails.toString());
+                    startActivity(ticketdetails);
                 }
             });
             TicketBuilder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
@@ -544,10 +527,9 @@ public class Tickets extends AppCompatActivity {
         }
     }
 
-    public void gotoclosedtickets(View view)
-    {
-        Intent closedtickets = new Intent(Tickets.this,ClosedTickets.class);
-        closedtickets.putExtra("closedticketobject",TicketResponsefromserver.toString());
+    public void gotoclosedtickets(View view) {
+        Intent closedtickets = new Intent(Tickets.this, ClosedTickets.class);
+        closedtickets.putExtra("closedticketobject", TicketResponsefromserver.toString());
         startActivity(closedtickets);
         finish();
     }

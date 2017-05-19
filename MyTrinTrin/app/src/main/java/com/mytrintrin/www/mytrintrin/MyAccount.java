@@ -179,11 +179,6 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         mProgressDialog.setCancelable(true);
         mProgressDialog.show();
 
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         checkinternet();
         getlocation();
         getalldockingstations();
@@ -197,24 +192,29 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-
-            Log.d("Internet Status", "Online");
-
+           // Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            Log.d("Internet Status", "Offline");
-            AlertDialog.Builder builder = new AlertDialog.Builder(
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
                     MyAccount.this);
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("OK",
+            builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -224,7 +224,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
     /*Requesting for permissions*/
     public void onpermision() {
         if (checkPermission()) {
-            Log.d("permissions", "Granted");
+            // Log.d("permissions", "Granted");
         } else {
             requestPermission();
         }
@@ -252,7 +252,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     boolean WritePermission = grantResults[2] == PackageManager.PERMISSION_GRANTED;
 
                     if (CameraPermission && LocationPermission && WritePermission) {
-                        Log.d("permissions", "Granted");
+                       /* Log.d("permissions", "Granted");*/
                     } else {
                         android.app.AlertDialog.Builder permissionbuilder = new android.app.AlertDialog.Builder(this);
                         permissionbuilder.setIcon(R.drawable.trintrinlogo);
@@ -339,8 +339,6 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
             currentlocation = new Location("");
             currentlocation.setLatitude(currentlatitude);
             currentlocation.setLongitude(currentlongitude);
-            Log.d("Current location", String.valueOf(currentlocation));
-            //Toast.makeText(this, String.valueOf(currentlocation), Toast.LENGTH_SHORT).show();
         }
         mGPSService.closeGPS();
     }
@@ -509,7 +507,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                         Stationnamearray.add(i, Stationname);
                         final int Capacity = dscoordinates.getInt("bicycleCapacity");
                         final int bicyclecount = dscoordinates.getInt("bicycleCount");
-                        final int emptyport =Capacity-bicyclecount;
+                        final int emptyport = Capacity - bicyclecount;
                         doclatitude = Double.parseDouble(lat);
                         docllongitude = Double.parseDouble(lang);
                         Location dockinglocation = new Location("");
@@ -519,7 +517,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                         allstationname.add(Stationname);
                         mmap.addMarker(new MarkerOptions()
                                 .position(new LatLng(doclatitude, docllongitude))
-                                .title(Stationname).snippet("Cycle:" + bicyclecount+"\n"+"Empty Port:"+emptyport)
+                                .title(Stationname).snippet("Cycle:" + bicyclecount + "\n" + "Empty Port:" + emptyport)
                                 .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_directions_bike_black_24dp)));
                         mmap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
@@ -536,7 +534,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
 
                                 TextView title = new TextView(MyAccount.this);
                                 title.setTextColor(Color.BLACK);
-                                title.setGravity(Gravity.CENTER);
+                                title.setGravity(Gravity.LEFT);
                                 title.setTypeface(null, Typeface.BOLD);
                                 title.setText(marker.getTitle());
 
@@ -565,7 +563,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                 }
 
                 if (error instanceof ServerError) {
-                    Toast.makeText(MyAccount.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MyAccount.this, "Server is under maintenance,Please try again later.", Toast.LENGTH_SHORT).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -577,9 +575,30 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(MyAccount.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MyAccount.this, "Please Check your connection.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            MyAccount.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(MyAccount.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
@@ -610,7 +629,6 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         StringRequest allregistrationcentrerequest = new StringRequest(Request.Method.GET, API.allregistrationcentre, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 try {
                     JSONObject responsefromserver = new JSONObject(response);
                     JSONArray data = responsefromserver.getJSONArray("data");
@@ -642,7 +660,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                 }
 
                 if (error instanceof ServerError) {
-                    Toast.makeText(MyAccount.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MyAccount.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -654,9 +672,30 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(MyAccount.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MyAccount.this, "Please check your connection.", Toast.LENGTH_SHORT).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            MyAccount.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(MyAccount.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
@@ -777,6 +816,27 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     Toast.makeText(MyAccount.this, "Please Check your connection", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            MyAccount.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(MyAccount.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
@@ -888,7 +948,6 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                         }
                     } else {
                         LatestRides.setVisibility(View.GONE);
-                        Toast.makeText(MyAccount.this, "No Rides Found", Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -905,7 +964,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     return;
                 }
                 if (error instanceof ServerError) {
-                    Toast.makeText(MyAccount.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MyAccount.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
                     Log.d("Error", String.valueOf(error instanceof ServerError));
                     error.printStackTrace();
                 } else if (error instanceof AuthFailureError) {
@@ -917,9 +976,30 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(MyAccount.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MyAccount.this, "Please check your connection.", Toast.LENGTH_SHORT).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            MyAccount.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(MyAccount.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
@@ -991,9 +1071,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         } else if (id == R.id.selectplan_myaccount) {
 
             startActivity(new Intent(MyAccount.this, SelectPlan.class));
-        }
-
-        else if (id == R.id.tickets_myaccount) {
+        } else if (id == R.id.tickets_myaccount) {
 
             Intent tickets = new Intent(MyAccount.this, Tickets.class);
             tickets.putExtra("Name", username);

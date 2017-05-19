@@ -51,11 +51,6 @@ public class ForgotPassword extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         EmailForgot = (EditText) findViewById(R.id.email_forgotpassword);
         checkinternet();
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
     }
 
     //checking internet
@@ -64,17 +59,25 @@ public class ForgotPassword extends AppCompatActivity {
             Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            Log.d("Internet Status", "Offline");
-            AlertDialog.Builder builder = new AlertDialog.Builder(ForgotPassword.this);
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                    ForgotPassword.this);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("OK",
+            builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -97,7 +100,7 @@ public class ForgotPassword extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
 
-                Toast.makeText(ForgotPassword.this, "Check your mail for password reset link", Toast.LENGTH_LONG).show();
+                Toast.makeText(ForgotPassword.this, "Check your mail for password reset link", Toast.LENGTH_SHORT).show();
                 mProgressDialog.dismiss();
                 AlertDialog.Builder ForgotBuilder = new AlertDialog.Builder(ForgotPassword.this);
                 ForgotBuilder.setTitle("Forgot Password");
@@ -118,45 +121,61 @@ public class ForgotPassword extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Log_Error", String.valueOf(error));
                 mProgressDialog.dismiss();
-                try {
-                    if (error.networkResponse != null) {
-                        parseVolleyError(error);
-                    } else if (error.networkResponse.data != null) {
-                        Log.d("check network error", String.valueOf(error));
+                if (error.networkResponse != null) {
+                    parseVolleyError(error);
+                } else if (error.networkResponse.data != null) {
+                    Log.d("check network error", String.valueOf(error));
+                } else {
+                    if (error instanceof ServerError) {
+                        Toast.makeText(ForgotPassword.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                        Log.d("Error", String.valueOf(error instanceof ServerError));
+                        error.printStackTrace();
+                    } else if (error instanceof AuthFailureError) {
+                        Toast.makeText(ForgotPassword.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                        Log.d("Error", "Authentication Error");
+                        error.printStackTrace();
+                    } else if (error instanceof ParseError) {
+                        Toast.makeText(ForgotPassword.this, "Parse Error", Toast.LENGTH_LONG).show();
+                        Log.d("Error", "Parse Error");
+                        error.printStackTrace();
+                    } else if (error instanceof NetworkError) {
+                        Toast.makeText(ForgotPassword.this, "Please check your connection", Toast.LENGTH_LONG).show();
+                        Log.d("Error", "Network Error");
+                        error.printStackTrace();
+                        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                                ForgotPassword.this);
+                        builder.setIcon(R.drawable.splashlogo);
+                        builder.setTitle("NO INTERNET CONNECTION!!!");
+                        builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                        builder.setPositiveButton("Exit",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                        dialog.dismiss();
+                                        finish();
+                                    }
+                                });
+                        builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                checkinternet();
+                            }
+                        });
+                        builder.show();
+                    } else if (error instanceof TimeoutError) {
+                        Toast.makeText(ForgotPassword.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                        Log.d("Error", "Timeout Error");
+                        error.printStackTrace();
+                    } else if (error instanceof NoConnectionError) {
+                        Toast.makeText(ForgotPassword.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                        Log.d("Error", "No Connection Error");
+                        error.printStackTrace();
                     } else {
-                        if (error instanceof ServerError) {
-                            Toast.makeText(ForgotPassword.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
-                            Log.d("Error", String.valueOf(error instanceof ServerError));
-                            error.printStackTrace();
-                        } else if (error instanceof AuthFailureError) {
-                            Toast.makeText(ForgotPassword.this, "Authentication Error", Toast.LENGTH_LONG).show();
-                            Log.d("Error", "Authentication Error");
-                            error.printStackTrace();
-                        } else if (error instanceof ParseError) {
-                            Toast.makeText(ForgotPassword.this, "Parse Error", Toast.LENGTH_LONG).show();
-                            Log.d("Error", "Parse Error");
-                            error.printStackTrace();
-                        } else if (error instanceof NetworkError) {
-                            Toast.makeText(ForgotPassword.this, "Please check your connection", Toast.LENGTH_LONG).show();
-                            Log.d("Error", "Network Error");
-                            error.printStackTrace();
-                        } else if (error instanceof TimeoutError) {
-                            Toast.makeText(ForgotPassword.this, "Timeout Error", Toast.LENGTH_LONG).show();
-                            Log.d("Error", "Timeout Error");
-                            error.printStackTrace();
-                        } else if (error instanceof NoConnectionError) {
-                            Toast.makeText(ForgotPassword.this, "No Connection Error", Toast.LENGTH_LONG).show();
-                            Log.d("Error", "No Connection Error");
-                            error.printStackTrace();
-                        } else {
-                            Toast.makeText(ForgotPassword.this, "Something went wrong", Toast.LENGTH_LONG).show();
-                            error.printStackTrace();
-                        }
+                        Toast.makeText(ForgotPassword.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                        error.printStackTrace();
                     }
-                } catch (Exception e) {
-                    Log.d("Exception", String.valueOf(e));
                 }
             }
         }) {
@@ -166,11 +185,6 @@ public class ForgotPassword extends AppCompatActivity {
                 headers.put("Content-Type", "application/json; charset=utf-8");
                 headers.put("Content-Type", "application/x-www-form-urlencoded");
                 return headers;
-            }
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
             }
 
             @Override
@@ -190,7 +204,21 @@ public class ForgotPassword extends AppCompatActivity {
             String responseBody = new String(error.networkResponse.data, "utf-8");
             JSONObject data = new JSONObject(responseBody);
             String message = data.getString("description");
-            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder ErrorBuilder = new AlertDialog.Builder(ForgotPassword.this);
+            ErrorBuilder.setTitle("Forgot Password");
+            ErrorBuilder.setIcon(R.drawable.splashlogo);
+            ErrorBuilder.setMessage(message);
+            ErrorBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    startActivity(new Intent(ForgotPassword.this, Login.class));
+                    finish();
+                }
+            });
+            ErrorBuilder.setCancelable(false);
+            ErrorBuilder.show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {
         }

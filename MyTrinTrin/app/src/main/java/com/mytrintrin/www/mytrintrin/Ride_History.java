@@ -68,32 +68,35 @@ public class Ride_History extends AppCompatActivity {
         context = getApplicationContext();
         RideHistory = (LinearLayout) findViewById(R.id.ridehistorylayout);
         checkinternet();
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         getridedetails();
     }
 
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+            //Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            Log.d("Internet Status", "Offline");
-            AlertDialog.Builder builder = new AlertDialog.Builder(Ride_History.this);
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                    Ride_History.this);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("OK",
+            builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -201,7 +204,7 @@ public class Ride_History extends AppCompatActivity {
                 mProgressDialog.dismiss();
 
                 if (error.networkResponse != null) {
-                    Toast.makeText(Ride_History.this, "No Rides Found", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(Ride_History.this, "No Rides Found", Toast.LENGTH_LONG).show();
                     parseVolleyError(error);
                     return;
                 }
@@ -221,6 +224,27 @@ public class Ride_History extends AppCompatActivity {
                     Toast.makeText(Ride_History.this, "Please check your connection.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            Ride_History.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(Ride_History.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
@@ -264,6 +288,7 @@ public class Ride_History extends AppCompatActivity {
                     finish();
                 }
             });
+            RideBuilder.setCancelable(false);
             RideBuilder.show();
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {

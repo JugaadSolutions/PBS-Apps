@@ -3,6 +3,8 @@ package com.mytrintrin.www.pbs_trintrin;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -49,6 +51,8 @@ public class ZoneAlert extends AppCompatActivity {
     ArrayList<JSONObject> Zone4ArrayList = new ArrayList<JSONObject>();
     ArrayList<JSONObject> Zone5ArrayList = new ArrayList<JSONObject>();
     LinearLayout Stationlayout;
+    Animation startAnimation;
+    SwipeRefreshLayout Zoneswipe;
 
 
     @Override
@@ -61,16 +65,35 @@ public class ZoneAlert extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         zonesspinner = (Spinner) findViewById(R.id.zonespinner);
         Stationlayout = (LinearLayout) findViewById(R.id.zonestationnamelayout);
+        startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking);
         getalldockingstation();
         zonesspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 getzonedetails(i);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+        Zoneswipe = (SwipeRefreshLayout) findViewById(R.id.zonealertswipe);
+        Zoneswipe.setColorSchemeResources(android.R.color.holo_blue_dark,
+                android.R.color.holo_blue_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_green_light);
+
+        Zoneswipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                (new Handler()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Zoneswipe.setRefreshing(false);
+                        zonesspinner.setSelection(0);
+                        getalldockingstation();
+                    }
+                },3000);
             }
         });
     }
@@ -82,6 +105,11 @@ public class ZoneAlert extends AppCompatActivity {
                 try {
                     JSONObject responsefromserver = new JSONObject(response);
                     JSONArray data = responsefromserver.getJSONArray("data");
+                    Zone1ArrayList.clear();
+                    Zone2ArrayList.clear();
+                    Zone3ArrayList.clear();
+                    Zone4ArrayList.clear();
+                    Zone5ArrayList.clear();
                     for (int i = 0; i < data.length(); i++) {
                         JSONObject dockstationobject = data.getJSONObject(i);
                         String zoneid = dockstationobject.getString("zoneId");
@@ -171,16 +199,26 @@ public class ZoneAlert extends AppCompatActivity {
                     stationname.setLayoutParams(buttonparams);
                     stationname.setText(sname);
                     stationname.setTextColor(Color.WHITE);
-                    if(capacity-count>maximum)
+                    int check = capacity-count;
+                    if(count>=maximum)
                     {
                         stationname.setBackgroundResource(R.drawable.roundcorner_red);
-                        Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking);
+                        /*startAnimation.cancel();
+                        startAnimation.reset();*/
+                        startAnimation.setRepeatCount(Animation.INFINITE);
                         stationname.startAnimation(startAnimation);
+                        startAnimation.setRepeatCount(0);
 
                     }
-                    else if(capacity-count<minimum)
+                    else if(count<=minimum)
                     {
-                        stationname.setBackgroundResource(R.drawable.roundcorner_yellow);
+                        stationname.setBackgroundResource(R.drawable.roundcorner_orange);
+                        /*startAnimation.cancel();
+                        stationname.clearAnimation();
+                        startAnimation.reset();*/
+                        startAnimation.setRepeatCount(Animation.INFINITE);
+                        stationname.startAnimation(startAnimation);
+                        startAnimation.setRepeatCount(0);
                     }
                     else
                     {
@@ -210,16 +248,24 @@ public class ZoneAlert extends AppCompatActivity {
                     stationname.setLayoutParams(buttonparams);
                     stationname.setText(sname);
                     stationname.setTextColor(Color.WHITE);
-                    if(capacity-count>maximum)
+                    if(count>=maximum)
                     {
-                        stationname.setBackgroundResource(R.drawable.roundcorner_red);
-                        Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking);
+                      stationname.setBackgroundResource(R.drawable.roundcorner_red);
+                        /*startAnimation.cancel();
+                        startAnimation.reset();*/
+                        startAnimation.setRepeatCount(Animation.INFINITE);
                         stationname.startAnimation(startAnimation);
-
+                        startAnimation.setRepeatCount(0);
                     }
-                    else if(capacity-count<minimum)
+                    else if(count<=minimum)
                     {
-                        stationname.setBackgroundResource(R.drawable.roundcorner_yellow);
+                        stationname.setBackgroundResource(R.drawable.roundcorner_orange);
+                        /*startAnimation.cancel();
+                        stationname.clearAnimation();
+                        startAnimation.reset();*/
+                        startAnimation.setRepeatCount(Animation.INFINITE);
+                        stationname.startAnimation(startAnimation);
+                        startAnimation.setRepeatCount(0);
                     }
                     else
                     {
@@ -249,16 +295,16 @@ public class ZoneAlert extends AppCompatActivity {
                     stationname.setLayoutParams(buttonparams);
                     stationname.setText(sname);
                     stationname.setTextColor(Color.WHITE);
-                    if(capacity-count>maximum)
+                    if(count>=maximum)
                     {
                         stationname.setBackgroundResource(R.drawable.roundcorner_red);
-                        Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking);
-                        stationname.startAnimation(startAnimation);
+                       /* Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking);
+                        stationname.startAnimation(startAnimation);*/
 
                     }
-                    else if(capacity-count<minimum)
+                    else if(count<=minimum)
                     {
-                        stationname.setBackgroundResource(R.drawable.roundcorner_yellow);
+                        stationname.setBackgroundResource(R.drawable.roundcorner_orange);
                     }
                     else
                     {
@@ -288,16 +334,16 @@ public class ZoneAlert extends AppCompatActivity {
                     stationname.setLayoutParams(buttonparams);
                     stationname.setText(sname);
                     stationname.setTextColor(Color.WHITE);
-                    if(capacity-count>maximum)
+                    if(count>=maximum)
                     {
                         stationname.setBackgroundResource(R.drawable.roundcorner_red);
-                        Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking);
-                        stationname.startAnimation(startAnimation);
+                       /* Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking);
+                        stationname.startAnimation(startAnimation);*/
 
                     }
-                    else if(capacity-count<minimum)
+                    else if(count<=minimum)
                     {
-                        stationname.setBackgroundResource(R.drawable.roundcorner_yellow);
+                        stationname.setBackgroundResource(R.drawable.roundcorner_orange);
                     }
                     else
                     {
@@ -327,16 +373,17 @@ public class ZoneAlert extends AppCompatActivity {
                     stationname.setLayoutParams(buttonparams);
                     stationname.setText(sname);
                     stationname.setTextColor(Color.WHITE);
-                    if(capacity-count>maximum)
+                    if(count>=maximum)
                     {
+
                         stationname.setBackgroundResource(R.drawable.roundcorner_red);
-                        Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking);
-                        stationname.startAnimation(startAnimation);
+                        /*Animation startAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.blinking);
+                        stationname.startAnimation(startAnimation);*/
 
                     }
-                    else if(capacity-count<minimum)
+                    else if(count<=minimum)
                     {
-                        stationname.setBackgroundResource(R.drawable.roundcorner_yellow);
+                        stationname.setBackgroundResource(R.drawable.roundcorner_orange);
                     }
                     else
                     {
@@ -349,13 +396,11 @@ public class ZoneAlert extends AppCompatActivity {
             }
             return;
         }
-
         else {
             Stationlayout.removeAllViews();
             return;
         }
     }
-
 
     public void parseVolleyError(VolleyError error) {
         try {

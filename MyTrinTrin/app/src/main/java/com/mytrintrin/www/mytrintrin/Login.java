@@ -83,41 +83,37 @@ public class Login extends AppCompatActivity {
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
         loginuserid = loginpref.getString("User-id", null);
-
-
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         checkinternet();
         onpermision();
-        // checkalreadylogin();
     }
 
 
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-
-            Log.d("Internet Status", "Online");
-
+            //Log.d("Internet Status", "Online");
         } else {
-            Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            Log.d("Internet Status", "Offline");
+            Toast.makeText(this, "You are offline!", Toast.LENGTH_SHORT).show();
             AlertDialog.Builder builder = new AlertDialog.Builder(
                     Login.this);
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
             builder.setPositiveButton("OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -155,9 +151,7 @@ public class Login extends AppCompatActivity {
 
                     boolean WritePermission = grantResults[2] == PackageManager.PERMISSION_GRANTED;
 
-
                     if (CameraPermission && LocationPermission && WritePermission) {
-
                         Toast.makeText(Login.this, "Permission Granted", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(Login.this, Login.class));
                     } else {
@@ -177,10 +171,7 @@ public class Login extends AppCompatActivity {
         return FirstPermissionResult == PackageManager.PERMISSION_GRANTED &&
                 SecondPermissionResult == PackageManager.PERMISSION_GRANTED &&
                 ThirdPermissionResult == PackageManager.PERMISSION_GRANTED;
-
-
     }
-
     /*Requesting permission ends*/
 
     @Override
@@ -198,7 +189,7 @@ public class Login extends AppCompatActivity {
             final android.app.AlertDialog.Builder aboutusbuilder = new android.app.AlertDialog.Builder(this);
             aboutusbuilder.setView(aboutusview);
             aboutusbuilder.setTitle("About Us");
-            aboutusbuilder.setIcon(R.drawable.trintrinlogo);
+            aboutusbuilder.setIcon(R.drawable.splashlogo);
             aboutusbuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -224,9 +215,8 @@ public class Login extends AppCompatActivity {
             Email.setError("Please enter Email/Phone.");
             return;
         }
-        if(TextUtils.isDigitsOnly(Enteredemail)&&Enteredemail.length()>4)
-        {
-            Enteredemail="91-"+Enteredemail;
+        if (TextUtils.isDigitsOnly(Enteredemail) && Enteredemail.length() > 4) {
+            Enteredemail = "91-" + Enteredemail;
         }
         if (Enteredpassword.equals("") || Enteredpassword.equals(null)) {
             Password.setError("Please enter Password");
@@ -252,22 +242,22 @@ public class Login extends AppCompatActivity {
                     JSONObject data = responsefromserver.getJSONObject("data");
                     String userid = data.getString("uid");
                     String role = data.getString("role");
-                    Log.d("User-id", userid);
-                    editor.putString("User-id", userid);
-                    editor.commit();
                     mProgressDialog.dismiss();
                     if (role.equals("member")) {
+                        editor.putString("User-id", userid);
+                        editor.commit();
                         startActivity(new Intent(Login.this, MyAccount.class));
                         finish();
                     } else {
                         AlertDialog.Builder LoginBuilder = new AlertDialog.Builder(Login.this);
-                        LoginBuilder.setIcon(R.drawable.trintrinlogo);
+                        LoginBuilder.setIcon(R.drawable.splashlogo);
                         LoginBuilder.setTitle("Invalid user");
                         LoginBuilder.setMessage("Authorization Fail!");
 
                         LoginBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                                 Toast.makeText(Login.this, "Try to login with valid credentials", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -302,6 +292,27 @@ public class Login extends AppCompatActivity {
                     Toast.makeText(Login.this, "Please check your connection.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            Login.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(Login.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
@@ -323,6 +334,7 @@ public class Login extends AppCompatActivity {
                 headers.put("Content-Type", "application/x-www-form-urlencoded");
                 return headers;
             }
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
@@ -384,8 +396,7 @@ public class Login extends AppCompatActivity {
         }
     }
 
-
-    public static class NukeSSLCerts {
+    /* public static class NukeSSLCerts {
         protected static final String TAG = "NukeSSLCerts";
 
         public static void nuke() {
@@ -417,6 +428,6 @@ public class Login extends AppCompatActivity {
             } catch (Exception e) {
             }
         }
-    }
+    }*/
 
 }

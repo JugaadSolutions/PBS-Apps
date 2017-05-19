@@ -127,6 +127,14 @@
                         android:padding="5dp"
                         android:id="@+id/planusagefee_topup"/>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:text="Service Fee"
+                        android:padding="5dp"
+                        android:id="@+id/planservicefee_topup"/>
+
 
                     <TextView
                         android:layout_width="wrap_content"

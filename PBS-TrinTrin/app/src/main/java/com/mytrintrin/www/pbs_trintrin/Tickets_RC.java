@@ -73,11 +73,6 @@ public class Tickets_RC extends AppCompatActivity {
         Description_ticketrc = (EditText) findViewById(R.id.description_ticketrc);
         Departmentspinner = (Spinner) findViewById(R.id.departmentspinner);
 
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         checkinternet();
         getdepartments();
 
@@ -89,7 +84,7 @@ public class Tickets_RC extends AppCompatActivity {
             Toast.makeText(this, "Getting user details", Toast.LENGTH_SHORT).show();
             }
          else {
-            Toast.makeText(this, "Nothing", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Nothing", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -180,10 +175,27 @@ public class Tickets_RC extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 mProgressDialog.dismiss();
-                Subject_ticketrc.setError("Subject");
-                Description_ticketrc.setError("Description");
-                startActivity(new Intent(Tickets_RC.this,GetStarted.class));
-                finish();
+                Toast.makeText(Tickets_RC.this, "Ticket Raised Successfully", Toast.LENGTH_SHORT).show();
+                JSONObject responsefromserver = response;
+                try {
+                    JSONObject data = responsefromserver.getJSONObject("data");
+                    String TicketID = data.getString("uuId");
+                    AlertDialog.Builder TicketBuilder = new AlertDialog.Builder(Tickets_RC.this);
+                    TicketBuilder.setIcon(R.drawable.splashlogo);
+                    TicketBuilder.setTitle("Ticket");
+                    TicketBuilder.setMessage("Ticket Raised Successfully\n Your Ticket Number is UT"+TicketID);
+                    TicketBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(new Intent(Tickets_RC.this,GetStarted.class));
+                            finish();
+                        }
+                    });
+                    TicketBuilder.setCancelable(false);
+                    TicketBuilder.show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override

@@ -48,30 +48,26 @@ public class Topup extends AppCompatActivity {
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
     String loginuserid, topupamount,Topupname, Topupid, TopupValidity;
-    int  Usagefee,TopupAmount;
+    int  Usagefee,TopupAmount,PGcharges,TotalAmount;
 
     public static ArrayList<String> TopupIDArrayList = new ArrayList<String>();
     public static ArrayList<String> TopupNameArrayList = new ArrayList<String>();
     public static ArrayList<String> TopupValidityArrayList = new ArrayList<String>();
     public static ArrayList<Integer> Totalamountoftopup = new ArrayList<Integer>();
+    public static ArrayList<Integer> TopupPgchargesList = new ArrayList<Integer>();
     Spinner TopupPlans;
     public ArrayAdapter<String> Topupadapter;
-    TextView planname_topup, planvalidity_topup, planuserfee_topup, plantotalfee_topup;
+    TextView planname_topup, planvalidity_topup, planuserfee_topup, plantotalfee_topup,planservicefee_topup;
     JSONObject Topupobject;
 
-
     public static final String merchant_id = "96478";
-    public static final String access_code = "AVUM66DI93AY80MUYA";
-    public static final String working_key = "5F8405032B54AF1400A79BB0B92D2ECC";
+    public static final String access_code = "AVZS70EE81BJ45SZJB";
+    public static final String working_key = "E2B38B98BE6D31F70F4320A8F1A784B0";
     public static final String currency = "INR";
-    /*public static final String redirect_url = "http://www.mytrintrin.com/app/ccavResponseHandler.php";
-    public static final String cancel_url = "http://www.mytrintrin.com/app/ccavResponseHandler.php";
-    public static final String rsa_url = "http://www.mytrintrin.com/app/GetRSA.php";*/
 
-    public static final String redirect_url = "http://43.251.80.79:13070/app/ccavResponseHandler.php";
-    public static final String cancel_url = "http://43.251.80.79:13070/app/ccavResponseHandler.php";
-    public static final String rsa_url = "http://43.251.80.79/app/GetRSA.php";
-
+    public static final String redirect_url = "https://www.mytrintrin.com/app/ccavResponseHandler.php";
+    public static final String cancel_url = "https://www.mytrintrin.com/app/ccavResponseHandler.php";
+    public static final String rsa_url = "https://www.mytrintrin.com/app/GetRSA.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,12 +87,7 @@ public class Topup extends AppCompatActivity {
         planvalidity_topup = (TextView) findViewById(R.id.planvalidity_topup);
         planuserfee_topup = (TextView) findViewById(R.id.planusagefee_topup);
         plantotalfee_topup = (TextView) findViewById(R.id.plantotalfee_topup);
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
+        planservicefee_topup = (TextView) findViewById(R.id.planservicefee_topup);
         gettopupplans();
 
     }
@@ -104,21 +95,29 @@ public class Topup extends AppCompatActivity {
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+           // Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            Log.d("Internet Status", "Offline");
-            AlertDialog.Builder builder = new AlertDialog.Builder(Topup.this);
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                    Topup.this);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("OK",
+            builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -126,11 +125,12 @@ public class Topup extends AppCompatActivity {
 
     public void Topupuser(View view) {
 
+        TotalAmount = TopupAmount+PGcharges;
         String orderid = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         String vAccessCode = ServiceUtility.chkNull(access_code).toString().trim();
         String vMerchantId = ServiceUtility.chkNull(merchant_id).toString().trim();
         String vCurrency = ServiceUtility.chkNull(currency).toString().trim();
-        String vAmount = ServiceUtility.chkNull(TopupAmount).toString().trim();
+        String vAmount = ServiceUtility.chkNull(TotalAmount).toString().trim();
         String vLoginid = ServiceUtility.chkNull(loginuserid).toString().trim();
         if (!vAccessCode.equals("") && !vMerchantId.equals("") && !vCurrency.equals("") && !vAmount.equals("") && !vLoginid.equals("")) {
             Intent intent = new Intent(this, WebViewActivity.class);
@@ -138,7 +138,7 @@ public class Topup extends AppCompatActivity {
             intent.putExtra(AvenuesParams.MERCHANT_ID, ServiceUtility.chkNull(merchant_id).toString().trim());
             intent.putExtra(AvenuesParams.ORDER_ID, ServiceUtility.chkNull(orderid).toString().trim());
             intent.putExtra(AvenuesParams.CURRENCY, ServiceUtility.chkNull(currency).toString().trim());
-            intent.putExtra(AvenuesParams.AMOUNT, ServiceUtility.chkNull(TopupAmount).toString().trim());
+            intent.putExtra(AvenuesParams.AMOUNT, ServiceUtility.chkNull(TotalAmount).toString().trim());
             intent.putExtra(AvenuesParams.REDIRECT_URL, ServiceUtility.chkNull(redirect_url).toString().trim());
             intent.putExtra(AvenuesParams.CANCEL_URL, ServiceUtility.chkNull(cancel_url).toString().trim());
             intent.putExtra(AvenuesParams.RSA_KEY_URL, ServiceUtility.chkNull(rsa_url).toString().trim());
@@ -180,6 +180,27 @@ public class Topup extends AppCompatActivity {
                     Toast.makeText(Topup.this, "Please check your connection", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Topup.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(Topup.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
@@ -202,7 +223,7 @@ public class Topup extends AppCompatActivity {
                 return headers;
             }
         };
-        getplanrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        getplanrequest.setRetryPolicy(new DefaultRetryPolicy(25000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(getplanrequest);
     }
 
@@ -210,18 +231,24 @@ public class Topup extends AppCompatActivity {
     public void gettopupdetails() {
         try {
             JSONArray data = Topupobject.getJSONArray("data");
+            TopupIDArrayList.clear();
             TopupNameArrayList.clear();
+            Totalamountoftopup.clear();
+            TopupValidityArrayList.clear();
+            TopupPgchargesList.clear();
             for (int i = 0; i < data.length(); i++) {
                 JSONObject getid = data.getJSONObject(i);
                 String id = getid.getString("topupId");
                 String name = getid.getString("topupName");
                 Usagefee = getid.getInt("userFees");
                 TopupValidity = getid.getString("validity");
+                int pgcharges = getid.getInt("ccserviceCharge");
 
                 TopupIDArrayList.add(id);
                 TopupNameArrayList.add(name);
                 Totalamountoftopup.add(Usagefee);
                 TopupValidityArrayList.add(TopupValidity);
+                TopupPgchargesList.add(pgcharges);
 
                 Topupadapter = new ArrayAdapter<String>(Topup.this, android.R.layout.simple_spinner_dropdown_item, TopupNameArrayList);
                 Topupadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -235,8 +262,10 @@ public class Topup extends AppCompatActivity {
                         planname_topup.setText("Plan Name : " + Topupname);
                         planvalidity_topup.setText("Validity : " + TopupValidityArrayList.get(position) + " days");
                         planuserfee_topup.setText("Usage Fee : " + Totalamountoftopup.get(position) + "/-");
+                        planservicefee_topup.setText("Service Fee : " + TopupPgchargesList.get(position) + "/-");
                         plantotalfee_topup.setText("Total : " + Totalamountoftopup.get(position) + "/-");
                         TopupAmount = Totalamountoftopup.get(position);
+                        PGcharges = TopupPgchargesList.get(position);
                     }
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {

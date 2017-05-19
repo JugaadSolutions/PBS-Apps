@@ -39,7 +39,7 @@ public class Register extends AppCompatActivity {
 
     Toolbar RegisterToolbar;
     EditText FirstName, LastName, Phone, Email, Password, ConfirmPassword;
-    String firstname, lastname, phone, email, password, confirmpassword;
+    String firstname, lastname, phone, email, password, confirmpassword,passworderrormessage;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -50,14 +50,7 @@ public class Register extends AppCompatActivity {
         RegisterToolbar.setTitle("Sign Up");
         setSupportActionBar(RegisterToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         Intialize();
-
     }
 
     private void Intialize() {
@@ -73,22 +66,29 @@ public class Register extends AppCompatActivity {
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+            //Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            Log.d("Internet Status", "Offline");
-            AlertDialog.Builder builder = new AlertDialog.Builder(
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
                     Register.this);
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("OK",
+            builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -108,10 +108,6 @@ public class Register extends AppCompatActivity {
             FirstName.setError("First Name");
             return;
         }
-        /*if (lastname.equals("") || lastname.equals(null)) {
-            LastName.setError("Last Name");
-            return;
-        }*/
         if (phone.equals("") || phone.equals(null)) {
             Phone.setError("Phone Number");
             return;
@@ -126,21 +122,25 @@ public class Register extends AppCompatActivity {
         }
         if (!password.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$")) {
             Password.setError("Invalid Password");
-            Toast.makeText(this, "Password must contain minimum 6 characters at least 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character ", Toast.LENGTH_LONG).show();
+            passworderrormessage = "Password must contain minimum 6 characters at least 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character";
+            showpassworderror(passworderrormessage);
             return;
         }
         if (!confirmpassword.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$")) {
             ConfirmPassword.setError("Invalid Password");
+            passworderrormessage = "Password must contain minimum 6 characters at least 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character";
+            showpassworderror(passworderrormessage);
             return;
         }
         if (!password.equals(confirmpassword)) {
             Password.setError("Password didn't match");
             ConfirmPassword.setError("Password didn't match");
+            passworderrormessage = "Password Didn't Match";
+            showpassworderror(passworderrormessage);
             return;
         }
 
         //password = md5(password);
-
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Please wait...");
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -157,10 +157,22 @@ public class Register extends AppCompatActivity {
                 Email.setText("");
                 Password.setText("");
                 ConfirmPassword.setText("");
-                Toast.makeText(Register.this, "Sign Up successfull", Toast.LENGTH_LONG).show();
+                Toast.makeText(Register.this, "Sign Up Successfull", Toast.LENGTH_LONG).show();
                 mProgressDialog.dismiss();
-                startActivity(new Intent(Register.this, Login.class));
-                finish();
+                android.app.AlertDialog.Builder SignupBuilder = new android.app.AlertDialog.Builder(Register.this);
+                SignupBuilder.setIcon(R.drawable.splashlogo);
+                SignupBuilder.setTitle("Sign Up");
+                SignupBuilder.setMessage("Sign Up Successfull!!!");
+                SignupBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        startActivity(new Intent(Register.this, Login.class));
+                        finish();
+                    }
+                });
+                SignupBuilder.setCancelable(false);
+                SignupBuilder.show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -247,11 +259,27 @@ public class Register extends AppCompatActivity {
             JSONObject data = new JSONObject(responseBody);
             String message = data.getString("description");
             Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            showpassworderror(message);
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {
         }
     }
 
+    public  void showpassworderror(String errormsg)
+    {
+        AlertDialog.Builder ErrorBuilder = new AlertDialog.Builder(Register.this);
+        ErrorBuilder.setIcon(R.drawable.splashlogo);
+        ErrorBuilder.setTitle("Change Password");
+        ErrorBuilder.setMessage(errormsg);
+        ErrorBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        ErrorBuilder.setCancelable(false);
+        ErrorBuilder.show();
+    }
 
 }
 

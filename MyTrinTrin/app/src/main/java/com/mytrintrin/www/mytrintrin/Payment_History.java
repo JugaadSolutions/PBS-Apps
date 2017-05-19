@@ -3,6 +3,7 @@ package com.mytrintrin.www.mytrintrin;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
@@ -66,7 +67,6 @@ public class Payment_History extends AppCompatActivity {
         setSupportActionBar(PaymentToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         userbalance = getIntent().getStringExtra("balance");
-        Toast.makeText(this, userbalance, Toast.LENGTH_SHORT).show();
         UserBalance = (TextView) PaymentToolbar.findViewById(R.id.balance_payment_action);
         UserBalance.setText(userbalance + "/-");
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
@@ -76,31 +76,35 @@ public class Payment_History extends AppCompatActivity {
         PaymentHistory = (LinearLayout) findViewById(R.id.paymenthistorylayout);
         checkinternet();
 
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         getpaymentdetails();
     }
 
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+            //Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            Log.d("Internet Status", "Offline");
-            AlertDialog.Builder builder = new AlertDialog.Builder(Payment_History.this);
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                    Payment_History.this);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("OK",
+            builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -138,8 +142,9 @@ public class Payment_History extends AppCompatActivity {
 
                             String invoiceno = paymentdata.getString("invoiceNo");
                             String paymentmode = paymentdata.getString("paymentMode");
-                            String credit = paymentdata.getString("credit");
+                            int credit = paymentdata.getInt("credit");
 
+                            if (credit > 0) {
                             cardview = new CardView(context);
                             cardparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                             cardparams.bottomMargin = 10;
@@ -186,8 +191,23 @@ public class Payment_History extends AppCompatActivity {
                             cardview.addView(PaymentDetailsLayout);
                             PaymentHistory.addView(cardview);
                         }
+                        }
                     } else {
                         Toast.makeText(Payment_History.this, "Looks there is no payment transaction.", Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder PaymentBuilder = new AlertDialog.Builder(Payment_History.this);
+                        PaymentBuilder.setIcon(R.drawable.splashlogo);
+                        PaymentBuilder.setTitle("Payment");
+                        PaymentBuilder.setMessage("Looks there is no payment transaction.");
+                        PaymentBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                                startActivity(new Intent(Payment_History.this,MyAccount.class));
+                                finish();
+                            }
+                        });
+                        PaymentBuilder.setCancelable(false);
+                        PaymentBuilder.show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -219,6 +239,27 @@ public class Payment_History extends AppCompatActivity {
                     Toast.makeText(Payment_History.this, "Please check your connection.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            Payment_History.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(Payment_History.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");

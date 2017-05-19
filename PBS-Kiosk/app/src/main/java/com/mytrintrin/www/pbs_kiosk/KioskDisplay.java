@@ -2,6 +2,7 @@ package com.mytrintrin.www.pbs_kiosk;
 
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -26,22 +26,47 @@ import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 public class KioskDisplay extends AppCompatActivity {
 
@@ -59,6 +84,7 @@ public class KioskDisplay extends AppCompatActivity {
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         checknfc();
     }
+
 
     private void checknfc() {
 
@@ -250,12 +276,25 @@ public class KioskDisplay extends AppCompatActivity {
         } else {
             String bicyletagid = sb.toString();
             String finalbicidbicyletagid = bicyletagid.replace(" ", "");
-            Toast.makeText(this, "Invalid card detected", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Invalid card Detected", Toast.LENGTH_LONG).show();
+            AlertDialog.Builder InvalidCardBuilder = new AlertDialog.Builder(KioskDisplay.this);
+            InvalidCardBuilder.setIcon(R.drawable.splashlogo);
+            InvalidCardBuilder.setTitle("KIOSK");
+            InvalidCardBuilder.setMessage("Invalid Card Detected!!!");
+            InvalidCardBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            InvalidCardBuilder.setCancelable(false);
+            InvalidCardBuilder.show();
         }
         return sb.toString();
     }
 
     public void getmemberdetails() {
+
         StringRequest GetUserDetailsRequest = new StringRequest(Request.Method.POST, API.getmemberdetails, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -264,6 +303,18 @@ public class KioskDisplay extends AppCompatActivity {
                     JSONArray data = responsefromserver.getJSONArray("data");
                     if (data.length() == 0) {
                         Toast.makeText(KioskDisplay.this, "Invalid User", Toast.LENGTH_LONG).show();
+                        AlertDialog.Builder InvalidCardBuilder = new AlertDialog.Builder(KioskDisplay.this);
+                        InvalidCardBuilder.setIcon(R.drawable.splashlogo);
+                        InvalidCardBuilder.setTitle("KIOSK");
+                        InvalidCardBuilder.setMessage("Invalid User!!!");
+                        InvalidCardBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        InvalidCardBuilder.setCancelable(false);
+                        InvalidCardBuilder.show();
                     } else if (data.length() > 0) {
                         JSONObject resultobject = data.getJSONObject(0);
                         JSONArray VehicleArray = resultobject.getJSONArray("vehicleId");
@@ -414,7 +465,7 @@ public class KioskDisplay extends AppCompatActivity {
                             finish();
                         }
                     });
-            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     checkinternet();
@@ -424,4 +475,5 @@ public class KioskDisplay extends AppCompatActivity {
         }
     }
     /*ends*/
+
 }

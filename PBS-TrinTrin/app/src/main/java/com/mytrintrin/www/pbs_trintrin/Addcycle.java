@@ -124,10 +124,7 @@ public class Addcycle extends AppCompatActivity {
         Allcycleclear = new ArrayList<ImageView>();
 
         Alldetailslist = new ArrayList<LinearLayout>();
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
+
         checknfc();
         checkinternet();
         getFleetdetails();

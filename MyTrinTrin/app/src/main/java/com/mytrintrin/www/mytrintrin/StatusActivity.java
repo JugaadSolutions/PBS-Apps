@@ -16,11 +16,13 @@ public class StatusActivity extends Activity {
         Intent mainIntent = getIntent();
         /*TextView tv4 = (TextView) findViewById(R.id.textView1);
 		tv4.setText(mainIntent.getStringExtra("transStatus"));*/
+        String status  = mainIntent.getStringExtra("transStatus");
         if (mainIntent.getStringExtra("transStatus").equals("Transaction Successful!")) {
             startActivity(new Intent(StatusActivity.this, MyAccount.class));
         }
         if (mainIntent.getStringExtra("transStatus").equals("Transaction Declined!")) {
-            startActivity(new Intent(StatusActivity.this, SelectPlan.class));
+            startActivity(new Intent(StatusActivity.this, MyAccount.class));
+            Toast.makeText(this, "Sorry,Transaction Declined.Please try again later.", Toast.LENGTH_LONG).show();
         }
         if (mainIntent.getStringExtra("transStatus").equals("")) {
 

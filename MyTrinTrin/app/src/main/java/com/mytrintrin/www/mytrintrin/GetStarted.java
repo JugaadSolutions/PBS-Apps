@@ -30,24 +30,34 @@ public class GetStarted extends AppCompatActivity {
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+            //Log.d("Internet Status", "Online");
         } else {
-            Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            Log.d("Internet Status", "Offline");
-            AlertDialog.Builder builder = new AlertDialog.Builder(GetStarted.this);
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            Toast.makeText(this, "You are offline!", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    GetStarted.this);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
             builder.setPositiveButton("OK",
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
     /*ends*/
+
 
     //to go to login
     public void gotologin(View view)

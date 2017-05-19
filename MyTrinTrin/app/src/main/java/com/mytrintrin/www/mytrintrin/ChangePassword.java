@@ -44,7 +44,7 @@ public class ChangePassword extends AppCompatActivity {
 
     private Toolbar ChangePasswordToolbar;
     EditText OldPassword,NewPassword,ConfirmPassword;
-    String oldpassword,newpassword,confirmpassword,loginuserid;
+    String oldpassword,newpassword,confirmpassword,loginuserid,passworderrormessage;
     LinearLayout ChangepasswordLayout;
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
@@ -65,37 +65,32 @@ public class ChangePassword extends AppCompatActivity {
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
         loginuserid = loginpref.getString("User-id",null);
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
-
         checkinternet();
     }
 
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+            //Log.d("Internet Status", "Online");
         } else {
-            Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            Log.d("Internet Status", "Offline");
-            AlertDialog.Builder builder = new AlertDialog.Builder(ChangePassword.this);
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            Toast.makeText(this, "You are offline!", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    ChangePassword.this);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("Exit",
+            builder.setPositiveButton("OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
-            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -114,36 +109,24 @@ public class ChangePassword extends AppCompatActivity {
         if(!oldpassword.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$"))
         {
             OldPassword.setError("Invalid Password");
-            Snackbar snackbar = Snackbar.make(ChangepasswordLayout, "Invalid Password", Snackbar.LENGTH_LONG);
-            View sbView = snackbar.getView();
-            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-            textView.setTextColor(Color.RED);
-            snackbar.show();
-            Toast.makeText(this, "Password must contain minimum 6 characters at least 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character ", Toast.LENGTH_LONG).show();
+            passworderrormessage = "Password must contain minimum 6 characters at least 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character";
+            showpassworderror(passworderrormessage);
             return;
         }
 
         if(!newpassword.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$"))
         {
             NewPassword.setError("Invalid Password");
-            Snackbar snackbar = Snackbar.make(ChangepasswordLayout, "Invalid Password", Snackbar.LENGTH_LONG);
-            View sbView = snackbar.getView();
-            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-            textView.setTextColor(Color.RED);
-            snackbar.show();
-            Toast.makeText(this, "Password must contain minimum 6 characters at least 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character ", Toast.LENGTH_LONG).show();
+            passworderrormessage = "Password must contain minimum 6 characters at least 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character";
+            showpassworderror(passworderrormessage);
             return;
         }
 
         if(!confirmpassword.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$"))
         {
             ConfirmPassword.setError("Invalid Password");
-            Snackbar snackbar = Snackbar.make(ChangepasswordLayout, "Invalid Password", Snackbar.LENGTH_LONG);
-            View sbView = snackbar.getView();
-            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-            textView.setTextColor(Color.RED);
-            snackbar.show();
-            Toast.makeText(this, "Password must contain minimum 6 characters at least 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character ", Toast.LENGTH_LONG).show();
+            passworderrormessage = "Password must contain minimum 6 characters at least 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character";
+            showpassworderror(passworderrormessage);
             return;
         }
 
@@ -153,6 +136,8 @@ public class ChangePassword extends AppCompatActivity {
             ConfirmPassword.setError("Password Didn't match");
             Snackbar snackbar = Snackbar.make(ChangepasswordLayout, "Password Didn't Match", Snackbar.LENGTH_LONG);
             snackbar.show();
+            passworderrormessage = "Password Didn't Match";
+            showpassworderror(passworderrormessage);
             return;
         }
 
@@ -167,13 +152,26 @@ public class ChangePassword extends AppCompatActivity {
         StringRequest changepasswordrequest = new StringRequest(Request.Method.PUT, API.changepassword+loginuserid+"/password/change", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(ChangePassword.this, "Password Changed Successfully", Toast.LENGTH_LONG).show();
                 OldPassword.setText("");
                 NewPassword.setText("");
                 ConfirmPassword.setText("");
                 mProgressDialog.dismiss();
-                startActivity(new Intent(ChangePassword.this,Login.class));
-                finish();
+                editor.putString("User-id", "");
+                editor.commit();
+                AlertDialog.Builder changepasswordbuilder = new AlertDialog.Builder(ChangePassword.this);
+                changepasswordbuilder.setIcon(R.drawable.splashlogo);
+                changepasswordbuilder.setTitle("Change Password");
+                changepasswordbuilder.setMessage("Password Changed Successfully");
+                changepasswordbuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        startActivity(new Intent(ChangePassword.this,Login.class));
+                        finish();
+                    }
+                });
+                changepasswordbuilder.setCancelable(false);
+                changepasswordbuilder.show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -199,6 +197,27 @@ public class ChangePassword extends AppCompatActivity {
                     Toast.makeText(ChangePassword.this, "Please check you connection.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            ChangePassword.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(ChangePassword.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
@@ -249,6 +268,22 @@ public class ChangePassword extends AppCompatActivity {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public  void showpassworderror(String errormsg)
+    {
+        AlertDialog.Builder ErrorBuilder = new AlertDialog.Builder(ChangePassword.this);
+        ErrorBuilder.setIcon(R.drawable.splashlogo);
+        ErrorBuilder.setTitle("Change Password");
+        ErrorBuilder.setMessage(errormsg);
+        ErrorBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        ErrorBuilder.setCancelable(false);
+        ErrorBuilder.show();
     }
 
     public void parseVolleyError(VolleyError error) {

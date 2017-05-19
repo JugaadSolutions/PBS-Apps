@@ -45,31 +45,29 @@ public class SelectPlan extends AppCompatActivity {
 
     private Toolbar SelectPlanToolbar;
     private ProgressDialog mProgressDialog;
-    public static ArrayList<String> MembershipIDArrayList = new ArrayList<String>();
+    public static ArrayList<Integer> MembershipIDArrayList = new ArrayList<Integer>();
     public static ArrayList<String> MembershipNameArrayList = new ArrayList<String>();
-    public static ArrayList<String> MembershipValidityArrayList = new ArrayList<String>();
-    public static ArrayList<String> MembershipUserFeeArrayList = new ArrayList<String>();
-    public static ArrayList<String> MembershipSecurityFeeArrayList = new ArrayList<String>();
-    public static ArrayList<String> MembershipSmartcardFeeArrayList = new ArrayList<String>();
-    public static ArrayList<String> MembershipProcessingFeeArrayList = new ArrayList<String>();
+    public static ArrayList<Integer> MembershipValidityArrayList = new ArrayList<Integer>();
+    public static ArrayList<Integer> MembershipUserFeeArrayList = new ArrayList<Integer>();
+    public static ArrayList<Integer> MembershipSecurityFeeArrayList = new ArrayList<Integer>();
+    public static ArrayList<Integer> MembershipSmartcardFeeArrayList = new ArrayList<Integer>();
+    public static ArrayList<Integer> MembershipProcessingFeeArrayList = new ArrayList<Integer>();
+    public static ArrayList<Integer> MembershipServiceChargeArrayList = new ArrayList<Integer>();
 
     public static final String merchant_id ="96478";
-    public static final String access_code ="AVUM66DI93AY80MUYA";
-    public static final String working_key="5F8405032B54AF1400A79BB0B92D2ECC";
+    public static final String access_code ="AVZS70EE81BJ45SZJB";
+    public static final String working_key="E2B38B98BE6D31F70F4320A8F1A784B0";
     public static final String currency="INR";
-   /* public static final String redirect_url="http://www.mytrintrin.com/app/ccavResponseHandler.php";
-    public static final String cancel_url="http://www.mytrintrin.com/app/ccavResponseHandler.php";
-    public static final String rsa_url="http://www.mytrintrin.com/app/GetRSA.php";*/
 
-    public static final String redirect_url="http://43.251.80.79:13070/app/ccavResponseHandler.php";
-    public static final String cancel_url="http://43.251.80.79:13070/app/ccavResponseHandler.php";
-    public static final String rsa_url="http://43.251.80.79/app/GetRSA.php";
+    public static final String redirect_url="https://www.mytrintrin.com/app/ccavResponseHandler.php";
+    public static final String cancel_url="https://www.mytrintrin.com/app/ccavResponseHandler.php";
+    public static final String rsa_url="https://www.mytrintrin.com/app/GetRSA.php";
 
     public static ArrayAdapter<String> Memberplanadapter;
     Spinner Plans;
-    String Planname, Planid, Planvalidity, Planuserfee, Plansecurityfee, Plansmartcardfee, Planprocessingfee;
-    TextView planname, planvalidity, planuserfee, plansecurityfee, plansmartcardfee, planprocessingfee, plantotalfee;
-    int plantotal;
+    String Planname;
+    TextView planname, planvalidity, planuserfee, plansecurityfee, plansmartcardfee, planprocessingfee, plantotalfee,planservicefee;
+    int plantotal,TotalAmount,PGcharges,Planid, Planvalidity, Planuserfee, Plansecurityfee, Plansmartcardfee, Planprocessingfee;
 
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
@@ -91,40 +89,42 @@ public class SelectPlan extends AppCompatActivity {
         plansmartcardfee = (TextView) findViewById(R.id.plansmartcardfee);
         planprocessingfee = (TextView) findViewById(R.id.planprocessingfee);
         plantotalfee = (TextView) findViewById(R.id.plantotalfee);
+        planservicefee = (TextView) findViewById(R.id.planservicefee);
 
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
         loginuserid = loginpref.getString("User-id", null);
 
         checkinternet();
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         GetallPlans();
     }
 
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-
-            Log.d("Internet Status", "Online");
-
+            //Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            Log.d("Internet Status", "Offline");
-            AlertDialog.Builder builder = new AlertDialog.Builder(SelectPlan.this);
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                    SelectPlan.this);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setPositiveButton("OK",
+            builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    checkinternet();
+                }
+            });
             builder.show();
         }
     }
@@ -140,20 +140,27 @@ public class SelectPlan extends AppCompatActivity {
         StringRequest getplanrequest = new StringRequest(Request.Method.GET, API.getplans, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 try {
                     JSONObject plansresponse = new JSONObject(response);
                     JSONArray data = plansresponse.getJSONArray("data");
+                    MembershipIDArrayList.clear();
                     MembershipNameArrayList.clear();
+                    MembershipValidityArrayList.clear();
+                    MembershipUserFeeArrayList.clear();
+                    MembershipSecurityFeeArrayList.clear();
+                    MembershipSmartcardFeeArrayList.clear();
+                    MembershipProcessingFeeArrayList.clear();
+                    MembershipServiceChargeArrayList.clear();
                     for (int i = 0; i < data.length(); i++) {
                         JSONObject getid = data.getJSONObject(i);
-                        String id = getid.getString("membershipId");
+                        int id = getid.getInt("membershipId");
                         String name = getid.getString("subscriptionType");
-                        String validity = getid.getString("validity");
-                        String userfees = getid.getString("userFees");
-                        String securitydeposit = getid.getString("securityDeposit");
-                        String smartcardfees = getid.getString("smartCardFees");
-                        String processingfees = getid.getString("processingFees");
+                        int validity = getid.getInt("validity");
+                        int userfees = getid.getInt("userFees");
+                        int securitydeposit = getid.getInt("securityDeposit");
+                        int smartcardfees = getid.getInt("smartCardFees");
+                        int processingfees = getid.getInt("processingFees");
+                        int pgcharges = getid.getInt("ccserviceCharge");
 
                         MembershipIDArrayList.add(id);
                         MembershipNameArrayList.add(name);
@@ -162,6 +169,7 @@ public class SelectPlan extends AppCompatActivity {
                         MembershipSecurityFeeArrayList.add(securitydeposit);
                         MembershipSmartcardFeeArrayList.add(smartcardfees);
                         MembershipProcessingFeeArrayList.add(processingfees);
+                        MembershipServiceChargeArrayList.add(pgcharges);
 
                         Memberplanadapter = new ArrayAdapter<String>(SelectPlan.this, android.R.layout.simple_spinner_dropdown_item, MembershipNameArrayList);
                         Memberplanadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -176,13 +184,15 @@ public class SelectPlan extends AppCompatActivity {
                                 Plansecurityfee = MembershipSecurityFeeArrayList.get(position);
                                 Plansmartcardfee = MembershipSmartcardFeeArrayList.get(position);
                                 Planprocessingfee = MembershipProcessingFeeArrayList.get(position);
+                                PGcharges = MembershipServiceChargeArrayList.get(position);
                                 planname.setText("Plan Name : " + Planname);
                                 planvalidity.setText("Validity : " + Planvalidity + " days");
                                 plansecurityfee.setText("Security Fee(Refundable) : " + Plansecurityfee + "/-");
                                 planprocessingfee.setText("Processing Fee : " + Planprocessingfee + "/-");
                                 planuserfee.setText("Usage Fee : " + Planuserfee + "/-");
                                 plansmartcardfee.setText("Smartcard Fee : " + Plansmartcardfee + "/-");
-                                plantotal = Integer.parseInt(Planuserfee) + Integer.parseInt(Plansecurityfee) + Integer.parseInt(Plansmartcardfee) + Integer.parseInt(Planprocessingfee);
+                                planservicefee.setText("Service Fee : "+MembershipServiceChargeArrayList.get(position)+"/-");
+                                plantotal = Planuserfee + Plansecurityfee + Plansmartcardfee +Planprocessingfee+PGcharges;
                                 plantotalfee.setText("Total : " + plantotal + "/-");
                                 mProgressDialog.dismiss();
                             }

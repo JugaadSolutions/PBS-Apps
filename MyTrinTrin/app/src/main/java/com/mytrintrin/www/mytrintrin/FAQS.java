@@ -27,14 +27,40 @@ public class FAQS extends AppCompatActivity {
         FaqToolbar.setTitle("FAQ's");
         setSupportActionBar(FaqToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
+        checkinternet();
         getwebview();
     }
+
+    //checking internet
+    public void checkinternet() {
+        if (AppStatus.getInstance(this).isOnline()) {
+            //Log.d("Internet Status", "Online");
+        } else {
+            Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                    FAQS.this);
+            builder.setIcon(R.drawable.splashlogo);
+            builder.setTitle("NO INTERNET CONNECTION!!!");
+            builder.setMessage("Your offline !!! Please check your connection and come back later.");
+            builder.setPositiveButton("Exit",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    checkinternet();
+                }
+            });
+            builder.show();
+        }
+    }
+    /*ends*/
 
     private void getwebview() {
 
@@ -47,7 +73,7 @@ public class FAQS extends AppCompatActivity {
             mProgressDialog.setCancelable(true);
             mProgressDialog.show();
 
-            startWebView("http://www.mytrintrin.com/?page_id=4308");
+            startWebView("https://www.mytrintrin.com/?page_id=4308");
 
             webView.setWebViewClient(new WebViewClient() {
                 @Override
@@ -101,11 +127,12 @@ public class FAQS extends AppCompatActivity {
                     FAQS.this);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setPositiveButton("OK",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });

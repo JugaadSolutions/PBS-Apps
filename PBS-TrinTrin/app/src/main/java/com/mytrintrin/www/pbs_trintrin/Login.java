@@ -78,8 +78,8 @@ public class Login extends AppCompatActivity {
         loginuserid = loginpref.getString("User-id", null);
         checkinternet();
         onpermision();
-        NukeSSLCerts nukeSSLCerts = new NukeSSLCerts();
-        nukeSSLCerts.nuke();
+       /* NukeSSLCerts nukeSSLCerts = new NukeSSLCerts();
+        nukeSSLCerts.nuke();*/
 
     }
 
@@ -348,7 +348,7 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    public static class NukeSSLCerts {
+    /*public static class NukeSSLCerts {
         protected static final String TAG = "NukeSSLCerts";
 
         public static void nuke() {
@@ -380,7 +380,7 @@ public class Login extends AppCompatActivity {
             } catch (Exception e) {
             }
         }
-    }
+    }*/
 
 
 }

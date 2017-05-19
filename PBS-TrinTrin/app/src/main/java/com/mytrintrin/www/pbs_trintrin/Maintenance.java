@@ -92,11 +92,6 @@ public class Maintenance extends AppCompatActivity {
         editor = loginpref.edit();
         loginuserid = loginpref.getString("User-id", null);
 
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         checkinternet();
         getalldockingstations();
         getmcemplist();

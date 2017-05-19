@@ -81,21 +81,14 @@ public class TicketDetails extends AppCompatActivity {
         TickeReplies = (TextView) findViewById(R.id.replies_ticketdetails);
         Ticketsdetailstoolbar.setTitle("Tickets");
         setSupportActionBar(Ticketsdetailstoolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         CloseorReply = (Button) findViewById(R.id.btncloseorreply);
         CloseorReplyTI = (TextInputLayout) findViewById(R.id.ticketreply);
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
 
         if (getIntent().getExtras() != null) {
             Intent intent = getIntent();
             Ticketdetails = intent.getStringExtra("TicketObject");
             if (Ticketdetails != null) {
                 setTicketdetails();
-                Toast.makeText(this, "Getting ticket details", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "New Ticket", Toast.LENGTH_SHORT).show();
@@ -193,7 +186,7 @@ public class TicketDetails extends AppCompatActivity {
             //Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            AlertDialog.Builder builder = new AlertDialog.Builder(
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
                     TicketDetails.this);
             builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
@@ -202,12 +195,14 @@ public class TicketDetails extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
-            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -274,12 +269,14 @@ public class TicketDetails extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog,
                                                         int which) {
+                                        dialog.dismiss();
                                         finish();
                                     }
                                 });
-                        builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
                                 checkinternet();
                             }
                         });

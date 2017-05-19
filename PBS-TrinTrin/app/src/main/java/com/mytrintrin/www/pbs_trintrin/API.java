@@ -7,7 +7,7 @@ public class API {
   //public static  final String Baseurl="http://43.251.80.79:13060/api/";   //PBS Development
  //   public static  final String Baseurl="http://43.251.80.79:13065/api/";   //PBS Admin Test : External Test Instance
   // public static  final String Baseurl="https://43.251.80.72:13060/api/";   //PBS Admin Test : Internal  sync Test Instance
-   public static  final String Baseurl="https://www.mytrintrin.com:13070/api/";   //PBS Admin Test : SDC Test Instance
+   public static  final String Baseurl="https://www.mytrintrin.com:13060/api/";   //PBS Admin Test : SDC Test Instance
 
     public static final String register =Baseurl+"member";
 

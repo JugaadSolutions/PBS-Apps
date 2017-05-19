@@ -81,13 +81,13 @@ public class Registration extends AppCompatActivity implements NavigationView.On
     DrawerLayout RegistrationDrawer;
 
     LinearLayout Basicdetails, Profilepic, Proofpic, Selectplan, Payment, Smartcard;
-    EditText Firstname, Lastname, Email, Phone, Address, DocNo, Amount, TransactionNo, Comments, CardNum, OtpNum,Age,EmergencyContact;
+    EditText Firstname, Lastname, Email, Phone, Address, DocNo, Amount, TransactionNo, Comments, CardNum, OtpNum, Age, EmergencyContact;
     CheckBox male, female, others;
     Spinner Country, State, City, DocType, Plans, Paymentmode, CountryCode;
     TextView statetv, citytv;
     ImageView profilepic, proofpic, proofpic_2;
     ImageButton Takeprofilepic, Takeproofpic, Takeproofpic_2;
-    String Fname, Lname, email, phone, address, gender, country, state, city, doctype, docno, uid, Planname, Planid, LoginId, userdetails, cardno,age,emergencycontact;
+    String Fname, Lname, email, phone, address, gender, country, state, city, doctype, docno, uid, Planname, Planid, LoginId, userdetails, cardno, age, emergencycontact;
     Bitmap profilephoto = null, proofphoto = null, proofphoto_2 = null;
     int Userid, CreditBalance, Usagefee, OTP;
     Menu nav_menu;
@@ -107,7 +107,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
     public static ArrayList<Integer> Totalamountofmembership = new ArrayList<Integer>();
     public ArrayAdapter<String> Membernameadapter;
 
-    JSONObject Memberobject, Documentobject, Docresultobject, Profileobject, Prospectiveobject,Emergencyobject;
+    JSONObject Memberobject, Documentobject, Docresultobject, Profileobject, Prospectiveobject, Emergencyobject;
     JSONArray Documentarray;
 
     SharedPreferences loginpref;
@@ -129,11 +129,6 @@ public class Registration extends AppCompatActivity implements NavigationView.On
         mToogle.syncState();
         Registration_navigation = (NavigationView) findViewById(R.id.registration_navigationview);
         nav_menu = Registration_navigation.getMenu();
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
 
         onpermision();
         getplans();
@@ -280,6 +275,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     Selectplan.setVisibility(View.GONE);
                     Payment.setVisibility(View.GONE);
                     Smartcard.setVisibility(View.GONE);
+                    AddMembers.setText("Generate OTP");
                     AddMembers.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -341,8 +337,9 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     Selectplan.setVisibility(View.VISIBLE);
                     Payment.setVisibility(View.VISIBLE);
                     Smartcard.setVisibility(View.VISIBLE);
-                    DocNo.setFilters(new InputFilter[] {new InputFilter.LengthFilter(12)});
+                    DocNo.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
                     DocNo.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    AddMembers.setText("Submit");
                     AddMembers.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -354,7 +351,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     Payment.setVisibility(View.VISIBLE);
                     Smartcard.setVisibility(View.VISIBLE);
                     DocNo.setInputType(InputType.TYPE_CLASS_TEXT);
-                    DocNo.setFilters(new InputFilter[] {new InputFilter.LengthFilter(30)});
+                    DocNo.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});
+                    AddMembers.setText("Submit");
                     AddMembers.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -366,7 +364,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     Payment.setVisibility(View.GONE);
                     Smartcard.setVisibility(View.GONE);
                     DocNo.setInputType(InputType.TYPE_CLASS_TEXT);
-                    DocNo.setFilters(new InputFilter[] {new InputFilter.LengthFilter(30)});
+                    DocNo.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});
+                    AddMembers.setText("Generate OTP");
                     AddMembers.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -447,12 +446,21 @@ public class Registration extends AppCompatActivity implements NavigationView.On
     }
 
     public void Takeproofpic(View view) {
-        Toast.makeText(Registration.this, "Document Picture", Toast.LENGTH_SHORT).show();
-        onpermision();
-        Intent proof = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(proof, ProofPicRequest);
-        Takeproofpic.setVisibility(View.GONE);
-        Takeproofpic_2.setVisibility(View.VISIBLE);
+        boolean hasproof = (proofpic.getDrawable() != null);
+        if (hasproof) {
+            Takeproofpic.setVisibility(View.GONE);
+            Takeproofpic_2.setVisibility(View.VISIBLE);
+
+        }
+        else {
+            Takeproofpic.setVisibility(View.VISIBLE);
+            Takeproofpic_2.setVisibility(View.GONE);
+            Toast.makeText(Registration.this, "Document Picture", Toast.LENGTH_SHORT).show();
+            onpermision();
+            Intent proof = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(proof, ProofPicRequest);
+        }
+
     }
 
     public void Takeproofpic_2(View view) {
@@ -502,29 +510,25 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             return;
         }
 
-        if(Age.getText().toString().trim().equals("")||Age.getText().toString().trim().equals(null))
-        {
+        if (Age.getText().toString().trim().equals("") || Age.getText().toString().trim().equals(null)) {
             Age.setError("Age");
             Age.requestFocus();
             return;
         }
 
-        if(EmergencyContact.getText().toString().trim().equals("")||EmergencyContact.getText().toString().trim().equals(null))
-        {
+        if (EmergencyContact.getText().toString().trim().equals("") || EmergencyContact.getText().toString().trim().equals(null)) {
             EmergencyContact.setError("Emergency Contact");
             EmergencyContact.requestFocus();
             return;
         }
 
-        if(EmergencyContact.getText().toString().trim().length()<10)
-        {
+        if (EmergencyContact.getText().toString().trim().length() < 10) {
             EmergencyContact.setError("Emergency Contact");
             EmergencyContact.requestFocus();
             return;
         }
 
-        if(Age.getText().toString().trim().length()<2)
-        {
+        if (Age.getText().toString().trim().length() < 2) {
             Age.setError("Age");
             Age.requestFocus();
             return;
@@ -552,7 +556,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             return;
         } else {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("Registration is in progress...");
+            mProgressDialog.setMessage("Generating OTP...");
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             mProgressDialog.setCancelable(true);
             mProgressDialog.show();
@@ -565,24 +569,6 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             }
             address = Address.getText().toString().trim();
             email = Email.getText().toString().trim();
-            if (male.isSelected()) {
-                gender = male.getTag().toString();
-                female.toggle();
-                others.toggle();
-                Toast.makeText(this, gender, Toast.LENGTH_SHORT).show();
-            }
-            if (female.isChecked()) {
-                gender = female.getTag().toString();
-                male.toggle();
-                others.toggle();
-                Toast.makeText(this, gender, Toast.LENGTH_SHORT).show();
-            }
-            if (others.isChecked()) {
-                gender = others.getTag().toString();
-                female.toggle();
-                male.toggle();
-                Toast.makeText(this, gender, Toast.LENGTH_SHORT).show();
-            }
             country = Country.getSelectedItem().toString();
             state = State.getSelectedItem().toString();
             city = City.getSelectedItem().toString();
@@ -594,9 +580,9 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 Documentobject.put("documentNumber", docno);
                 Docresultobject.put("result", getStringImage(proofphoto));
 
-                Emergencyobject.put("countryCode","91");
-                Emergencyobject.put("contactName","");
-                Emergencyobject.put("contactNumber",EmergencyContact.getText().toString().trim());
+                Emergencyobject.put("countryCode", "91");
+                Emergencyobject.put("contactName", "");
+                Emergencyobject.put("contactNumber", EmergencyContact.getText().toString().trim());
 
                 boolean hasproofpic_2 = (proofpic_2.getDrawable() != null);
                 if (hasproofpic_2) {
@@ -642,8 +628,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 Memberobject.put("documents", Documentarray);
                 Memberobject.put("UserID", Userid);
                 Memberobject.put("createdBy", LoginId);
-                Memberobject.put("age",Age.getText().toString().trim());
-                Memberobject.put("emergencyContact",Emergencyobject);
+                Memberobject.put("age", Age.getText().toString().trim());
+                Memberobject.put("emergencyContact", Emergencyobject);
                 sendprospectivedetailstoserver();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -659,29 +645,25 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             return;
         }
 
-        if(Age.getText().toString().trim().equals("")||Age.getText().toString().trim().equals(null))
-        {
+        if (Age.getText().toString().trim().equals("") || Age.getText().toString().trim().equals(null)) {
             Age.setError("Age");
             Age.requestFocus();
             return;
         }
 
-        if(EmergencyContact.getText().toString().trim().equals("")||EmergencyContact.getText().toString().trim().equals(null))
-        {
+        if (EmergencyContact.getText().toString().trim().equals("") || EmergencyContact.getText().toString().trim().equals(null)) {
             EmergencyContact.setError("Emergency Contact");
             EmergencyContact.requestFocus();
             return;
         }
 
-        if(EmergencyContact.getText().toString().trim().length()<10)
-        {
+        if (EmergencyContact.getText().toString().trim().length() < 10) {
             EmergencyContact.setError("Emergency Contact");
             EmergencyContact.requestFocus();
             return;
         }
 
-        if(Age.getText().toString().trim().length()<2)
-        {
+        if (Age.getText().toString().trim().length() < 2) {
             Age.setError("Age");
             Age.requestFocus();
             return;
@@ -721,8 +703,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             }
             doctype = DocType.getSelectedItem().toString();
             docno = DocNo.getText().toString();
-            if(doctype.equals("Aadhar")&&docno.length()<12)
-            {
+            if (doctype.equals("Aadhar") && docno.length() < 12) {
                 DocNo.setError("Aadhar Card");
                 DocNo.requestFocus();
                 return;
@@ -740,9 +721,9 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 Documentobject.put("documentNumber", docno);
                 Docresultobject.put("result", getStringImage(proofphoto));
 
-                Emergencyobject.put("countryCode","91");
-                Emergencyobject.put("contactName","");
-                Emergencyobject.put("contactNumber",EmergencyContact.getText().toString().trim());
+                Emergencyobject.put("countryCode", "91");
+                Emergencyobject.put("contactName", "");
+                Emergencyobject.put("contactNumber", EmergencyContact.getText().toString().trim());
 
                 boolean hasproofpic_2 = (proofpic_2.getDrawable() != null);
                 if (hasproofpic_2) {
@@ -803,8 +784,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 Memberobject.put("UserID", Userid);
                 Memberobject.put("createdBy", LoginId);
 
-                Memberobject.put("age",Age.getText().toString().trim());
-                Memberobject.put("emergencyContact",Emergencyobject);
+                Memberobject.put("age", Age.getText().toString().trim());
+                Memberobject.put("emergencyContact", Emergencyobject);
 
                 int getpostion = Plans.getSelectedItemPosition();
                 mProgressDialog = new ProgressDialog(this);
@@ -1071,7 +1052,6 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     Prospectiveobject = data;
                     Userid = Prospectiveobject.getInt("UserID");
                     mProgressDialog.dismiss();
-                    Toast.makeText(Registration.this, "Prospective Member", Toast.LENGTH_SHORT).show();
                     showotpdialog();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1157,7 +1137,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             Firstname.setEnabled(false);
             Lname = Memberobject.getString("lastName");
             Lastname.setText(Lname);
-            if(Memberobject.has("age")) {
+            if (Memberobject.has("age")) {
                 age = Memberobject.getString("age");
                 Age.setText(age);
                 Age.setEnabled(false);
@@ -1224,6 +1204,10 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                         Amount.setText(String.valueOf(CreditBalance));
                         Amount.setEnabled(false);
                     }
+                    else{
+                        Amount.setText(String.valueOf(CreditBalance));
+                        Amount.setEnabled(false);
+                    }
                 }
             }
             if (Memberobject.has("documents")) {
@@ -1255,7 +1239,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     try {
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                         StrictMode.setThreadPolicy(policy);
-                       URL url = new URL("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + doccopy_2 + ".png");
+                        URL url = new URL("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + doccopy_2 + ".png");
                         //URL url = new URL("http://43.251.80.79/mytrintrin/Member/" + Userid + "/" + doccopy_2 + ".png");
                         proofphoto_2 = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                         proofpic_2.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));
@@ -1284,7 +1268,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 StrictMode.setThreadPolicy(policy);
                 try {
                     URL url = new URL("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + profilepics + ".png");
-                   // URL url = new URL("http://43.251.80.79/mytrintrin/Member/" + Userid + "/" + profilepics + ".png");
+                    // URL url = new URL("http://43.251.80.79/mytrintrin/Member/" + Userid + "/" + profilepics + ".png");
                     profilephoto = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                     profilepic.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));
                     Takeprofilepic.setEnabled(false);
@@ -1406,9 +1390,23 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                             Userid = verifieddata.getInt("UserID");
                             if (isverified.equals("true")) {
                                 Toast.makeText(Registration.this, "OTP Verified.Please Continue.", Toast.LENGTH_LONG).show();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(
+                                        Registration.this);
+                                builder.setIcon(R.drawable.splashlogo);
+                                builder.setTitle("OTP");
+                                builder.setMessage("OTP Verified Successfully.Please Continue.");
+                                builder.setPositiveButton("OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog,
+                                                                int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                builder.show();
                                 Selectplan.setVisibility(View.VISIBLE);
                                 Payment.setVisibility(View.VISIBLE);
                                 Smartcard.setVisibility(View.VISIBLE);
+                                AddMembers.setText("Submit");
                                 AddMembers.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -1609,6 +1607,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             Selectplan.setVisibility(View.VISIBLE);
             Payment.setVisibility(View.VISIBLE);
             Smartcard.setVisibility(View.VISIBLE);
+            AddMembers.setText("Submit");
             AddMembers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1623,6 +1622,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             Selectplan.setVisibility(View.VISIBLE);
             Payment.setVisibility(View.VISIBLE);
             Smartcard.setVisibility(View.VISIBLE);
+            AddMembers.setText("Submit");
             AddMembers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -1633,6 +1633,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             Selectplan.setVisibility(View.GONE);
             Payment.setVisibility(View.GONE);
             Smartcard.setVisibility(View.GONE);
+            AddMembers.setText("Generate OTP");
             AddMembers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

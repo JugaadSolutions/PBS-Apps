@@ -67,12 +67,6 @@ public class Refund extends AppCompatActivity {
         memberid=getIntent().getIntExtra("userid",0);
         Refund_Username.setText(UserName);
         Log.d("Member ID", String.valueOf(memberid));
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
-
         checkinternet();
 
     }
@@ -145,10 +139,25 @@ public class Refund extends AppCompatActivity {
                                         @Override
                                         public void onResponse(String response) {
                                             Toast.makeText(Refund.this, "Refund success and Membership cancelled", Toast.LENGTH_SHORT).show();
-                                            Refund_Transactionid.setText("");
-                                            Refund_Comments.setText("");
-                                            startActivity(new Intent(Refund.this, GetStarted.class));
-                                            finish();
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(
+                                                    Refund.this);
+                                            builder.setIcon(R.drawable.splashlogo);
+                                            builder.setTitle("Refund");
+                                            builder.setMessage("Refund success and Membership cancelled.");
+                                            builder.setPositiveButton("OK",
+                                                    new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog,
+                                                                            int which) {
+                                                            dialog.dismiss();
+                                                            Refund_Transactionid.setText("");
+                                                            Refund_Comments.setText("");
+                                                            startActivity(new Intent(Refund.this, GetStarted.class));
+                                                            finish();
+                                                        }
+                                                    });
+                                            builder.setCancelable(false);
+                                            builder.show();
+
                                         }
                                     }, new Response.ErrorListener() {
                                         @Override

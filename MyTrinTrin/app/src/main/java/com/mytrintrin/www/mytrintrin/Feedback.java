@@ -39,7 +39,7 @@ public class Feedback extends AppCompatActivity {
 
     private Toolbar FeedBackToolbar;
     EditText FeedbackMessage;
-    String feedbackmessage,loginuserid,username;
+    String feedbackmessage, loginuserid, username;
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
     private ProgressDialog mProgressDialog;
@@ -55,37 +55,34 @@ public class Feedback extends AppCompatActivity {
         FeedbackMessage = (EditText) findViewById(R.id.message_feedback);
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
-        loginuserid = loginpref.getString("User-id",null);
+        loginuserid = loginpref.getString("User-id", null);
         username = getIntent().getStringExtra("Name");
         checkinternet();
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
     }
 
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+            // Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
-            Log.d("Internet Status", "Offline");
-            AlertDialog.Builder builder = new AlertDialog.Builder(Feedback.this);
-            builder.setIcon(R.mipmap.ic_signal_wifi_off_black_24dp);
+            android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                    Feedback.this);
+            builder.setIcon(R.drawable.splashlogo);
             builder.setTitle("NO INTERNET CONNECTION!!!");
             builder.setMessage("Your offline !!! Please check your connection and come back later.");
             builder.setPositiveButton("Exit",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
-            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -94,12 +91,10 @@ public class Feedback extends AppCompatActivity {
     }
     /*ends*/
 
-    public  void sendfeedback(View view)
-    {
+    public void sendfeedback(View view) {
         checkinternet();
         feedbackmessage = FeedbackMessage.getText().toString().trim();
-        if(feedbackmessage.equals("")||feedbackmessage.equals(null))
-        {
+        if (feedbackmessage.equals("") || feedbackmessage.equals(null)) {
             FeedbackMessage.setError("Enter Feedback");
             return;
         }
@@ -127,12 +122,12 @@ public class Feedback extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        startActivity(new Intent(Feedback.this,MyAccount.class));
+                        startActivity(new Intent(Feedback.this, MyAccount.class));
                         finish();
                     }
                 });
                 feedbackalert.setCancelable(false);
-                    feedbackalert.show();
+                feedbackalert.show();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -158,6 +153,27 @@ public class Feedback extends AppCompatActivity {
                     Toast.makeText(Feedback.this, "Please check your connection.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            Feedback.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(Feedback.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
@@ -171,7 +187,7 @@ public class Feedback extends AppCompatActivity {
                     error.printStackTrace();
                 }
             }
-        }){
+        }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
@@ -179,6 +195,7 @@ public class Feedback extends AppCompatActivity {
                 headers.put("Content-Type", "application/x-www-form-urlencoded");
                 return headers;
             }
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
@@ -187,9 +204,9 @@ public class Feedback extends AppCompatActivity {
                 params.put("ticketdate", ticketdate);
                 params.put("subject", "user feedback");
                 params.put("channel", "2");
-                params.put("description",feedbackmessage);
-                params.put("priority","2");
-                params.put("user",loginuserid);
+                params.put("description", feedbackmessage);
+                params.put("priority", "2");
+                params.put("user", loginuserid);
                 return params;
             }
         };

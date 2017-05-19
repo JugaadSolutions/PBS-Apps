@@ -49,12 +49,6 @@ public class ClosedTickets extends AppCompatActivity {
         Ticketstoolbar= (Toolbar) findViewById(R.id.closeticketstoolbar);
         Ticketstoolbar.setTitle("Tickets");
         setSupportActionBar(Ticketstoolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
 
         try {
             ClosedTicketsObject = new JSONObject(closedtickets);

@@ -52,10 +52,6 @@ public class Signup extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Intialize();
 
-        //To bypass ssl
-        Login.NukeSSLCerts nukeSSLCerts = new Login.NukeSSLCerts();
-        nukeSSLCerts.nuke();
-        //ends
     }
     private void Intialize() {
 
@@ -128,8 +124,21 @@ public class Signup extends AppCompatActivity {
                 Email.setText("");
                 Toast.makeText(Signup.this, "Sign Up successfull", Toast.LENGTH_LONG).show();
                 mProgressDialog.dismiss();
-                startActivity(new Intent(Signup.this, GetStarted.class));
-                finish();
+                AlertDialog.Builder Signupbuilder = new AlertDialog.Builder(Signup.this);
+                Signupbuilder.setIcon(R.drawable.splashlogo);
+                Signupbuilder.setTitle("Sign Up");
+                Signupbuilder.setMessage("Sign Up successfull.");
+                Signupbuilder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+                                dialog.dismiss();
+                                startActivity(new Intent(Signup.this, GetStarted.class));
+                                finish();
+                            }
+                        });
+                Signupbuilder.setCancelable(false);
+                Signupbuilder.show();
             }
         }, new Response.ErrorListener() {
             @Override
