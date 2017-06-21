@@ -3,6 +3,7 @@ package com.mytrintrin.www.pbs_trintrin;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,12 +42,14 @@ public class Refund extends AppCompatActivity {
 
     Button Refundrequest;
     String TransationId, Comments, Payment_mode, MemberBalance;
-    String UserName;
+    String UserName,loginid;
     Spinner Refund_Paymentmode;
     EditText Refund_Transactionid, Refund_Comments,Refund_Username;
     Toolbar Refundtoolbar;
     private ProgressDialog mProgressDialog;
     int memberid;
+    SharedPreferences loginpref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +69,10 @@ public class Refund extends AppCompatActivity {
         UserName=getIntent().getStringExtra("Name");
         memberid=getIntent().getIntExtra("userid",0);
         Refund_Username.setText(UserName);
-        Log.d("Member ID", String.valueOf(memberid));
+        //Log.d("Member ID", String.valueOf(memberid));
+        loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
+        editor = loginpref.edit();
+        loginid = loginpref.getString("User-id", null);
         checkinternet();
 
     }
@@ -86,12 +92,14 @@ public class Refund extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
             builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -230,6 +238,7 @@ public class Refund extends AppCompatActivity {
                                             params.put("creditMode", Payment_mode);
                                             params.put("transactionNumber", TransationId);
                                             params.put("comments", Comments);
+                                            params.put("createdBy", loginid);
                                             return params;
                                         }
                                     };

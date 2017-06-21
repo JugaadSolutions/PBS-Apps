@@ -48,7 +48,7 @@ public class Topup extends AppCompatActivity {
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
     String loginuserid, topupamount,Topupname, Topupid, TopupValidity;
-    int  Usagefee,TopupAmount,PGcharges,TotalAmount;
+    int  Usagefee,TopupAmount,TopupPGcharges,TotalAmount;
 
     public static ArrayList<String> TopupIDArrayList = new ArrayList<String>();
     public static ArrayList<String> TopupNameArrayList = new ArrayList<String>();
@@ -125,7 +125,7 @@ public class Topup extends AppCompatActivity {
 
     public void Topupuser(View view) {
 
-        TotalAmount = TopupAmount+PGcharges;
+        TotalAmount = TopupAmount+TopupPGcharges;
         String orderid = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         String vAccessCode = ServiceUtility.chkNull(access_code).toString().trim();
         String vMerchantId = ServiceUtility.chkNull(merchant_id).toString().trim();
@@ -263,9 +263,10 @@ public class Topup extends AppCompatActivity {
                         planvalidity_topup.setText("Validity : " + TopupValidityArrayList.get(position) + " days");
                         planuserfee_topup.setText("Usage Fee : " + Totalamountoftopup.get(position) + "/-");
                         planservicefee_topup.setText("Service Fee : " + TopupPgchargesList.get(position) + "/-");
-                        plantotalfee_topup.setText("Total : " + Totalamountoftopup.get(position) + "/-");
                         TopupAmount = Totalamountoftopup.get(position);
-                        PGcharges = TopupPgchargesList.get(position);
+                        TopupPGcharges = TopupPgchargesList.get(position);
+                        int total = TopupAmount + TopupPGcharges;
+                        plantotalfee_topup.setText("Total : "+total+"/-");
                     }
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {

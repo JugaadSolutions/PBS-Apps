@@ -66,7 +66,10 @@
             android:screenOrientation="portrait" />
         <activity android:name=".Rides" />
         <activity android:name=".Payment_History" />
-        <activity android:name=".ZoneAlert"
+        <activity
+            android:name=".ZoneAlert"
+            android:parentActivityName=".Redistribution" />
+        <activity android:name=".ForceBicycle"
             android:parentActivityName=".Redistribution"></activity>
     </application>
 

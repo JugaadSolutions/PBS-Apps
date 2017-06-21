@@ -67,7 +67,9 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -84,7 +86,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
     EditText Firstname, Lastname, Email, Phone, Address, DocNo, Amount, TransactionNo, Comments, CardNum, OtpNum, Age, EmergencyContact;
     CheckBox male, female, others;
     Spinner Country, State, City, DocType, Plans, Paymentmode, CountryCode;
-    TextView statetv, citytv;
+    TextView statetv, citytv,paymenttv;
     ImageView profilepic, proofpic, proofpic_2;
     ImageButton Takeprofilepic, Takeproofpic, Takeproofpic_2;
     String Fname, Lname, email, phone, address, gender, country, state, city, doctype, docno, uid, Planname, Planid, LoginId, userdetails, cardno, age, emergencycontact;
@@ -180,12 +182,14 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
-            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -243,6 +247,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
         TransactionNo = (EditText) findViewById(R.id.ettransactions);
         Comments = (EditText) findViewById(R.id.etcomments);
         Paymentmode = (Spinner) findViewById(R.id.paymentmode);
+        paymenttv = (TextView) findViewById(R.id.tvpaymentmode);
         Amount.setEnabled(false);
         /*Ends*/
 
@@ -253,8 +258,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
 
         AddMembers = (Button) findViewById(R.id.addmember_registration);
 
-        countrycodecheck();
-        documentcheck();
+
 
         if (getIntent().getExtras() != null) {
             Intent intent = getIntent();
@@ -265,6 +269,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             }
         } else {
             Toast.makeText(this, "New User", Toast.LENGTH_SHORT).show();
+            countrycodecheck();
+            documentcheck();
         }
 
         CountryCode.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -502,11 +508,13 @@ public class Registration extends AppCompatActivity implements NavigationView.On
 
         if (Phone.getText().toString().trim().equals("") || Phone.getText().toString().trim().equals(null)) {
             Phone.setError("Phone Number");
+            Phone.requestFocus();
             return;
         }
 
         if (Phone.getText().toString().trim().length() < 10) {
             Phone.setError("Phone Number");
+            Phone.requestFocus();
             return;
         }
 
@@ -758,6 +766,23 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     return;
                 }
 
+                if(Planname.equals("")||Planname.equals(null))
+                {
+                    AlertDialog.Builder Planerror = new AlertDialog.Builder(Registration.this);
+                    Planerror.setIcon(R.mipmap.logo);
+                    Planerror.setTitle("Membership Plan");
+                    Planerror.setMessage("Please select the plan");
+                    Planerror.setPositiveButton("Fetch Plan", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                           // getplans();
+                        }
+                    });
+                    Planerror.show();
+                    return;
+
+                }
                 //Documentobject.put("documentCopy", Docresultobject);
 
                 Memberobject.put("Name", Fname);
@@ -796,7 +821,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 AlertDialog.Builder Summary = new AlertDialog.Builder(Registration.this);
                 Summary.setIcon(R.mipmap.logo);
                 Summary.setTitle("Member summary");
-                Summary.setMessage("Name: " + Fname + "\n" + "Email: " + email + "\n" + "Phone: " + phone + "\n" + "Plan: " + Planname + "\n" + "Card Number: " + CardNum.getText().toString().trim() + "\n" + "Balance: " + Totalamountofmembership.get(getpostion));
+                Summary.setMessage("Name: " + Fname + "\n" + "Email: " + email + "\n" + "Phone: " + phone + "\n" + "Plan: " + Planname + "\n" + "Card Number: " + CardNum.getText().toString().trim() + "\n" + "Balance: " + Totalamountofmembership.get(getpostion)+"+Service Charges 10Rs");
                 Summary.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -907,12 +932,14 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
-                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -1088,12 +1115,14 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -1183,6 +1212,11 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 CreditBalance = Memberobject.getInt("creditBalance");
                 Boolean processingfee = Memberobject.getBoolean("processingFeesDeducted");
                 if (CreditBalance > 0 && processingfee.equals(false)) {
+                    Paymentmode.setVisibility(View.GONE);
+                    paymenttv.setVisibility(View.GONE);
+                    if(CreditBalance==360) {
+                        CreditBalance = CreditBalance - 10;
+                    }
                     if (Totalamountofmembership.contains(CreditBalance)) {
                         int getindex = Totalamountofmembership.indexOf(CreditBalance);
                         Toast.makeText(this, String.valueOf(Totalamountofmembership.indexOf(CreditBalance)), Toast.LENGTH_SHORT).show();
@@ -1190,10 +1224,13 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                         Planid = MembershipIDArrayList.get(getindex);
                         Plans.setSelection(getindex);
                         Plans.setEnabled(false);
+                        //CreditBalance = CreditBalance+10;
                         Amount.setText(String.valueOf(CreditBalance));
                         Amount.setEnabled(false);
                     }
                 } else if (CreditBalance > 0 && processingfee.equals(true)) {
+                    Paymentmode.setVisibility(View.GONE);
+                    paymenttv.setVisibility(View.GONE);
                     if (MembershipUsageArrayList.contains(CreditBalance)) {
                         int getindex = MembershipUsageArrayList.indexOf(CreditBalance);
                         Toast.makeText(this, String.valueOf(MembershipUsageArrayList.indexOf(CreditBalance)), Toast.LENGTH_SHORT).show();
@@ -1205,6 +1242,8 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                         Amount.setEnabled(false);
                     }
                     else{
+                        Paymentmode.setVisibility(View.GONE);
+                        paymenttv.setVisibility(View.GONE);
                         Amount.setText(String.valueOf(CreditBalance));
                         Amount.setEnabled(false);
                     }
@@ -1215,8 +1254,17 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                 JSONObject docobj = docsarray.getJSONObject(0);
                 String docnos = docobj.getString("documentNumber");
                 String doccopy = docobj.getString("documentCopy");
+                /*String docType = docobj.getString("documentType");
+                List doclist = Arrays.asList(getResources().getStringArray(R.array.proof_arrays));
+                if(doclist.contains(docType))
+                {
+                    int position = doclist.indexOf(docType);
+                    DocType.setSelection(position);
+                    DocType.setEnabled(false);
+                }
+                DocNo.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});*/
                 DocNo.setText(docnos);
-                DocNo.setEnabled(false);
+               // DocNo.setEnabled(false);
                 Takeproofpic.setEnabled(false);
                 try {
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -1234,7 +1282,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     String docnos_2 = docobj_2.getString("documentNumber");
                     String doccopy_2 = docobj_2.getString("documentCopy");
                     DocNo.setText(docnos_2);
-                    DocNo.setEnabled(false);
+                   // DocNo.setEnabled(false);
                     Takeproofpic_2.setEnabled(false);
                     try {
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();

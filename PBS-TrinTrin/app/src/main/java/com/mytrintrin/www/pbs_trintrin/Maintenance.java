@@ -102,7 +102,7 @@ public class Maintenance extends AppCompatActivity {
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+            //Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
             Log.d("Internet Status", "Offline");
@@ -115,12 +115,14 @@ public class Maintenance extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
             builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -143,6 +145,7 @@ public class Maintenance extends AppCompatActivity {
                     JSONObject responsefromserver = new JSONObject(response);
                     JSONArray data = responsefromserver.getJSONArray("data");
                     StationnameArrayList.clear();
+                    StationIdArrayList.clear();
                     for (i = 0; i < data.length(); i++) {
                         JSONObject stationnameobj = data.getJSONObject(i);
                         String id = stationnameobj.getString("StationID");
@@ -157,7 +160,7 @@ public class Maintenance extends AppCompatActivity {
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 stationname = DockingStationName_MC.getSelectedItem().toString();
                                 stationid = StationIdArrayList.get(position);
-                                Log.d("Sid",stationid);
+                               // Log.d("Sid",stationid);
                                 mProgressDialog.dismiss();
                             }
                             @Override
@@ -201,12 +204,14 @@ public class Maintenance extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
-                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -248,6 +253,7 @@ public class Maintenance extends AppCompatActivity {
                     JSONObject responsefromserver = new JSONObject(response);
                     JSONArray data = responsefromserver.getJSONArray("data");
                     McEmpnameArrayList.clear();
+                    McEmpIDArrayList.clear();
                     for(int i=0;i<data.length();i++)
                     {
                         JSONObject mcempobj = data.getJSONObject(i);
@@ -266,7 +272,7 @@ public class Maintenance extends AppCompatActivity {
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 mcempname = Employeelist_MC.getSelectedItem().toString();
                                 empid = McEmpIDArrayList.get(position);
-                                Log.d("empid",empid);
+                               // Log.d("empid",empid);
                                 mProgressDialog.dismiss();
                             }
                             @Override
@@ -311,12 +317,14 @@ public class Maintenance extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -412,12 +420,14 @@ public class Maintenance extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -535,12 +545,14 @@ public class Maintenance extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });

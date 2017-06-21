@@ -185,12 +185,14 @@ public class Rides extends AppCompatActivity {
                         RidesBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
                                     finish();
                             }
                         });
                         RidesBuilder.setNegativeButton("Refresh", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
                                     getridedetails();
                             }
                         });
@@ -233,12 +235,14 @@ public class Rides extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });

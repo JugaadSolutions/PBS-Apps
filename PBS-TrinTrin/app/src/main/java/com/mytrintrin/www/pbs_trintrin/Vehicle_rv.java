@@ -2,6 +2,8 @@ package com.mytrintrin.www.pbs_trintrin;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ public class Vehicle_rv extends AppCompatActivity {
     SharedPreferences.Editor editor;
     String loginuserid;
     LinearLayout Cyclewithrvemp, Cyclewithrv;
+    SwipeRefreshLayout Vehiclesinrv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,27 @@ public class Vehicle_rv extends AppCompatActivity {
         Cyclewithrvemp = (LinearLayout) findViewById(R.id.cyclewithrvemplayout);
         Cyclewithrv = (LinearLayout) findViewById(R.id.cyclewithrvlayout);
 
+        Vehiclesinrv = (SwipeRefreshLayout) findViewById(R.id.refreshcycleinrv);
+        Vehiclesinrv.setColorSchemeResources(android.R.color.holo_blue_dark,
+                android.R.color.holo_blue_light,
+                android.R.color.holo_green_light,
+                android.R.color.holo_green_light);
+
+        Vehiclesinrv.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                (new Handler()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Vehiclesinrv.setRefreshing(false);
+                        getcycleswithrvemp();
+                    }
+                },2000);
+            }
+        });
+
+
+
         checkinternet();
         getcycleswithrvemp();
     }
@@ -60,7 +84,7 @@ public class Vehicle_rv extends AppCompatActivity {
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+            //Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
             Log.d("Internet Status", "Offline");
@@ -72,12 +96,14 @@ public class Vehicle_rv extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
             builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -91,14 +117,14 @@ public class Vehicle_rv extends AppCompatActivity {
         StringRequest cylewithrvemprequest = new StringRequest(Request.Method.GET, API.getrvempcycles + loginuserid + "/cyclestatus", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(Vehicle_rv.this, response, Toast.LENGTH_SHORT).show();
-                Log.d("Cycle response", response);
+                Toast.makeText(Vehicle_rv.this, "Details fetched successfully", Toast.LENGTH_SHORT).show();
                 try {
                     JSONObject responsefromserver = new JSONObject(response);
                     JSONObject data = responsefromserver.getJSONObject("data");
                     if(data.has("user")) {
                         JSONArray user = data.getJSONArray("user");
                         if (user.length() > 0) {
+                            Cyclewithrvemp.removeAllViews();
                             for (int i = 0; i < user.length(); i++) {
                                 TextView cyclenouser = new TextView(Vehicle_rv.this);
                                 cyclenouser.setText(user.get(i).toString());
@@ -114,6 +140,7 @@ public class Vehicle_rv extends AppCompatActivity {
                     }
                     if(data.has("rv")) {
                         JSONArray rv = data.getJSONArray("rv");
+                        Cyclewithrv.removeAllViews();
                         if (rv.length() > 0) {
                             for (int i = 0; i < rv.length(); i++) {
                                 TextView cyclenorv = new TextView(Vehicle_rv.this);
@@ -161,12 +188,14 @@ public class Vehicle_rv extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });

@@ -2,16 +2,40 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
+    <item android:id="@+id/checkin_rv"
+        android:title="Check-in"
+        android:icon="@mipmap/ic_transfer_within_a_station_black_24dp"/>
+
+    <item android:id="@+id/checkout_rv"
+        android:title="Check-out"
+        android:icon="@mipmap/ic_transfer_within_a_station_black_24dp"/>
+
+    <item android:id="@+id/vehiclepostion_rv"
+        android:title="Cycle Position"
+        android:icon="@mipmap/ic_directions_bike_black_24dp"/>
+
+    <item android:id="@+id/fueldetails_rv"
+        android:title="Fuel Details"
+        android:icon="@mipmap/ic_local_gas_station_black_24dp"/>
+
+    <item android:id="@+id/KMdetails_rv"
+        android:title="KM Details"
+        android:icon="@mipmap/ic_local_shipping_black_24dp"/>
 
     <item android:id="@+id/changefleet_rv"
-        android:title="Change Fleet"
-        />
+        android:title="Select Fleet"
+        android:icon="@mipmap/ic_loop_black_24dp"/>
 
     <item android:id="@+id/changepassword_rv"
         android:title="Change Password"
-        />
+        android:icon="@mipmap/ic_edit_black_24dp"/>
+
+    <item android:id="@+id/forcebicycle_rv"
+        android:title="Force Bicycle"
+        android:icon="@mipmap/ic_directions_bike_black_24dp"/>
 
     <item android:id="@+id/logout_rv"
-        android:title="Logout"/>
+        android:title="Logout"
+        android:icon="@mipmap/ic_power_settings_new_black_24dp"/>
 
 </menu>

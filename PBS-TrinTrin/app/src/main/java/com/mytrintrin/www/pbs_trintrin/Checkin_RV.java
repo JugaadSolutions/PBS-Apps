@@ -1,6 +1,7 @@
 package com.mytrintrin.www.pbs_trintrin;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -80,6 +81,10 @@ public class Checkin_RV extends AppCompatActivity {
 
     int j = 0;
 
+    SharedPreferences loginpref;
+    SharedPreferences.Editor editor;
+    String loginuserid,alertmsg;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +113,9 @@ public class Checkin_RV extends AppCompatActivity {
 
         fleetname = getIntent().getStringExtra("fleetname");
 
+        loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
+        loginuserid = loginpref.getString("User-id", null);
+
         getRestributiondetails();
         getMCdetails();
         getHAdetails();
@@ -122,7 +130,7 @@ public class Checkin_RV extends AppCompatActivity {
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+            //Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
             Log.d("Internet Status", "Offline");
@@ -135,12 +143,14 @@ public class Checkin_RV extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
             builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -270,21 +280,20 @@ public class Checkin_RV extends AppCompatActivity {
         StringRequest checkinrequest = new StringRequest(Request.Method.POST, API.checkinurl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("check out Response", response);
                 try {
                     cycleidcount = Allcycleid.size();
                     JSONObject responsefromserver = new JSONObject(response);
                     JSONObject data = responsefromserver.getJSONObject("data");
                     String errorstatus = data.getString("errorStatus");
                     if (errorstatus.equals("0")) {
-                        Toast.makeText(Checkin_RV.this, "Check in Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Checkin_RV.this, str +"Check in Successfully", Toast.LENGTH_SHORT).show();
                         Allcycleid.clear();
                         Allcycleidlist.clear();
                         Bicyleidlayout.removeAllViews();
                         checkinVehicleID.setText("");
-                        checkinCardID.setText("");
+                       // checkinCardID.setText("");
                         //checkinstationspinner.setSelection(0);
-                        checkinstations();
+                        //checkinstations();
                     } else {
                         CheckinErrorlayout.setVisibility(View.VISIBLE);
                         String errormessage = data.getString("errorMsg");
@@ -342,12 +351,14 @@ public class Checkin_RV extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -398,12 +409,29 @@ public class Checkin_RV extends AppCompatActivity {
                 try {
                     JSONObject restributionfromserver = new JSONObject(response);
                     JSONArray restributiondataarray = restributionfromserver.getJSONArray("data");
+                    RVIDArrayList.clear();
+                    RVNameArrayList.clear();
                     for (int i = 0; i < restributiondataarray.length(); i++) {
                         JSONObject portid = restributiondataarray.getJSONObject(i);
-                        String id = portid.getString("_id");
-                        String name = portid.getString("Name");
-                        RVIDArrayList.add(id);
-                        RVNameArrayList.add(name);
+                        if(portid.has("assignedTo"))
+                        {
+                            JSONObject assigned = portid.getJSONObject("assignedTo");
+                            if(!assigned.equals(null))
+                            {
+                                String userid = assigned.getString("UserID");
+                                if(userid.equals(loginuserid))
+                                {
+                                    String id = portid.getString("_id");
+                                    String name = portid.getString("Name");
+                                    RVIDArrayList.add(id);
+                                    RVNameArrayList.add(name);
+                                }
+                            }
+                        }
+                        /*else {
+                            alertmsg = "RV is not assigned for you.";
+                            showalert(alertmsg);
+                        }*/
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -440,12 +468,14 @@ public class Checkin_RV extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -486,6 +516,8 @@ public class Checkin_RV extends AppCompatActivity {
                 try {
                     JSONObject maintenancefromserver = new JSONObject(response);
                     JSONArray maintenancedataarray = maintenancefromserver.getJSONArray("data");
+                    MCIDArrayList.clear();
+                    MCNameArrayList.clear();
                     for (int i = 0; i < maintenancedataarray.length(); i++) {
                         JSONObject maintenanceid = maintenancedataarray.getJSONObject(i);
                         String id = maintenanceid.getString("_id");
@@ -574,6 +606,8 @@ public class Checkin_RV extends AppCompatActivity {
                 try {
                     JSONObject holdingareafromserver = new JSONObject(response);
                     JSONArray holdingareadataarray = holdingareafromserver.getJSONArray("data");
+                    HAIDArrayList.clear();
+                    HANameArrayList.clear();
                     for (int i = 0; i < holdingareadataarray.length(); i++) {
                         JSONObject holdingareaid = holdingareadataarray.getJSONObject(i);
                         String id = holdingareaid.getString("_id");
@@ -616,12 +650,14 @@ public class Checkin_RV extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -760,5 +796,22 @@ public class Checkin_RV extends AppCompatActivity {
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {
         }
+    }
+
+    public void showalert(String alertmessage)
+    {
+        AlertDialog.Builder alertbuilder = new AlertDialog.Builder(
+                Checkin_RV.this);
+        alertbuilder.setIcon(R.drawable.splashlogo);
+        alertbuilder.setTitle("Redistribution");
+        alertbuilder.setMessage(alertmessage);
+        alertbuilder.setPositiveButton("Exit",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertbuilder.show();
     }
 }

@@ -3,11 +3,11 @@ package com.mytrintrin.www.pbs_trintrin;
 
 public class API {
 
-    //public static  final String Baseurl="http://43.251.80.79:13070/api/";   //PBS Internal Test
-  //public static  final String Baseurl="http://43.251.80.79:13060/api/";   //PBS Development
- //   public static  final String Baseurl="http://43.251.80.79:13065/api/";   //PBS Admin Test : External Test Instance
-  // public static  final String Baseurl="https://43.251.80.72:13060/api/";   //PBS Admin Test : Internal  sync Test Instance
-   public static  final String Baseurl="https://www.mytrintrin.com:13060/api/";   //PBS Admin Test : SDC Test Instance
+  //public static  final String Baseurl="http://43.251.80.79:13070/api/";   //PBS Internal Test
+ // public static  final String Baseurl="http://43.251.80.79:13060/api/";   //PBS Development
+  //public static  final String Baseurl="http://43.251.80.79:13065/api/";   //PBS Admin Test : External Test Instance
+  //public static  final String Baseurl="https://www.mytrintrin.com:13070/api/";   //PBS Admin Test : SDC Instance
+  public static  final String Baseurl="https://www.mytrintrin.com:13060/api/";   //PBS Admin : SDC Instance
 
     public static final String register =Baseurl+"member";
 
@@ -84,4 +84,10 @@ public class API {
     public static final String ridehistory =Baseurl+"transactions/myrides/member/";
 
     public static final String paymenthistory =Baseurl+"paymenttransaction/member/";
+
+    public static final String getassignedregistrationcenter =Baseurl+"registrationcenter";
+
+    public static final String getallvehicles =Baseurl+"vehicle";
+
+    public static final String forcebicycle = Baseurl+"vehicle/force";
 }

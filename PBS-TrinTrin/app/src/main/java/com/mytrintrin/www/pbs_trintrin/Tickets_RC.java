@@ -114,12 +114,14 @@ public class Tickets_RC extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
             builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -137,16 +139,19 @@ public class Tickets_RC extends AppCompatActivity {
         if(Name.equals("")||Name.equals(null))
         {
             Name_ticketrc.setError("Name");
+            Name_ticketrc.requestFocus();
             return;
         }
         if(Subject.equals("")||Subject.equals(null))
         {
             Subject_ticketrc.setError("Subject");
+            Subject_ticketrc.requestFocus();
             return;
         }
         if(Description.equals("")||Description.equals(null))
         {
             Description_ticketrc.setError("Description");
+            Description_ticketrc.requestFocus();
             return;
         }
         mProgressDialog = new ProgressDialog(this);
@@ -188,6 +193,7 @@ public class Tickets_RC extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             startActivity(new Intent(Tickets_RC.this,GetStarted.class));
+                            dialogInterface.dismiss();
                             finish();
                         }
                     });
@@ -328,12 +334,14 @@ public class Tickets_RC extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
-                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });

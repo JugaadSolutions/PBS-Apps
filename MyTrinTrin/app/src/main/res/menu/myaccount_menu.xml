@@ -39,6 +39,11 @@
         android:icon="@mipmap/ic_receipt_black_24dp"
         android:visible="true"/>
 
+    <item android:id="@+id/contactus_myaccount"
+        android:title="Contact Us"
+        android:icon="@mipmap/ic_announcement_black_24dp"
+        android:visible="true"/>
+
     <item android:id="@+id/logout_myaccount"
         android:title="Logout"
         android:icon="@mipmap/ic_power_settings_new_black_24dp"/>

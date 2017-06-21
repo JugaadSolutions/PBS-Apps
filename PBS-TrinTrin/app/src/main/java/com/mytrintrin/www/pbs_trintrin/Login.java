@@ -98,6 +98,7 @@ public class Login extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
@@ -196,21 +197,27 @@ public class Login extends AppCompatActivity {
                     JSONObject data = responsefromserver.getJSONObject("data");
                     String userid = data.getString("uid");
                     String role = data.getString("role");
-                    editor.putString("User-id", userid);
-                    editor.putString("Role",role);
-                    editor.commit();
                     mProgressDialog.dismiss();
                     if (role.equals("registration-employee")) {
+                        editor.putString("User-id", userid);
+                        editor.putString("Role",role);
+                        editor.commit();
                         startActivity(new Intent(Login.this, GetStarted.class));
                         finish();
                     }
                     else if(role.equals("redistribution-employee"))
                     {
+                        editor.putString("User-id", userid);
+                        editor.putString("Role",role);
+                        editor.commit();
                         startActivity(new Intent(Login.this, Redistribution.class));
                         finish();
                     }
                     else if(role.equals("maintenancecentre-employee"))
                     {
+                        editor.putString("User-id", userid);
+                        editor.putString("Role",role);
+                        editor.commit();
                         startActivity(new Intent(Login.this, GetStarted_MC.class));
                         finish();
                     }
@@ -265,12 +272,14 @@ public class Login extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
-                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });

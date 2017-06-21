@@ -125,7 +125,7 @@ public class Checkout_RV extends AppCompatActivity {
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+           // Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
             Log.d("Internet Status", "Offline");
@@ -138,12 +138,14 @@ public class Checkout_RV extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
-            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -203,7 +205,7 @@ public class Checkout_RV extends AppCompatActivity {
         for (int i = 1; i < cycleidcount; i++) {
             Allcycleidlist.add(i, Allcycleid.get(i - 1).getText().toString());
         }
-        Toast.makeText(this, String.valueOf(cycleidcount), Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, String.valueOf(cycleidcount), Toast.LENGTH_SHORT).show();
         for (j = 0; j < cycleidcount; j++) {
             checkinternet();
             getcheckoutdetails();
@@ -238,7 +240,7 @@ public class Checkout_RV extends AppCompatActivity {
         StringRequest checkoutrequest = new StringRequest(Request.Method.POST, API.checkouturl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("check out Response", response);
+              //  Log.d("check out Response", response);
                 checkoutstationspinner.setSelection(0);
                 try {
                     cycleidcount = Allcycleid.size();
@@ -246,7 +248,7 @@ public class Checkout_RV extends AppCompatActivity {
                     JSONObject data = responsefromserver.getJSONObject("data");
                     String errorstatus = data.getString("errorStatus");
                     if (errorstatus.equals("0")) {
-                        Toast.makeText(Checkout_RV.this, "Check out Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Checkout_RV.this,str +" Check out Successfully", Toast.LENGTH_SHORT).show();
                         Allcycleid.clear();
                         Allcycleidlist.clear();
                         Bicyleidlayout.removeAllViews();
@@ -315,12 +317,14 @@ public class Checkout_RV extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
-                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -494,6 +498,8 @@ public class Checkout_RV extends AppCompatActivity {
                 try {
                     JSONObject fleetresponsefronserver = new JSONObject(response);
                     JSONArray fleetdataarray = fleetresponsefronserver.getJSONArray("data");
+                    FleetIDArrayList.clear();
+                    FleetNameArrayList.clear();
                     for (int i = 0; i < fleetdataarray.length(); i++) {
                         JSONObject getid = fleetdataarray.getJSONObject(i);
                         String id = getid.getString("_id");
@@ -537,12 +543,14 @@ public class Checkout_RV extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
-                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -583,6 +591,8 @@ public class Checkout_RV extends AppCompatActivity {
                 try {
                     JSONObject restributionfromserver = new JSONObject(response);
                     JSONArray restributiondataarray = restributionfromserver.getJSONArray("data");
+                    RVIDArrayList.clear();
+                    RVNameArrayList.clear();
                     for (int i = 0; i < restributiondataarray.length(); i++) {
                         JSONObject portid = restributiondataarray.getJSONObject(i);
                         String id = portid.getString("_id");
@@ -626,12 +636,14 @@ public class Checkout_RV extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
-                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -718,6 +730,8 @@ public class Checkout_RV extends AppCompatActivity {
                 try {
                     JSONObject maintenancefromserver = new JSONObject(response);
                     JSONArray maintenancedataarray = maintenancefromserver.getJSONArray("data");
+                    MCIDArrayList.clear();
+                    MCNameArrayList.clear();
                     for (int i = 0; i < maintenancedataarray.length(); i++) {
                         JSONObject maintenanceid = maintenancedataarray.getJSONObject(i);
                         String id = maintenanceid.getString("_id");
@@ -806,6 +820,8 @@ public class Checkout_RV extends AppCompatActivity {
                 try {
                     JSONObject holdingareafromserver = new JSONObject(response);
                     JSONArray holdingareadataarray = holdingareafromserver.getJSONArray("data");
+                    HANameArrayList.clear();
+                    HAIDArrayList.clear();
                     for (int i = 0; i < holdingareadataarray.length(); i++) {
                         JSONObject holdingareaid = holdingareadataarray.getJSONObject(i);
                         String id = holdingareaid.getString("_id");
@@ -849,12 +865,14 @@ public class Checkout_RV extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });

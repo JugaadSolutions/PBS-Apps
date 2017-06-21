@@ -180,12 +180,14 @@ public class Addcycle extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
-            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -235,12 +237,14 @@ public class Addcycle extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -281,14 +285,12 @@ public class Addcycle extends AppCompatActivity {
                 Fleetobject = Fleetarray.getJSONObject(i);
                 String id = Fleetobject.getString("_id");
                 String name = Fleetobject.getString("Name");
-                Log.d("ID", id);
+                //Log.d("ID", id);
                 FleetIDArrayList.add(id);
                 FleetNameArrayList.add(name);
                 JSONObject Stationname = Fleetobject.getJSONObject("StationId");
                 String sname =  Stationname.getString("name");
                 StationNameArrayList.add(sname);
-                Log.d("Array ID", String.valueOf(FleetIDArrayList));
-                Log.d("Station Name", sname);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -346,7 +348,7 @@ public class Addcycle extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Log.d("NFC Tag", "Detected");
+       // Log.d("NFC Tag", "Detected");
         resolveIntent(intent);
     }
 
@@ -578,7 +580,7 @@ public class Addcycle extends AppCompatActivity {
                             Allcyclerfid.remove(toberemovedid);
                             addcyclerfidlist.remove(toberemovedid+1);
                             Alldetailslist.remove(toberemovedid);
-                            Toast.makeText(Addcycle.this, "Current cycle clear "+Allcycleclear.size() +"current card num "+Allcyclenum.size() + "current card rfid "+Allcyclerfid.size(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(Addcycle.this, "Current cycle clear "+Allcycleclear.size() +"current card num "+Allcyclenum.size() + "current card rfid "+Allcyclerfid.size(), Toast.LENGTH_SHORT).show();
 
                             View Remove =CycleDetails.getChildAt(toberemovedid);
                             CycleDetails.removeView(Remove);
@@ -611,7 +613,7 @@ public class Addcycle extends AppCompatActivity {
 
                     CycleDetails.addView(alldetails);
 
-                    Toast.makeText(this, "All Cycle Clear "+Allcycleclear.size() +"All card num "+Allcyclenum.size()+ "All Cycle RFIT "+Allcyclerfid.size(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "All Cycle Clear "+Allcycleclear.size() +"All card num "+Allcyclenum.size()+ "All Cycle RFIT "+Allcyclerfid.size(), Toast.LENGTH_SHORT).show();
                     a++;
                 }
             }
@@ -669,7 +671,6 @@ public class Addcycle extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 mProgressDialog.dismiss();
-                Toast.makeText(Addcycle.this, response, Toast.LENGTH_LONG).show();
                 CycleErrorDetails.setVisibility(View.GONE);
             }
         }, new Response.ErrorListener() {
@@ -706,12 +707,14 @@ public class Addcycle extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -786,7 +789,6 @@ public class Addcycle extends AppCompatActivity {
                                 addcyclefleet = FleetAddCycleSpinner.getSelectedItem().toString();
                                 addcyclefleetid = FleetIDArrayList.get(position);
                                 stationname_addcycle = StationNameArrayList.get(position);
-                                Log.d("Fleet port id", addcyclefleetid);
                             }
                             @Override
                             public void onNothingSelected(AdapterView<?> parent) {

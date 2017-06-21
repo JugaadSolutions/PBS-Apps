@@ -36,6 +36,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -331,12 +332,17 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         if (mGPSService.isLocationAvailable == false) {
             Toast.makeText(this, "Your location is not available, please try again.", Toast.LENGTH_SHORT).show();
             currentlocation = new Location("");
-            currentlocation.setLatitude(0);
-            currentlocation.setLongitude(0);
+            currentlocation.setLatitude(12.3033);
+            currentlocation.setLongitude(76.64586);
         } else {
             currentlatitude = mGPSService.getLatitude();
             currentlongitude = mGPSService.getLongitude();
             currentlocation = new Location("");
+            if(currentlatitude==0.0&&currentlongitude==0.0)
+            {
+                currentlatitude=12.3033;
+                currentlongitude=76.64586;
+            }
             currentlocation.setLatitude(currentlatitude);
             currentlocation.setLongitude(currentlongitude);
         }
@@ -1077,7 +1083,24 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
             tickets.putExtra("Name", username);
             startActivity(tickets);
         }
-
+        else if(id == R.id.contactus_myaccount)
+        {
+            AlertDialog.Builder contactdialog = new AlertDialog.Builder(this);
+            contactdialog.setTitle("Contact Us");
+            contactdialog.setIcon(R.drawable.splashlogo);
+            LayoutInflater contactinflate = LayoutInflater.from(this);
+            View contactView = contactinflate.inflate(R.layout.contactus,null);
+            TextView Version = (TextView) contactView.findViewById(R.id.versiontextview);
+            Version.setText("Version : "+BuildConfig.VERSION_NAME.toString());
+            contactdialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                }
+            });
+            contactdialog.setView(contactView);
+            contactdialog.show();
+        }
         return false;
     }
 

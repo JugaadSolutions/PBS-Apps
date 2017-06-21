@@ -31,5 +31,7 @@ Trin Trin is a Government of Karnataka project, partially funded by the World Ba
 This is a system where bicycles are owned and operated by a civic administration and its associates, for shared, short-term use by local residents as well as visitors, on an easy rental basis. The system involves borrowing a bicycle from any ‘docking station’ across the city and returning the borrowed bicycle after a ride to any ‘docking station’, as suits the convenience of the rider.
 “TrinTrin”, the PBS of Mysuru will be implemented and operated by <b>Green Wheel Ride</b>, an Mysuru city based enterprise engaged in manufacturing eco-friendly battery-operated bicycles, and promoting the concept and culture of cycling in Mysuru City. Currently the system features 52 hubs and 450 bicycles.</string>
 
+    <string name="contact_us_myaccount"><font size="20"><b>Email us:\n</b></font>support@mytrintrin.com\n\n<font size="20"><b>Need to Call us?\n</b></font>+91 821 2333 000\nTrin Trin Bicycle Sharing Operating Hours – 6AM to 10PM\nCall Centre operating hours – 9AM to 6PM\n
+</string>
 
 </resources>

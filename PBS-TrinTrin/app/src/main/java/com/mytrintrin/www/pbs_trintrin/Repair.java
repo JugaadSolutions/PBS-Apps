@@ -115,12 +115,14 @@ public class Repair extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
             builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                         checkinternet();
                 }
             });
@@ -142,6 +144,8 @@ public class Repair extends AppCompatActivity {
                 try {
                     JSONObject responsefromserver = new JSONObject(response);
                     JSONArray data = responsefromserver.getJSONArray("data");
+                    StationIdArrayList.clear();
+                    StationnameArrayList.clear();
                     for (i = 0; i < data.length(); i++) {
                         JSONObject stationnameobj = data.getJSONObject(i);
                         String id = stationnameobj.getString("StationID");
@@ -200,12 +204,14 @@ public class Repair extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -247,6 +253,7 @@ public class Repair extends AppCompatActivity {
                     JSONObject responsefromserver = new JSONObject(response);
                     JSONArray data = responsefromserver.getJSONArray("data");
                     McEmpnameArrayList.clear();
+                    McEmpIDArrayList.clear();
                     for(int i=0;i<data.length();i++)
                     {
                         JSONObject mcempobj = data.getJSONObject(i);
@@ -265,7 +272,6 @@ public class Repair extends AppCompatActivity {
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                 mcempname = Employeelist_MC.getSelectedItem().toString();
                                 empid = McEmpIDArrayList.get(position);
-                                Log.d("empid",empid);
                                 mProgressDialog.dismiss();
                             }
                             @Override
@@ -310,12 +316,14 @@ public class Repair extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -403,7 +411,27 @@ public class Repair extends AppCompatActivity {
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
                     Toast.makeText(Repair.this, "Please check your connection.", Toast.LENGTH_LONG).show();
-                    checkinternet();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Repair.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
@@ -538,12 +566,14 @@ public class Repair extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });

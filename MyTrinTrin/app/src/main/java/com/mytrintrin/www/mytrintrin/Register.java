@@ -269,7 +269,7 @@ public class Register extends AppCompatActivity {
     {
         AlertDialog.Builder ErrorBuilder = new AlertDialog.Builder(Register.this);
         ErrorBuilder.setIcon(R.drawable.splashlogo);
-        ErrorBuilder.setTitle("Change Password");
+        ErrorBuilder.setTitle("Password");
         ErrorBuilder.setMessage(errormsg);
         ErrorBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override

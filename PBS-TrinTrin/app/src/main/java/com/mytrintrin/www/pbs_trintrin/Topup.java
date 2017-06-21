@@ -2,6 +2,7 @@ package com.mytrintrin.www.pbs_trintrin;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +42,7 @@ public class Topup extends AppCompatActivity {
 
     private Toolbar Topuptoolbar;
     EditText Transactionno_topup, Comments_topup, Username_topup;
-    String amountfortopup, Usernamefortopup, transactionno_topup, comments_topup, Topupname, Topupid, TopupValidity;
+    String amountfortopup, Usernamefortopup, transactionno_topup, comments_topup, Topupname, Topupid, TopupValidity,loginid;
     int Memberid_topup, Usagefee;
     Spinner Paymentmode_topup;
     public static ArrayList<String> TopupIDArrayList = new ArrayList<String>();
@@ -52,6 +53,8 @@ public class Topup extends AppCompatActivity {
     public ArrayAdapter<String> Topupadapter;
     TextView planname_topup, planvalidity_topup, planuserfee_topup, plantotalfee_topup;
     JSONObject Topupobject;
+    SharedPreferences loginpref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,9 @@ public class Topup extends AppCompatActivity {
         planvalidity_topup = (TextView) findViewById(R.id.planvalidity_topup);
         planuserfee_topup = (TextView) findViewById(R.id.planusagefee_topup);
         plantotalfee_topup = (TextView) findViewById(R.id.plantotalfee_topup);
+        loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
+        editor = loginpref.edit();
+        loginid = loginpref.getString("User-id", null);
         checkinternet();
 
         gettopupplans();
@@ -80,7 +86,7 @@ public class Topup extends AppCompatActivity {
     //checking internet
     public void checkinternet() {
         if (AppStatus.getInstance(this).isOnline()) {
-            Log.d("Internet Status", "Online");
+            //Log.d("Internet Status", "Online");
         } else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
             Log.d("Internet Status", "Offline");
@@ -92,12 +98,14 @@ public class Topup extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog,
                                             int which) {
+                            dialog.dismiss();
                             finish();
                         }
                     });
             builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
                     checkinternet();
                 }
             });
@@ -112,10 +120,12 @@ public class Topup extends AppCompatActivity {
         comments_topup = Comments_topup.getText().toString().trim();
         if (transactionno_topup.isEmpty()) {
             Transactionno_topup.setError("Transaction Number");
+            Transactionno_topup.requestFocus();
             return;
         }
         if (comments_topup.isEmpty()) {
             Comments_topup.setError("Comments");
+            Comments_topup.requestFocus();
             return;
         }
         StringRequest topuprequest = new StringRequest(Request.Method.POST, API.addcredit + Memberid_topup + "/topup", new Response.Listener<String>() {
@@ -130,6 +140,7 @@ public class Topup extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         startActivity(new Intent(Topup.this, GetStarted.class));
+                        dialogInterface.dismiss();
                         finish();
                     }
                 });
@@ -165,12 +176,14 @@ public class Topup extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -206,6 +219,7 @@ public class Topup extends AppCompatActivity {
                 params.put("creditMode", Paymentmode_topup.getSelectedItem().toString());
                 params.put("transactionNumber", transactionno_topup);
                 params.put("comments", comments_topup);
+                params.put("createdBy", loginid);
                 return params;
             }
         };
@@ -255,12 +269,14 @@ public class Topup extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                                     int which) {
+                                    dialog.dismiss();
                                     finish();
                                 }
                             });
                     builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
                             checkinternet();
                         }
                     });
@@ -297,6 +313,7 @@ public class Topup extends AppCompatActivity {
         try {
             JSONArray data = Topupobject.getJSONArray("data");
             TopupNameArrayList.clear();
+            TopupIDArrayList.clear();
             for (int i = 0; i < data.length(); i++) {
                 JSONObject getid = data.getJSONObject(i);
                 String id = getid.getString("topupId");
