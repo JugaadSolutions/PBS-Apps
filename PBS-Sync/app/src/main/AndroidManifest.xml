@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mytrintrin.www.pbs_sync">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".Getstarted">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Allusers"
+            android:parentActivityName=".Getstarted" />
+        <activity
+            android:name=".Allvehicles"
+            android:parentActivityName=".Getstarted" />
+        <activity
+            android:name=".User"
+            android:parentActivityName=".Getstarted" />
+        <activity
+            android:name=".Vehicle"
+            android:parentActivityName=".Getstarted" />
+        <activity
+            android:name=".Clearcheckout"
+            android:parentActivityName=".Getstarted" />
+        <activity
+            android:name=".Checkin"
+            android:parentActivityName=".Getstarted" />
+        <activity
+            android:name=".Checkout"
+            android:parentActivityName=".Getstarted" />
+        <activity android:name=".Clearcheckin" />
+        <activity android:name=".multipleCheckout_clear"></activity>
+    </application>
+
+</manifest>

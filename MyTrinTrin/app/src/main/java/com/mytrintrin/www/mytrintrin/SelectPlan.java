@@ -251,7 +251,7 @@ public class SelectPlan extends AppCompatActivity {
         TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(getplanrequest);
     }
 
-    public void makeplanpayment(View view)
+   /* public void makeplanpayment(View view)
     {
         String orderid = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         String vAccessCode =ServiceUtility.chkNull(access_code).toString().trim();
@@ -275,5 +275,80 @@ public class SelectPlan extends AppCompatActivity {
         }else{
            // showToast("All parameters are mandatory.");
         }
+    }*/
+
+    public void makeplanpayment(View view)
+    {
+        final String CustomerId = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        StringRequest selectplanrequest = new StringRequest(Request.Method.POST, API.selectplan, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d("select plan response ",response);
+                if(!response.equals(null))
+                {
+                    Intent paygovintent = new Intent(SelectPlan.this,Paygovwebview.class);
+                    paygovintent.putExtra("paygovresponse",response);
+                    startActivity(paygovintent);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                if (error instanceof ServerError) {
+                    Toast.makeText(SelectPlan.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", String.valueOf(error instanceof ServerError));
+                    mProgressDialog.dismiss();
+                    error.printStackTrace();
+                } else if (error instanceof AuthFailureError) {
+                    Toast.makeText(SelectPlan.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Authentication Error");
+                    error.printStackTrace();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(SelectPlan.this, "Parse Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Parse Error");
+                    error.printStackTrace();
+                } else if (error instanceof NetworkError) {
+                    Toast.makeText(SelectPlan.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Network Error");
+                    error.printStackTrace();
+                } else if (error instanceof TimeoutError) {
+                    Toast.makeText(SelectPlan.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Timeout Error");
+                    error.printStackTrace();
+                } else if (error instanceof NoConnectionError) {
+                    Toast.makeText(SelectPlan.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(SelectPlan.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                }
+
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("amount", String.valueOf(plantotal));
+                params.put("CustomerID", "201706222102555");
+                params.put("AdditionalInfo1",Planname);
+                params.put("AdditionalInfo2","NewMember");
+                params.put("AdditionalInfo3",loginuserid);
+                return params;
+            }
+        };
+        selectplanrequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(selectplanrequest);
     }
 }

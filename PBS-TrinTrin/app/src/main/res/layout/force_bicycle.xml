@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/force_bicycle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mytrintrin.www.pbs_trintrin.ForceBicycle"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/forceview">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/forcetoolbar"
+        android:theme="@style/customToolbartheme">
+
+    </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/forcemainlayout"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/forcelayout"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+
+            <EditText
+                android:id="@+id/cyclenumber_force"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/input_outline"
+                android:ems="10"
+                android:inputType="number"
+                android:padding="12dp"
+                android:hint="Bicycle Number"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:textColorHint="@color/colorPrimary"
+                android:maxLength="@integer/bicycleno"/>
+
+          <!--  <TextView
+                android:text="Select Station"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginBottom="5dp"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/stationspinner"
+                android:background="@drawable/input_outline"
+                android:layout_marginBottom="5dp"/>-->
+
+            <TextView
+                android:text="Station Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginBottom="5dp"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <EditText
+                android:id="@+id/stationame_force"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/input_outline"
+                android:ems="10"
+                android:inputType="text"
+                android:padding="12dp"
+                android:hint="Station Name"
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold"
+                android:textColorHint="@color/colorPrimary"
+                android:maxLength="50"/>
+
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/portspinner"
+                android:background="@drawable/input_outline"
+                android:layout_marginBottom="5dp"/>
+
+            <Button
+                android:id="@+id/next_unlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@drawable/roundcorner"
+                android:onClick="takenextportdetails"
+                android:text="Next"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:layout_marginBottom="5dp"/>
+
+
+            <Button
+                android:id="@+id/submit_unlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@drawable/roundcorner"
+                android:onClick="submitunlockdetails"
+                android:text="Submit"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:visibility="gone"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

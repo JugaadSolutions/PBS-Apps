@@ -29,4 +29,6 @@ public class API {
     public static final String getusertickets =Baseurl+"tickets/user/";
     public static final String replytotickets =Baseurl+"tickets/";
 
+ public static final String selectplan = "https://www.mytrintrin.com/testup/paygovRequestHandler.php";
+
 }

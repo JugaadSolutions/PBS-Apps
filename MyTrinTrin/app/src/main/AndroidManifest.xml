@@ -76,7 +76,8 @@
         <activity
             android:name=".TicketDetails"
             android:parentActivityName=".Tickets" />
-        <activity android:name=".ClosedTickets"></activity>
+        <activity android:name=".ClosedTickets" />
+        <activity android:name=".Paygovwebview"></activity>
     </application>
 
 </manifest>

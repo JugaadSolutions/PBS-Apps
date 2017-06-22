@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_alluser"
+        android:title="All Users"
+        android:icon="@mipmap/ic_group_black_24dp"/>
+
+    <item
+        android:id="@+id/nav_allvehicles"
+        android:title="All Vehicles"
+        android:icon="@mipmap/ic_directions_bike_black_24dp"/>
+
+    <item
+        android:id="@+id/nav_particularuser"
+        android:title= "User"
+        android:icon="@mipmap/ic_account_circle_black_24dp"/>
+
+    <item
+        android:id="@+id/nav_particularvehicle"
+        android:title="Vehicle"
+        android:icon="@mipmap/ic_directions_bike_black_24dp"/>
+
+    <item android:id="@+id/nav_createcheckin"
+        android:title="Check In"
+        android:icon="@mipmap/ic_transfer_within_a_station_black_24dp"/>
+
+    <item android:id="@+id/nav_createcheckout"
+        android:title="Check Out"
+        android:icon="@mipmap/ic_transfer_within_a_station_black_24dp"/>
+
+    <item android:id="@+id/nav_clearcheckout"
+        android:title="Clear Checkout"
+        android:icon="@mipmap/ic_clear_black_24dp"/>
+
+    <item android:id="@+id/nav_clearcheckin"
+        android:title="Clear Checkin"
+        android:icon="@mipmap/ic_clear_black_24dp"/>
+
+    <item android:id="@+id/nav_multipleclearcheckout"
+        android:title="Multiple Checkout"
+        android:icon="@mipmap/ic_clear_black_24dp"
+        android:visible="false"/>
+
+
+</menu>

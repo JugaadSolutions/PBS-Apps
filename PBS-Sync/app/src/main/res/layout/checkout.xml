@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/checkout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mytrintrin.www.pbs_sync.Checkout"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkoutview">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkouttoolbar"
+            android:theme="@style/customToolbartheme">
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/checkoutmainlayout"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/checkoutlayout"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:text="Select Member"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginBottom="5dp"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_outline"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/memberspinner" />
+
+            <TextView
+                android:text="Select Cycle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginBottom="5dp"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_outline"
+                android:layout_marginBottom="5dp"
+                android:id="@+id/cyclespinner" />
+
+
+            <TextView
+                android:text="Select Station"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginBottom="5dp"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/stationspinner"
+                android:background="@drawable/input_outline"
+                android:layout_marginBottom="5dp"/>
+
+            <TextView
+                android:text="Select Port"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginBottom="5dp"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/portspinner"
+                android:background="@drawable/input_outline"
+                android:layout_marginBottom="5dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dateandtimelayout"
+                android:orientation="horizontal">
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/datecheckout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/colorPrimary"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/checkout_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:hint="Date"
+                        android:textColor="@color/colorPrimary"
+                        android:focusable="false"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/timecheckout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/colorPrimary"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/checkout_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="5dp"
+                        android:hint="Time"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_weight="1"
+                        android:focusable="false"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+
+            </LinearLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/createcheckout"
+                android:background="@drawable/roundcorner"
+                android:layout_marginTop="5dp"
+                android:text="Check out"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:onClick="createcheckout"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
