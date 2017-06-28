@@ -88,6 +88,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -102,8 +103,8 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
     ActionBarDrawerToggle mToogle;
     DrawerLayout MyaccountDrawer;
     private static int RESULT_LOAD_IMG = 1;
-    String profilePicpath = "", loginuserid, username, usermail, userbalance;
-    ImageView Profilepic;
+    String profilePicpath = "", loginuserid, username, usermail, userbalance,valid;
+    ImageView Profilepic,Clearmessage;
     NavigationView NV_Myaccount;
     Location currentlocation;
     double currentlatitude, doclatitude, reglatitude, reglongitude;
@@ -112,9 +113,9 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
     ArrayList<String> Stationnamearray = new ArrayList<>();
     int i;
     public static final int RequestPermissionCode = 1;
-    SharedPreferences loginpref;
-    SharedPreferences.Editor editor;
-    TextView UserName, UserMail, UserBalance, MarqueeBalance, MarqueeValidity, LatestRides;
+    SharedPreferences loginpref,marqueepref;
+    SharedPreferences.Editor editor,marqueeeditor;
+    TextView UserName, UserMail, UserBalance, MarqueeBalance, MarqueeValidity, LatestRides,UserValidity;
     Menu nav_Menu;
 
     private static final int ProfilePicRequest = 101;
@@ -123,7 +124,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
 
     CardView Ridecardview;
     Context context;
-    LinearLayout RideHistory, RideDetailsLayout;
+    LinearLayout RideHistory, RideDetailsLayout,Marqueedetails;
     LinearLayout.LayoutParams ridecardparams, ridedetailsparams;
     TextView RideDate, RideFromStation, RideToStation, RideCheckinTime, RideFare, RideDuration;
 
@@ -140,7 +141,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         setContentView(R.layout.my_account);
 
         MyaccountToolbar = (Toolbar) findViewById(R.id.myaccount_action);
-        MyaccountToolbar.setTitle("My Account");
+        MyaccountToolbar.setTitle("TrinTrin");
         setSupportActionBar(MyaccountToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -156,14 +157,19 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         Profilepic = (ImageView) profileview.findViewById(R.id.userprofilepic);
         UserName = (TextView) profileview.findViewById(R.id.username);
         UserMail = (TextView) profileview.findViewById(R.id.usermailid);
-        // UserBalance = (TextView) Balanceview.findViewById(R.id.balance_myaccount_action);
+
         MarqueeBalance = (TextView) findViewById(R.id.MarqueeText);
-        MarqueeValidity = (TextView) findViewById(R.id.validity);
+       // MarqueeValidity = (TextView) findViewById(R.id.validity);
+        Marqueedetails = (LinearLayout) findViewById(R.id.marqueedetailslayout);
         LatestRides = (TextView) findViewById(R.id.latestrideinmyaccount);
 
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
         loginuserid = loginpref.getString("User-id", null);
+
+        marqueepref = getApplicationContext().getSharedPreferences("MarqueePref", MODE_PRIVATE);
+        marqueeeditor = marqueepref.edit();
+        marqueeeditor.putString("visibile","show");
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MyAccount.this);
@@ -173,6 +179,12 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
 
         context = getApplicationContext();
         RideHistory = (LinearLayout) findViewById(R.id.ridesinmyaacount);
+
+        UserBalance = (TextView) Balanceview.findViewById(R.id.balance_myaccount_action);
+        UserValidity = (TextView) Balanceview.findViewById(R.id.validity_myaccount_action);
+
+        Clearmessage = (ImageView) findViewById(R.id.clearmessage);
+
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("Loading...");
@@ -186,6 +198,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         getallregistrationcentre();
         getmemberdetails();
         getridedetails();
+        getlatestmessage();
         onpermision();
 
     }
@@ -497,6 +510,136 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
     }
 /*ends*/
 
+    public void getlatestmessage()
+    {
+        StringRequest getmessagerequest = new StringRequest(Request.Method.GET, API.getmessage, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONObject responsefromserver = new JSONObject(response);
+                    String data = responsefromserver.getString("data");
+                    if(marqueepref.contains("message"))
+                    {
+                        String checkdata = marqueepref.getString("message",null);
+                        String visibility = marqueepref.getString("visibile",null);
+                        if(data.equals(""))
+                        {
+                            Marqueedetails.setVisibility(View.GONE);
+                            marqueeeditor.putString("message",data);
+                            marqueeeditor.commit();
+
+                        }
+                        else
+                        {
+                            if(checkdata.equals(data)&&(visibility.equals("show")))
+                            {
+                                MarqueeBalance.setText(data);
+                            }
+                            else if(checkdata.equals(data)&&(visibility.equals("hide")))
+                            {
+                                Marqueedetails.setVisibility(View.GONE);
+                            }
+                            else {
+                                marqueeeditor.putString("message", data);
+                                marqueeeditor.putString("visible","show");
+                                MarqueeBalance.setText(data);
+                                marqueeeditor.commit();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(data.equals(""))
+                        {
+                            Marqueedetails.setVisibility(View.GONE);
+                            marqueeeditor.putString("message",data);
+                            marqueeeditor.commit();
+                        }
+                        else
+                        {
+                            marqueeeditor.putString("message",data);
+                            MarqueeBalance.setText(data);
+                            marqueeeditor.commit();
+
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                if (error.networkResponse != null) {
+                    parseVolleyError(error);
+                    return;
+                }
+
+                if (error instanceof ServerError) {
+                    Toast.makeText(MyAccount.this, "Server is under maintenance,Please try again later.", Toast.LENGTH_SHORT).show();
+                    Log.d("Error", String.valueOf(error instanceof ServerError));
+                    error.printStackTrace();
+                } else if (error instanceof AuthFailureError) {
+                    Toast.makeText(MyAccount.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Authentication Error");
+                    error.printStackTrace();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(MyAccount.this, "Parse Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Parse Error");
+                    error.printStackTrace();
+                } else if (error instanceof NetworkError) {
+                    Toast.makeText(MyAccount.this, "Please Check your connection.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Network Error");
+                    error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            MyAccount.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
+                } else if (error instanceof TimeoutError) {
+                    Toast.makeText(MyAccount.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Timeout Error");
+                    error.printStackTrace();
+                } else if (error instanceof NoConnectionError) {
+                    Toast.makeText(MyAccount.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(MyAccount.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                }
+
+            }
+        });
+        getmessagerequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(getmessagerequest);
+    }
+
+    public void hidemarquee(View view)
+    {
+        Marqueedetails.setVisibility(View.GONE);
+        marqueeeditor.putString("visibile","hide");
+        marqueeeditor.commit();
+    }
+
     public void getalldockingstations() {
         StringRequest alldockingstationrequest = new StringRequest(Request.Method.GET, API.alldockingstation, new Response.Listener<String>() {
             @Override
@@ -757,7 +900,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        MarqueeValidity.setText("Validity : " + outFormat.format(c.getTime()));
+                        UserValidity.setText("Validity : " + outFormat.format(c.getTime()));
                     } else {
                         nav_Menu.findItem(R.id.selectplan_myaccount).setVisible(true);
                         nav_Menu.findItem(R.id.topup_myaccount).setVisible(false);
@@ -789,9 +932,24 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     username = name;
                     UserName.setText(name + " " + lastname);
                     UserMail.setText(emailid);
-                   /* UserBalance.setText(balance+"/-");
-                    userbalance = balance;*/
-                    MarqueeBalance.setText("Balance : " + getResources().getString(R.string.Rs) + balance + "/-");
+                    UserBalance.setText("Balance:" + balance + "/-");
+                    valid = data.getString("valid");
+                    if(valid.equals("no")) {
+                        UserValidity.setText("Validity : Expired" );
+                        AlertDialog.Builder ExpireBuilder = new AlertDialog.Builder(MyAccount.this);
+                        ExpireBuilder.setIcon(R.mipmap.logo);
+                        ExpireBuilder.setTitle("Membership");
+                        ExpireBuilder.setMessage("Validity Expired.Please Top Up");
+                        ExpireBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.dismiss();
+                                startActivity(new Intent(MyAccount.this,Topup.class));
+
+                            }
+                        });
+                        ExpireBuilder.show();
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -192,7 +193,7 @@ public class SelectPlan extends AppCompatActivity {
                                 planuserfee.setText("Usage Fee : " + Planuserfee + "/-");
                                 plansmartcardfee.setText("Smartcard Fee : " + Plansmartcardfee + "/-");
                                 planservicefee.setText("Service Fee : "+MembershipServiceChargeArrayList.get(position)+"/-");
-                                plantotal = Planuserfee + Plansecurityfee + Plansmartcardfee +Planprocessingfee+PGcharges;
+                                plantotal = Planuserfee + Plansecurityfee + Plansmartcardfee +Planprocessingfee;/*+PGcharges*/
                                 plantotalfee.setText("Total : " + plantotal + "/-");
                                 mProgressDialog.dismiss();
                             }
@@ -287,9 +288,12 @@ public class SelectPlan extends AppCompatActivity {
                 Log.d("select plan response ",response);
                 if(!response.equals(null))
                 {
-                    Intent paygovintent = new Intent(SelectPlan.this,Paygovwebview.class);
+                  Intent paygovintent = new Intent(SelectPlan.this,Paygovwebview.class);
                     paygovintent.putExtra("paygovresponse",response);
                     startActivity(paygovintent);
+                    /*Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(response));
+                    startActivity(intent);*/
                 }
 
             }
@@ -329,19 +333,19 @@ public class SelectPlan extends AppCompatActivity {
 
             }
         }){
-            @Override
+           /* @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json; charset=utf-8");
                 headers.put("Content-Type", "application/x-www-form-urlencoded");
                 return headers;
-            }
+            }*/
 
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("amount", String.valueOf(plantotal));
-                params.put("CustomerID", "201706222102555");
+                params.put("CustomerID", CustomerId);
                 params.put("AdditionalInfo1",Planname);
                 params.put("AdditionalInfo2","NewMember");
                 params.put("AdditionalInfo3",loginuserid);

@@ -23,7 +23,7 @@
         />
 
     <item android:id="@+id/ride_myaccount"
-        android:title="Ride History"
+        android:title="Rides"
         android:icon="@mipmap/ic_directions_bike_black_24dp"/>
 
     <item android:id="@+id/faq_myaccount"

@@ -8,8 +8,8 @@ public class API {
 
     //public static  String Baseurl ="https://test.mytrintrin.com:13065/api/";
    // public static  String Baseurl ="http://43.251.80.79:13070/api/";
-   //public static  String Baseurl ="http://43.251.80.79:13060/api/";
-   public static  final String Baseurl="https://www.mytrintrin.com:13060/api/";   //SDC Test Instance
+  // public static  String Baseurl ="http://43.251.80.79:13060/api/";
+   public static  final String Baseurl="https://www.mytrintrin.com:13060/api/";   //SDC Instance
 
     public static String login = Baseurl+"auth/login";
     public static String register =Baseurl+"member";
@@ -28,7 +28,7 @@ public class API {
     public static final String ticketsfromuser =Baseurl+"tickets";
     public static final String getusertickets =Baseurl+"tickets/user/";
     public static final String replytotickets =Baseurl+"tickets/";
-
- public static final String selectplan = "https://www.mytrintrin.com/testup/paygovRequestHandler.php";
+    public static final String selectplan = "https://www.mytrintrin.com/app/androidPaygovRequest.php";
+    public static final String getmessage = Baseurl+"keysettings/app/msg";
 
 }

@@ -123,7 +123,7 @@ public class Topup extends AppCompatActivity {
     }
     /*ends*/
 
-    public void Topupuser(View view) {
+   /* public void Topupuser(View view) {
 
         TotalAmount = TopupAmount+TopupPGcharges;
         String orderid = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -147,6 +147,86 @@ public class Topup extends AppCompatActivity {
         } else {
             // showToast("All parameters are mandatory.");
         }
+    }*/
+
+    public void Topupuser(View view)
+
+    {
+
+        final String CustomerId = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        StringRequest Topuprequest = new StringRequest(Request.Method.POST, API.selectplan, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d("Topup response ",response);
+                if(!response.equals(null))
+                {
+                    Intent paygovintent = new Intent(Topup.this,Paygovwebview.class);
+                    paygovintent.putExtra("paygovresponse",response);
+                    startActivity(paygovintent);
+                    /*Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(response));
+                    startActivity(intent);*/
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                if (error instanceof ServerError) {
+                    Toast.makeText(Topup.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", String.valueOf(error instanceof ServerError));
+                    error.printStackTrace();
+                } else if (error instanceof AuthFailureError) {
+                    Toast.makeText(Topup.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Authentication Error");
+                    error.printStackTrace();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(Topup.this, "Parse Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Parse Error");
+                    error.printStackTrace();
+                } else if (error instanceof NetworkError) {
+                    Toast.makeText(Topup.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Network Error");
+                    error.printStackTrace();
+                } else if (error instanceof TimeoutError) {
+                    Toast.makeText(Topup.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Timeout Error");
+                    error.printStackTrace();
+                } else if (error instanceof NoConnectionError) {
+                    Toast.makeText(Topup.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(Topup.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                }
+
+            }
+        }){
+           /* @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                return headers;
+            }*/
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("amount", String.valueOf(TopupAmount));
+                params.put("CustomerID", CustomerId);
+                params.put("AdditionalInfo1",Topupname);
+                params.put("AdditionalInfo2","Topup");
+                params.put("AdditionalInfo3",loginuserid);
+                return params;
+            }
+        };
+        Topuprequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(Topuprequest);
+
     }
 
     public void gettopupplans() {
@@ -265,7 +345,8 @@ public class Topup extends AppCompatActivity {
                         planservicefee_topup.setText("Service Fee : " + TopupPgchargesList.get(position) + "/-");
                         TopupAmount = Totalamountoftopup.get(position);
                         TopupPGcharges = TopupPgchargesList.get(position);
-                        int total = TopupAmount + TopupPGcharges;
+                       // int total = TopupAmount + TopupPGcharges;
+                        int total = TopupAmount ;
                         plantotalfee_topup.setText("Total : "+total+"/-");
                     }
                     @Override

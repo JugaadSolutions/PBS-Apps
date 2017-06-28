@@ -89,5 +89,5 @@ public class API {
 
     public static final String getallvehicles =Baseurl+"vehicle";
 
-    public static final String forcebicycle = Baseurl+"vehicle/force";
+    public static final String forcebicycle ="http://43.251.80.79:13080/api/transactions/checkin/app";
 }

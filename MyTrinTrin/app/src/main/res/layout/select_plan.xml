@@ -118,7 +118,8 @@
                     android:textColor="@color/colorPrimary"
                     android:text="Service Fee"
                     android:padding="5dp"
-                    android:id="@+id/planservicefee" />
+                    android:id="@+id/planservicefee"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -19,7 +19,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -40,9 +42,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class ForceBicycle extends AppCompatActivity implements LocationListener {
 
@@ -64,7 +69,7 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
 
     private ProgressDialog mProgressDialog;
     Toolbar ForcebicylceToolbar;
-    EditText Bicyclenumber,Stationname;
+    TextView Stationname;
 
     LocationManager locationManager;
     String mprovider;
@@ -74,31 +79,55 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
     double docllongitude;
 
     ArrayList<Location> dockingstationlocation = new ArrayList<>();
+    ArrayList<Ports> ChekinList = new ArrayList<>();
 
     JSONObject Stationobject;
     int noofports,portselection=0;;
     Button Next,Submit;
     JSONArray Forcecyclearray;
     JSONObject Forcecycleobject,FinalObject;
+    EditText FPGAu3p1,FPGAu3p2,FPGAu3p3,FPGAu3p4, FPGAu4p1,FPGAu4p2,FPGAu4p3,FPGAu4p4,FPGAu5p1,FPGAu5p2,FPGAu5p3,FPGAu5p4,FPGAu6p1,FPGAu6p2,FPGAu6p3,FPGAu6p4;;
+    LinearLayout FPGA6Layout;
+
+    String PortID,VehicleNumber;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.force_bicycle);
-        //Station = (Spinner) findViewById(R.id.stationspinner);
-        Stationname = (EditText) findViewById(R.id.stationame_force);
-        Port = (Spinner) findViewById(R.id.portspinner);
+        Station = (Spinner) findViewById(R.id.stations_force);
         ForcebicylceToolbar = (Toolbar) findViewById(R.id.forcetoolbar);
         ForcebicylceToolbar.setTitle("Force Cycle");
         setSupportActionBar(ForcebicylceToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Bicyclenumber = (EditText) findViewById(R.id.cyclenumber_force);
-        Next= (Button) findViewById(R.id.next_unlock);
+        FPGA6Layout = (LinearLayout) findViewById(R.id.fpga6layout);
         Submit = (Button) findViewById(R.id.submit_unlock);
+
+        FPGAu3p1 = (EditText) findViewById(R.id.fpgau3p1);
+        FPGAu3p2 = (EditText) findViewById(R.id.fpgau3p2);
+        FPGAu3p3 = (EditText) findViewById(R.id.fpgau3p3);
+        FPGAu3p4 = (EditText) findViewById(R.id.fpgau3p4);
+
+        FPGAu4p1 = (EditText) findViewById(R.id.fpgau4p1);
+        FPGAu4p2 = (EditText) findViewById(R.id.fpgau4p2);
+        FPGAu4p3 = (EditText) findViewById(R.id.fpgau4p3);
+        FPGAu4p4 = (EditText) findViewById(R.id.fpgau4p4);
+
+        FPGAu5p1 = (EditText) findViewById(R.id.fpgau5p1);
+        FPGAu5p2 = (EditText) findViewById(R.id.fpgau5p2);
+        FPGAu5p3 = (EditText) findViewById(R.id.fpgau5p3);
+        FPGAu5p4 = (EditText) findViewById(R.id.fpgau5p4);
+
+        FPGAu6p1 = (EditText) findViewById(R.id.fpgau6p1);
+        FPGAu6p2 = (EditText) findViewById(R.id.fpgau6p2);
+        FPGAu6p3 = (EditText) findViewById(R.id.fpgau6p3);
+        FPGAu6p4 = (EditText) findViewById(R.id.fpgau6p4);
+
         FinalObject = new JSONObject();
 
-         /* to get location*/
+        /* to get location*/
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         mprovider = locationManager.getBestProvider(criteria, false);
@@ -107,7 +136,7 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
                 return;
             }
             Location location = locationManager.getLastKnownLocation(mprovider);
-            locationManager.requestLocationUpdates(mprovider, 15000, 1, this);
+            locationManager.requestLocationUpdates(mprovider, 10000, 1, this);
             if (location != null)
                 onLocationChanged(location);
             else
@@ -177,13 +206,16 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
                         dockinglocation.setLatitude(doclatitude);
                         dockinglocation.setLongitude(docllongitude);
                         dockingstationlocation.add(dockinglocation);
-                        String id = dscoordinates.getString("StationID");
-                        final String Stationname = dscoordinates.getString("name");
-                        JSONArray ports = dscoordinates.getJSONArray("portIds");
-                        StationIDArrayList.add(id);
-                        StationNameArrayList.add(Stationname);
-                        StationArray.put(dscoordinates);
-                        PortArray.put(ports);
+                        float distance = currentlocation.distanceTo(dockinglocation);
+                        if(distance<30) {
+                            String id = dscoordinates.getString("StationID");
+                            final String Stationname = dscoordinates.getString("name");
+                            JSONArray ports = dscoordinates.getJSONArray("portIds");
+                            StationIDArrayList.add(id);
+                            StationNameArrayList.add(Stationname);
+                            StationArray.put(dscoordinates);
+                            PortArray.put(ports);
+                        }
                     }
                     calculatedistanceandsetstation();
                 } catch (JSONException e) {
@@ -264,80 +296,209 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
 
 
     public void calculatedistanceandsetstation() {
-        for (int i = 0; i < dockingstationlocation.size(); i++) {
-            float distance = currentlocation.distanceTo(dockingstationlocation.get(i));
-            if (distance < 100) {
-                String Station = StationNameArrayList.get(i);
-                Toast.makeText(this, Station, Toast.LENGTH_SHORT).show();
-                Stationname.setText(Station);
-                Stationname.setEnabled(false);
-                StationId = StationIDArrayList.get(i);
-                try {
-                    Stationobject = StationArray.getJSONObject(i);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if(StationNameArrayList.size()>0)
+        {
+
+            Stationadapter = new ArrayAdapter<String>(ForceBicycle.this, android.R.layout.simple_spinner_dropdown_item, StationNameArrayList);
+            Stationadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            Station.setAdapter(Stationadapter);
+            Station.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    StationName = Station.getSelectedItem().toString();
+                    StationId = StationIDArrayList.get(i);
+                    try {
+                        Stationobject = StationArray.getJSONObject(i);
+                        JSONArray ports = PortArray.getJSONArray(i);
+                        PortIDArrayList.clear();
+                        PortNameArrayList.clear();
+                        int length = ports.length();
+                        for (int j = 0; j < ports.length(); j++) {
+                            JSONObject port = ports.getJSONObject(j);
+                            JSONObject dockports = port.getJSONObject("dockingPortId");
+                            String portid = dockports.getString("PortID");
+                            String portname = dockports.getString("Name");
+                            PortIDArrayList.add(portid);
+                            PortNameArrayList.add(portname);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } finally {
+                        getportdetails();
+                    }
+                    Toast.makeText(ForceBicycle.this, StationId, Toast.LENGTH_SHORT).show();
                 }
-                getportdetails();
-                break;
-            }
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
+            });
+
+        }
+        else
+        {
+            mProgressDialog.dismiss();
+            android.support.v7.app.AlertDialog.Builder Nostation = new android.support.v7.app.AlertDialog.Builder(this);
+            Nostation.setIcon(R.drawable.splashlogo);
+            Nostation.setTitle("Nearest Hubs");
+            Nostation.setMessage("Sorry,You are not near to any of the TrinTrin Hubs");
+            Nostation.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    finish();
+                }
+            });
+            Nostation.setCancelable(false);
+            Nostation.show();
         }
     }
 
-
-    public void getstationdetails() {
-        Stationadapter = new ArrayAdapter<String>(ForceBicycle.this, android.R.layout.simple_spinner_dropdown_item, StationNameArrayList);
-        Stationadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        Station.setAdapter(Stationadapter);
-        Station.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                StationName = Station.getSelectedItem().toString();
-                StationId = StationIDArrayList.get(i);
-                try {
-                    StationObject = StationArray.getJSONObject(i);
-                    JSONArray ports = PortArray.getJSONArray(i);
-                    PortIDArrayList.clear();
-                    PortNameArrayList.clear();
-                    int length = ports.length();
-                    for (int j = 0; j < ports.length(); j++) {
-                        JSONObject port = ports.getJSONObject(j);
-                        JSONObject dockports = port.getJSONObject("dockingPortId");
-                        String portid = dockports.getString("PortID");
-                        String portname = dockports.getString("Name");
-                        PortIDArrayList.add(portid);
-                        PortNameArrayList.add(portname);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } finally {
-                    getportdetails();
-                }
-                Toast.makeText(ForceBicycle.this, StationId, Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
-    }
-
     public void getportdetails() {
+        mProgressDialog.dismiss();
         try {
             JSONArray ports = Stationobject.getJSONArray("portIds");
             noofports= Stationobject.getInt("noofPorts");
+            if(noofports==12)
+            {
+                FPGA6Layout.setVisibility(View.GONE);
+            }
             PortIDArrayList.clear();
             PortNameArrayList.clear();
             for (int j = 0; j < ports.length(); j++) {
                 JSONObject port = ports.getJSONObject(j);
                 JSONObject dockports = port.getJSONObject("dockingPortId");
-                String portid = dockports.getString("PortID");
-                String portname = dockports.getString("Name");
-                PortIDArrayList.add(portid);
-                PortNameArrayList.add(portname);
+                int FPGA = dockports.getInt("FPGA");
+                PortID = dockports.getString("PortID");
+                PortIDArrayList.add(PortID);
+                if(FPGA==3) {
+                    int eportno = dockports.getInt("ePortNumber");
+                    JSONArray vehicleId = dockports.getJSONArray("vehicleId");
+                    if (vehicleId.length() > 0) {
+                        JSONObject vehicleobject = vehicleId.getJSONObject(0);
+                        JSONObject vehicle = vehicleobject.getJSONObject("vehicleid");
+                         VehicleNumber = vehicle.getString("vehicleNumber");
+                        CycleNumberList.add(VehicleNumber);
+                        if (eportno == 1) {
+                            FPGAu3p1.setText(VehicleNumber.substring(10));
+
+                        }
+                        else if(eportno == 2)
+                        {
+                            FPGAu3p2.setText(VehicleNumber.substring(10));
+                        }
+                        else if(eportno == 3)
+                        {
+                            FPGAu3p3.setText(VehicleNumber.substring(10));
+                        }
+                        else if(eportno == 4)
+                        {
+                            FPGAu3p4.setText(VehicleNumber.substring(10));
+                        }
+                        //Ports cycleandportobject = new Ports(PortID,VehicleNumber);
+                    }
+                    else
+                    {
+                       VehicleNumber = "";
+                        //Ports ClearCheckinobject = new Ports(PortId,VehicleNumber);
+                        CycleNumberList.add(VehicleNumber);
+                    }
+
+                }
+                if(FPGA==4) {
+                    int eportno = dockports.getInt("ePortNumber");
+                    JSONArray vehicleId = dockports.getJSONArray("vehicleId");
+                    if (vehicleId.length() > 0) {
+                        JSONObject vehicleobject = vehicleId.getJSONObject(0);
+                        JSONObject vehicle = vehicleobject.getJSONObject("vehicleid");
+                        VehicleNumber = vehicle.getString("vehicleNumber");
+                        if (eportno == 1) {
+                            FPGAu4p1.setText(VehicleNumber.substring(10));
+                        }
+                        else if(eportno == 2)
+                        {
+                            FPGAu4p2.setText(VehicleNumber.substring(10));
+                        }
+                        else if(eportno == 3)
+                        {
+                            FPGAu4p3.setText(VehicleNumber.substring(10));
+                        }
+                        else if(eportno == 4)
+                        {
+                            FPGAu4p4.setText(VehicleNumber.substring(10));
+                        }
+                        //Ports cycleandportobject = new Ports(PortId,VehicleNumber);
+                    }
+                   else
+                    {
+                        VehicleNumber = "";
+                        CycleNumberList.add(VehicleNumber);
+                        //Ports ClearCheckinobject = new Ports(PortId,VehicleNumber);
+                    }
+                }
+                if(FPGA==5) {
+                    int eportno = dockports.getInt("ePortNumber");
+                    JSONArray vehicleId = dockports.getJSONArray("vehicleId");
+                    if (vehicleId.length() > 0) {
+                        JSONObject vehicleobject = vehicleId.getJSONObject(0);
+                        JSONObject vehicle = vehicleobject.getJSONObject("vehicleid");
+                        VehicleNumber = vehicle.getString("vehicleNumber");
+                        if (eportno == 1) {
+                            FPGAu5p1.setText(VehicleNumber.substring(10));
+                        }
+                        else if(eportno == 2)
+                        {
+                            FPGAu5p2.setText(VehicleNumber.substring(10));
+                        }
+                        else if(eportno == 3)
+                        {
+                            FPGAu5p3.setText(VehicleNumber.substring(10));
+                        }
+                        else if(eportno == 4)
+                        {
+                            FPGAu5p4.setText(VehicleNumber.substring(10));
+                        }
+                    }
+                   else {
+                        VehicleNumber = "";
+                        CycleNumberList.add(VehicleNumber);
+                        //Ports ClearCheckinobject = new Ports(PortId,VehicleNumber);
+                    }
+                }
+
+                if(FPGA==6) {
+                    int eportno = dockports.getInt("ePortNumber");
+                    JSONArray vehicleId = dockports.getJSONArray("vehicleId");
+                    if (vehicleId.length() > 0) {
+                        JSONObject vehicleobject = vehicleId.getJSONObject(0);
+                        JSONObject vehicle = vehicleobject.getJSONObject("vehicleid");
+                        VehicleNumber = vehicle.getString("vehicleNumber");
+                        if (eportno == 1) {
+                            FPGAu6p1.setText(VehicleNumber.substring(10));
+                        }
+                        else if(eportno == 2)
+                        {
+                            FPGAu6p2.setText(VehicleNumber.substring(10));
+                        }
+                        else if(eportno == 3)
+                        {
+                            FPGAu6p3.setText(VehicleNumber.substring(10));
+                        }
+                        else if(eportno == 4)
+                        {
+                            FPGAu6p4.setText(VehicleNumber.substring(10));
+                        }
+                    }
+                    else{
+                        VehicleNumber = "";
+                        CycleNumberList.add(VehicleNumber);
+                        //Ports ClearCheckinobject = new Ports(PortId,VehicleNumber);
+                    }
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         } finally {
-            setports();
+            //setports();
         }
     }
 
@@ -360,37 +521,6 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
         });
     }
 
-    public void takenextportdetails(View view)
-    {
-
-        String cyclenum = Bicyclenumber.getText().toString().trim();
-        if(cyclenum.equals(""))
-        {
-            cyclenum = "-";
-            CycleNumberList.add(cyclenum);
-            ForcePortIdList.add(PortId);
-            Bicyclenumber.setText("");
-        }
-        else
-        {
-            cyclenum="MYS-Fleet-"+cyclenum;
-            CycleNumberList.add(cyclenum);
-            ForcePortIdList.add(PortId);
-            Bicyclenumber.setText("");
-        }
-        portselection++;
-        Toast.makeText(this, "Cycle :"+cyclenum+" Port No :"+PortId, Toast.LENGTH_SHORT).show();
-        if(portselection==noofports)
-        {
-            Next.setVisibility(View.GONE);
-            Submit.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            Port.setSelection(portselection);
-        }
-
-    }
 
     public void submitunlockdetails(View view)
     {
@@ -411,22 +541,182 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        forcecycle();
+        //forcecycle();
     }
 
-    public void forcecycle()
+    public void submitportdetailsandcheckin(View view)
     {
-        JsonObjectRequest forcebicyclerequest = new JsonObjectRequest(Request.Method.POST, API.forcebicycle,FinalObject, new Response.Listener<JSONObject>() {
+        CycleNumberList.clear();
+        ChekinList.clear();
+        String u3p1 =FPGAu3p1.getText().toString().trim();
+        if(u3p1.equals("")) {
+            CycleNumberList.add(u3p1);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u3p1);
+        }
+        String u3p2 =FPGAu3p2.getText().toString().trim();
+        if(u3p2.equals("")) {
+            CycleNumberList.add(u3p2);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u3p2);
+        }
+        String u3p3 =FPGAu3p3.getText().toString().trim();
+        if(u3p3.equals("")) {
+            CycleNumberList.add(u3p3);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u3p3);
+        }
+        String u3p4 =FPGAu3p4.getText().toString().trim();
+        if(u3p4.equals("")) {
+            CycleNumberList.add(u3p4);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u3p4);
+        }
+        String u4p1 =FPGAu4p1.getText().toString().trim();
+        if(u4p1.equals("")) {
+            CycleNumberList.add(u4p1);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u4p1);
+        }
+        String u4p2 =FPGAu4p2.getText().toString().trim();
+        if(u4p2.equals("")) {
+            CycleNumberList.add(u4p2);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u4p2);
+        }
+        String u4p3 =FPGAu4p3.getText().toString().trim();
+        if(u4p3.equals("")) {
+            CycleNumberList.add(u4p3);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u4p3);
+        }
+        String u4p4 =FPGAu4p4.getText().toString().trim();
+        if(u4p4.equals("")) {
+            CycleNumberList.add(u4p4);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u4p4);
+        }
+        String u5p1 =FPGAu5p1.getText().toString().trim();
+        if(u5p1.equals("")) {
+            CycleNumberList.add(u5p1);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u5p1);
+        }
+        String u5p2 =FPGAu5p2.getText().toString().trim();
+        if(u5p2.equals("")) {
+            CycleNumberList.add(u5p2);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u5p2);
+        }
+        String u5p3 =FPGAu5p3.getText().toString().trim();
+        if(u5p3.equals("")) {
+            CycleNumberList.add(u5p3);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u5p3);
+        }
+        String u5p4 =FPGAu5p4.getText().toString().trim();
+        if(u5p4.equals("")) {
+            CycleNumberList.add(u5p4);
+        }
+        else
+        {
+            CycleNumberList.add("MYS-Fleet-"+u5p4);
+        }
+        if(noofports==16) {
+            String u6p1 = FPGAu6p1.getText().toString().trim();
+            if(u6p1.equals("")) {
+                CycleNumberList.add(u6p1);
+            }
+            else
+            {
+                CycleNumberList.add("MYS-Fleet-"+u6p1);
+            }
+            String u6p2 = FPGAu6p2.getText().toString().trim();
+            if(u6p2.equals("")) {
+                CycleNumberList.add(u6p2);
+            }
+            else
+            {
+                CycleNumberList.add("MYS-Fleet-"+u6p2);
+            }
+            String u6p3 = FPGAu6p3.getText().toString().trim();
+            if(u6p3.equals("")) {
+                CycleNumberList.add(u6p3);
+            }
+            else
+            {
+                CycleNumberList.add("MYS-Fleet-"+u6p3);
+            }
+            String u6p4 = FPGAu6p4.getText().toString().trim();
+            if(u6p4.equals("")) {
+                CycleNumberList.add(u6p4);
+            }
+            else
+            {
+                CycleNumberList.add("MYS-Fleet-"+u6p4);
+            }
+        }
+        for(int k=0;k<CycleNumberList.size();k++)
+        {
+            SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+            String checkintime = dateFormatGmt.format(new Date()) + "";
+
+            Ports portobject = new Ports(PortIDArrayList.get(k),CycleNumberList.get(k),checkintime);
+            ChekinList.add(portobject);
+
+            forcecycle(PortIDArrayList.get(k),CycleNumberList.get(k),checkintime);
+
+
+
+        }
+        /*try {
+            FinalObject.put("forceList",ChekinList);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        finally {
+            forcecycle();
+        }*/
+
+
+    }
+
+    public void forcecycle(final String Pid,final  String cnum,final String cintime )
+    {
+        StringRequest forcebicyclerequest = new StringRequest(Request.Method.POST, API.forcebicycle, new Response.Listener<String>() {
             @Override
-            public void onResponse(JSONObject response) {
-                try {
+            public void onResponse(String response) {
+                /*try {
                     Port.setSelection(0);
                     portselection=0;
                     Next.setVisibility(View.VISIBLE);
                     Submit.setVisibility(View.GONE);
                     ForcePortIdList.clear();
                     CycleNumberList.clear();
-                    JSONObject responsefromserver = response;
+                    JSONObject responsefromserver =new JSONObject( response);
                     String message = responsefromserver.getString("message");
                     AlertDialog.Builder Successbuilder = new AlertDialog.Builder(
                             ForceBicycle.this);
@@ -443,7 +733,9 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
                     Successbuilder.show();
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
+                }*/
+
+                Log.d("force checkin",response);
 
             }
         }, new Response.ErrorListener() {
@@ -509,7 +801,14 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
 
             }
         }){
-
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("vehicleId",cnum);
+                params.put("toPort", Pid);
+                params.put("checkInTime", cintime);
+                return params;
+            }
         };
 
         forcebicyclerequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -534,6 +833,7 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
         currentlocation = new Location("");
         currentlocation.setLatitude(location.getLatitude());
         currentlocation.setLongitude(location.getLongitude());
+        //calculatedistanceandsetstation();
     }
 
     @Override
@@ -551,4 +851,59 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
 
     }
 
+
+    class Ports{
+       private int FPGA;
+        private String eport;
+        private String portid;
+        private String vehicleNumber;
+        private String CinTime;
+
+
+
+        public Ports(String Portid,String vehicleid)
+        {
+            portid = Portid;
+            vehicleNumber = vehicleid;
+        }
+
+        public Ports(String Portid,String vehicleid,String cintime)
+        {
+            portid = Portid;
+            vehicleNumber = vehicleid;
+            CinTime =cintime;
+        }
+
+        public int getFPGA() {
+            return FPGA;
+        }
+
+        public void setFPGA(int FPGA) {
+            this.FPGA = FPGA;
+        }
+
+        public String getEport() {
+            return eport;
+        }
+
+        public void setEport(String eport) {
+            this.eport = eport;
+        }
+
+        public String getPortid() {
+            return portid;
+        }
+
+        public void setPortid(String portid) {
+            this.portid = portid;
+        }
+
+        public String getVehicleid() {
+            return vehicleNumber;
+        }
+
+        public void setVehicleid(String vehicleid) {
+            this.vehicleNumber = vehicleid;
+        }
+    }
 }

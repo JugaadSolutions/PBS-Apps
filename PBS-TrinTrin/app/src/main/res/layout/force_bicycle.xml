@@ -28,90 +28,353 @@
         android:id="@+id/forcemainlayout"
         android:orientation="vertical">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/forcelayout"
             android:orientation="vertical"
-            android:padding="16dp">
-
-
-            <EditText
-                android:id="@+id/cyclenumber_force"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/input_outline"
-                android:ems="10"
-                android:inputType="number"
-                android:padding="12dp"
-                android:hint="Bicycle Number"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                android:textColorHint="@color/colorPrimary"
-                android:maxLength="@integer/bicycleno"/>
-
-          <!--  <TextView
-                android:text="Select Station"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginBottom="5dp"
-                android:textStyle="bold"
-                android:textSize="18sp"/>
-
-            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/stationspinner"
-                android:background="@drawable/input_outline"
-                android:layout_marginBottom="5dp"/>-->
-
-            <TextView
-                android:text="Station Name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginBottom="5dp"
-                android:textStyle="bold"
-                android:textSize="18sp"/>
-
-            <EditText
-                android:id="@+id/stationame_force"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/input_outline"
-                android:ems="10"
-                android:inputType="text"
-                android:padding="12dp"
-                android:hint="Station Name"
-                android:textColor="@color/colorPrimary"
-                android:textStyle="bold"
-                android:textColorHint="@color/colorPrimary"
-                android:maxLength="50"/>
-
+            android:padding="8dp">
 
             <Spinner
+                android:id="@+id/stations_force"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/portspinner"
                 android:background="@drawable/input_outline"
                 android:layout_marginBottom="5dp"/>
 
-            <Button
-                android:id="@+id/next_unlock"
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:background="@drawable/roundcorner"
-                android:onClick="takenextportdetails"
-                android:text="Next"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:layout_marginBottom="5dp"/>
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:id="@+id/unitlayout">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Unit 3"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/fpga3layout">
+
+                    <EditText
+                        android:layout_width="93dp"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau3p1"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau3p2"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau3p3"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau3p4"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Unit 4"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/fpga4layout">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau4p1"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau4p2"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau4p3"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau4p4"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Unit 5"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"/>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/fpga5layout">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau5p1"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau5p2"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau5p3"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau5p4"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Unit 6"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/fpga6layout">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau6p1"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau6p2"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau6p3"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:hint=""
+                        android:id="@+id/fpgau6p4"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:background="@drawable/input_outline"
+                        android:padding="12dp"
+                        android:layout_marginBottom="5dp"
+                        android:textColorHint="@color/colorPrimary"
+                        android:maxLength="3"
+                        android:layout_weight="1"
+                        android:layout_marginRight="3dp"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            </ScrollView>
 
             <Button
                 android:id="@+id/submit_unlock"
@@ -119,12 +382,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="@drawable/roundcorner"
-                android:onClick="submitunlockdetails"
+                android:onClick="submitportdetailsandcheckin"
                 android:text="Submit"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:visibility="gone"/>
-
+                android:textStyle="bold" />
 
         </LinearLayout>
 
