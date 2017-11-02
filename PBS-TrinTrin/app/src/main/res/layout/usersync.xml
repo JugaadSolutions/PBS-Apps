@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/usersync"
+    android:padding="16dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/usercardnum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/colorPrimary">
+
+        <EditText
+            android:id="@+id/etusercardnumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:hint="Card Number"
+            android:inputType="number"
+            android:maxLength="6"
+            android:padding="12dp"
+            android:textColor="#009746"
+            android:textColorHint="@color/colorPrimary" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/hubname"
+        android:text="Hub"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18dp"/>
+
+    <Spinner
+        android:id="@+id/stations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/input_outline"/>
+
+
+</LinearLayout>

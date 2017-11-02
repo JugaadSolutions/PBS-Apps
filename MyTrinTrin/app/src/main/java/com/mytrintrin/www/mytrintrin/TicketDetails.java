@@ -100,7 +100,8 @@ public class TicketDetails extends AppCompatActivity {
         try {
             Ticketobject = new JSONObject(Ticketdetails);
             TicketId = Ticketobject.getString("uuId");
-            String Name = Ticketobject.getString("name");
+            JSONObject user = Ticketobject.getJSONObject("user");
+            String Name = user.getString("Name");
             String Subject = Ticketobject.getString("subject");
             Ticketdescription = Ticketobject.getString("description");
             String Date = Ticketobject.getString("ticketdate");

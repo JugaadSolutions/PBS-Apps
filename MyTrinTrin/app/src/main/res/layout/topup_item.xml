@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="8dp"
+    android:paddingTop="8dp"
+    android:paddingLeft="8dp">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:padding="8dp">
+
+        <RelativeLayout
+            android:id="@+id/text_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/image"
+            android:orientation="vertical"
+            android:layout_margin="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Plan Name "
+                android:textStyle="bold"
+                android:textColor="#6b6b6b"
+                android:textSize="16sp"
+                android:id="@+id/planname_tv"/>
+
+            <TextView
+                android:id="@+id/plan_name"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:textSize="16sp"
+                android:textColor="#9b9b9b"
+                tools:text="Daily Plan"
+                android:layout_toRightOf="@+id/planname_tv"
+                android:layout_toEndOf="@+id/planname_tv"
+                android:layout_alignBaseline="@+id/planname_tv"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Validity "
+                android:textStyle="bold"
+                android:textColor="#6b6b6b"
+                android:textSize="16sp"
+                android:layout_below="@+id/planname_tv"
+                android:id="@+id/validity_tv"/>
+
+            <TextView
+                android:id="@+id/validity"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:textSize="16sp"
+                android:textColor="#9b9b9b"
+                tools:text="10 days"
+                android:layout_below="@+id/planname_tv"
+                android:layout_toRightOf="@+id/planname_tv"
+                android:layout_toEndOf="@+id/planname_tv" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/usagefee_tv"
+                android:layout_below="@+id/validity_tv"
+                android:text="Usage Fee"
+                android:textSize="16sp"
+                android:textColor="#6b6b6b"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:textSize="16sp"
+                tools:text="0 Rs"
+                android:textColor="#9b9b9b"
+                android:id="@+id/usagefee"
+                android:layout_alignBaseline="@+id/usagefee_tv"
+                android:layout_alignBottom="@+id/usagefee_tv"
+                android:layout_alignLeft="@+id/validity"
+                android:layout_alignStart="@+id/validity" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rs"
+                android:layout_centerVertical="true"
+                android:layout_alignRight="@+id/topup_amount"
+                android:layout_alignEnd="@+id/topup_amount"
+                android:layout_alignParentRight="true"
+                android:id="@+id/textView2"
+                android:layout_alignBaseline="@+id/topup_amount"
+                android:textColor="#6b6b6b"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recharge Now"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp"
+                android:id="@+id/rechargenow"
+                android:layout_below="@+id/line_view"
+                android:layout_alignRight="@+id/topup_amount"
+                android:layout_alignEnd="@+id/textView2"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="21dp"
+                android:text="50"
+                android:textColor="#6b6b6b"
+                android:id="@+id/topup_amount"
+                android:textSize="35sp"
+                android:layout_below="@+id/plan_name"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_alignBaseline="@+id/validity"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.2dp"
+                android:background="#6b6b6b"
+                android:layout_below="@+id/usagefee_tv"
+                android:id="@+id/line_view"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

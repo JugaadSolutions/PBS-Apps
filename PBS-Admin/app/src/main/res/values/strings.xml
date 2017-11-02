@@ -11,6 +11,7 @@
     <string-array name="cardtype">
         <item>Member Card</item>
         <item>Employee Card</item>
+        <item>Ondemand Card</item>
     </string-array>
 
     <string-array name="shifts">

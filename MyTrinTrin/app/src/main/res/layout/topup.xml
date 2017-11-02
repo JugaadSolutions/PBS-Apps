@@ -8,149 +8,32 @@
     tools:context="com.mytrintrin.www.mytrintrin.Topup">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/topupview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/topupview">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/topuptoolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/topuptoolbar"
             android:theme="@style/customToolbartheme">
         </android.support.v7.widget.Toolbar>
-
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-        android:id="@+id/topupmainlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:background="@color/screenbackground">
 
-        <LinearLayout
-            android:id="@+id/topuplayout"
+        <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-
-            <Spinner
-                android:id="@+id/topupplans"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/input_outline"/>
-
-
-           <!-- <android.support.design.widget.TextInputLayout
-                android:id="@+id/topupinput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColorHint="@color/colorPrimary">
-
-                <EditText
-                    android:id="@+id/topupamount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="5dp"
-                    android:hint="Amount"
-                    android:inputType="number"
-                    android:textColor="@color/colorPrimary" />
-
-            </android.support.design.widget.TextInputLayout>-->
-
-            <Button
-                android:id="@+id/submit_tipup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/roundcorner"
-                android:text="Submit"
-                android:textColor="@color/btntextcolor"
-                android:textStyle="bold"
-                android:layout_marginBottom="10dp"
-                android:onClick="Topupuser"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/renewlayout"
-                android:orientation="vertical">
-
-
-            </LinearLayout>
-
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/topupdetailslayout"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:background="@drawable/input_outline">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimary"
-                        android:text="Top Up Plan Details"
-                        android:padding="5dp"
-                        android:layout_gravity="center_horizontal"
-                        android:textStyle="bold"
-                        android:textSize="16dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimary"
-                        android:text="Plan Name"
-                        android:padding="5dp"
-                        android:id="@+id/planname_topup"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimary"
-                        android:text="Validity"
-                        android:padding="5dp"
-                        android:id="@+id/planvalidity_topup"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimary"
-                        android:text="Usage Fee"
-                        android:padding="5dp"
-                        android:id="@+id/planusagefee_topup"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimary"
-                        android:text="Service Fee"
-                        android:padding="5dp"
-                        android:id="@+id/planservicefee_topup"
-                        android:visibility="gone"/>
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimary"
-                        android:text="Total"
-                        android:padding="5dp"
-                        android:id="@+id/plantotalfee_topup"/>
-
-
-                </LinearLayout>
-
-            </ScrollView>
-
-        </LinearLayout>
+            android:id="@+id/topuplistview"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:drawSelectorOnTop="true"></ListView>
 
     </LinearLayout>
 

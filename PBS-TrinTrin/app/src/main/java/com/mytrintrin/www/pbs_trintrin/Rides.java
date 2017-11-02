@@ -34,6 +34,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,6 +120,10 @@ public class Rides extends AppCompatActivity {
                         String CheckinTime = ridedata.getString("checkInTime");
                         String Fare = ridedata.getString("fare");
                         String Duration = ridedata.getString("duration");
+                            if(Duration.length()>3)
+                            {
+                                Duration = Duration.substring(0, 3);
+                            }
 
                         Ridecardview = new CardView(context);
                         ridecardparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -136,7 +143,15 @@ public class Rides extends AppCompatActivity {
                         RideDetailsLayout.setLayoutParams(ridedetailsparams);
 
                         RideDate = new TextView(context);
-                        RideDate.setText("Check out : " + Checkout);
+                            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                            SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
+                            Calendar c = Calendar.getInstance();
+                            try {
+                                c.setTime(inFormat.parse(Checkout));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        RideDate.setText("Check out : " + outFormat.format(c.getTime()));
                         RideDate.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                         RideDate.setTextColor(Color.WHITE);
 
@@ -151,7 +166,15 @@ public class Rides extends AppCompatActivity {
                         RideToStation.setTextColor(Color.WHITE);
 
                         RideCheckinTime = new TextView(context);
-                        RideCheckinTime.setText("Check in : " + CheckinTime);
+                            SimpleDateFormat inFormat_checkin = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                            SimpleDateFormat outFormat_checkin = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss");
+                            Calendar c_checkin = Calendar.getInstance();
+                            try {
+                                c_checkin.setTime(inFormat_checkin.parse(CheckinTime));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        RideCheckinTime.setText("Check in : " + outFormat_checkin.format(c_checkin.getTime()));
                         RideCheckinTime.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                         RideCheckinTime.setTextColor(Color.WHITE);
 
@@ -161,7 +184,7 @@ public class Rides extends AppCompatActivity {
                         RideFare.setTextColor(Color.WHITE);
 
                         RideDuration = new TextView(context);
-                        RideDuration.setText("Duration : " + Duration.substring(0, 4));
+                        RideDuration.setText("Duration : " + Duration);
                         RideDuration.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
                         RideDuration.setTextColor(Color.WHITE);
 

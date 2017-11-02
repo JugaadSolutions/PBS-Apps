@@ -4,7 +4,7 @@ package com.mytrintrin.www.pbs_trintrin;
 public class API {
 
   //public static  final String Baseurl="http://43.251.80.79:13070/api/";   //PBS Internal Test
- // public static  final String Baseurl="http://43.251.80.79:13060/api/";   //PBS Development
+ //public static  final String Baseurl="http://43.251.80.79:13060/api/";   //PBS Development
   //public static  final String Baseurl="http://43.251.80.79:13065/api/";   //PBS Admin Test : External Test Instance
   //public static  final String Baseurl="https://www.mytrintrin.com:13070/api/";   //PBS Admin Test : SDC Instance
   public static  final String Baseurl="https://www.mytrintrin.com:13060/api/";   //PBS Admin : SDC Instance
@@ -51,7 +51,9 @@ public class API {
 
     public  static final String changepassword = Baseurl+"users/";
 
-    public  static final String searchmember = Baseurl+"member/search";
+    public  static final String searchmember = Baseurl+"member/search/";
+    //public  static final String searchmember = Baseurl+"users/search/";
+    //public  static final String searchmember  ="https://www.mytrintrin.com:13070/api/users/search/";
 
     public  static final String updatemember = Baseurl+"member/";
 
@@ -90,4 +92,14 @@ public class API {
     public static final String getallvehicles =Baseurl+"vehicle";
 
     public static final String forcebicycle ="http://43.251.80.79:13080/api/transactions/checkin/app";
+
+    public static final String updateemail = Baseurl+"member/email/";
+
+    public static final String usersync ="http://43.251.80.79:13090/api/users/sync/";
+
+    public static final  String releasecycle = "http://43.251.80.79:13090/api/transactions/unlock/app/test";
+
+    public static final String createcheckout = "http://43.251.80.79:13090/api/transactions/checkout/app";
+
+    public static final String opencheckout = "http://43.251.80.79:13090/api/transactions/open/";
 }

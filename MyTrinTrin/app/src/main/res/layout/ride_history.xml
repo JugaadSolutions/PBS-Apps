@@ -28,8 +28,7 @@
         android:orientation="vertical"
         android:id="@+id/ridehistorymainlayout">
 
-
-        <ScrollView
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -37,14 +36,118 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/ridehistorylayout"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="horizontal"
+                android:padding="6dp">
 
             </LinearLayout>
 
-        </ScrollView>
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/releasemainlayout"
+            android:orientation="vertical"
+            android:padding="6dp">
+
+            <Button
+                android:id="@+id/startbicycleride"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@drawable/roundcorner"
+                android:onClick="showcheckoutdialog"
+                android:text="Start Ride"
+                android:textColor="@color/btntextcolor"
+                android:textStyle="bold"
+                android:layout_marginBottom="5dp"
+                android:visibility="visible"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/latnlng"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/currentrideinfolayout"
+                android:visibility="gone"
+                android:weightSum="100">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:id="@+id/currentridedetails"
+                    android:background="@drawable/input_outline"
+                    android:layout_weight="20">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPrimary"
+                            android:text="Cycle : 255"
+                            android:padding="5dp"
+                            android:id="@+id/cyclenumber_currentride"
+                            android:textStyle="bold"
+                            android:textSize="13sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPrimary"
+                            android:text="At : 2 July,2017 10:00:00 PM"
+                            android:padding="5dp"
+                            android:id="@+id/at_currentride"
+                            android:textStyle="bold"
+                            android:textSize="13sp"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPrimary"
+                        android:text="From : Jayachamarajendra Circle"
+                        android:id="@+id/from_currentride"
+                        android:padding="5dp"
+                        android:textStyle="bold"
+                        android:textSize="13sp"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/returnbicycle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/roundcorner"
+                    android:onClick="returnwithoutqr"
+                    android:text="Return"
+                    android:textColor="@color/btntextcolor"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="80"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <fragment
+            android:id="@+id/dockingstationmap"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="MissingPrefix" />
 
     </LinearLayout>
-
-
 </LinearLayout>

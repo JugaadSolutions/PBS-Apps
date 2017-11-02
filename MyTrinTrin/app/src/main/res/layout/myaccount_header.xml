@@ -4,7 +4,7 @@
     android:layout_height="160dp"
     android:background="@drawable/coverpic"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="8dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
 
@@ -37,13 +37,24 @@
 
     </RelativeLayout>
 
+
+
     <TextView
         android:id="@+id/username"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
+        android:paddingTop="12dp"
         android:text="User Name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cardnumofuser"
+        android:text=""
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+
 
     <TextView
         android:id="@+id/usermailid"

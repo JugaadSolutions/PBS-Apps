@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mytrintrin.www.mytrintrin.Login"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/screenbackground">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

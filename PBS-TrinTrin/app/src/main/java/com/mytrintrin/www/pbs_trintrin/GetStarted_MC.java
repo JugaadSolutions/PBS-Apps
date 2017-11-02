@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class GetStarted_MC extends AppCompatActivity {
@@ -15,6 +16,7 @@ public class GetStarted_MC extends AppCompatActivity {
     Toolbar GetstartedMCToolbar;
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
+    TextView Versionname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,8 @@ public class GetStarted_MC extends AppCompatActivity {
         GetstartedMCToolbar.setTitle("Trin Trin");
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
+        Versionname = (TextView) findViewById(R.id.versionname_mc);
+        Versionname.setText("Version : "+BuildConfig.VERSION_NAME.toString());
         checkinternet();
     }
 

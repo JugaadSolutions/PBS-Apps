@@ -198,6 +198,16 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimary"/>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/versionname"
+                android:layout_gravity="center_horizontal"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:text="Version : "/>
+
         </LinearLayout>
 
         </ScrollView>

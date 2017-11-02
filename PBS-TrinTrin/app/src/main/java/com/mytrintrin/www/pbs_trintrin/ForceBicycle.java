@@ -82,7 +82,7 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
     ArrayList<Ports> ChekinList = new ArrayList<>();
 
     JSONObject Stationobject;
-    int noofports,portselection=0;;
+    int noofports,portselection=0,k;;
     Button Next,Submit;
     JSONArray Forcecyclearray;
     JSONObject Forcecycleobject,FinalObject;
@@ -206,7 +206,18 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
                         dockinglocation.setLatitude(doclatitude);
                         dockinglocation.setLongitude(docllongitude);
                         dockingstationlocation.add(dockinglocation);
-                        float distance = currentlocation.distanceTo(dockinglocation);
+
+
+                        String id = dscoordinates.getString("StationID");
+                        final String Stationname = dscoordinates.getString("name");
+                        JSONArray ports = dscoordinates.getJSONArray("portIds");
+                        StationIDArrayList.add(id);
+                        StationNameArrayList.add(Stationname);
+                        StationArray.put(dscoordinates);
+                        PortArray.put(ports);
+
+
+                        /*float distance = currentlocation.distanceTo(dockinglocation);
                         if(distance<30) {
                             String id = dscoordinates.getString("StationID");
                             final String Stationname = dscoordinates.getString("name");
@@ -215,7 +226,7 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
                             StationNameArrayList.add(Stationname);
                             StationArray.put(dscoordinates);
                             PortArray.put(ports);
-                        }
+                        }*/
                     }
                     calculatedistanceandsetstation();
                 } catch (JSONException e) {
@@ -298,7 +309,6 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
     public void calculatedistanceandsetstation() {
         if(StationNameArrayList.size()>0)
         {
-
             Stationadapter = new ArrayAdapter<String>(ForceBicycle.this, android.R.layout.simple_spinner_dropdown_item, StationNameArrayList);
             Stationadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             Station.setAdapter(Stationadapter);
@@ -358,6 +368,7 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
         try {
             JSONArray ports = Stationobject.getJSONArray("portIds");
             noofports= Stationobject.getInt("noofPorts");
+            FPGA6Layout.setVisibility(View.VISIBLE);
             if(noofports==12)
             {
                 FPGA6Layout.setVisibility(View.GONE);
@@ -546,6 +557,11 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
 
     public void submitportdetailsandcheckin(View view)
     {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("updating ports is in progress...");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.show();
         CycleNumberList.clear();
         ChekinList.clear();
         String u3p1 =FPGAu3p1.getText().toString().trim();
@@ -678,7 +694,7 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
                 CycleNumberList.add("MYS-Fleet-"+u6p4);
             }
         }
-        for(int k=0;k<CycleNumberList.size();k++)
+        for( k=0;k<CycleNumberList.size();k++)
         {
             SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -734,6 +750,11 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }*/
+                if(k==CycleNumberList.size())
+                {
+                    Toast.makeText(ForceBicycle.this, "Completed", Toast.LENGTH_LONG).show();
+                    mProgressDialog.dismiss();
+                }
 
                 Log.d("force checkin",response);
 
@@ -741,10 +762,11 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Port.setSelection(0);
+                mProgressDialog.dismiss();
+                /*Port.setSelection(0);
                 portselection=0;
                 Next.setVisibility(View.GONE);
-                Submit.setVisibility(View.VISIBLE);
+                Submit.setVisibility(View.VISIBLE);*/
                 if (error.networkResponse != null) {
                     parseVolleyError(error);
                     return;
@@ -762,29 +784,8 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
                 } else if (error instanceof NetworkError) {
-                    Toast.makeText(ForceBicycle.this, "Please check your connection", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ForceBicycle.this, "Please check your connection/Network Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(
-                            ForceBicycle.this);
-                    builder.setIcon(R.drawable.splashlogo);
-                    builder.setTitle("NO INTERNET CONNECTION!!!");
-                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
-                    builder.setPositiveButton("Exit",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    dialog.dismiss();
-                                    finish();
-                                }
-                            });
-                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                            checkinternet();
-                        }
-                    });
-                    builder.show();
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(ForceBicycle.this, "Timeout Error", Toast.LENGTH_LONG).show();
@@ -811,7 +812,7 @@ public class ForceBicycle extends AppCompatActivity implements LocationListener 
             }
         };
 
-        forcebicyclerequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        forcebicyclerequest.setRetryPolicy(new DefaultRetryPolicy(60000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(forcebicyclerequest);
     }
 

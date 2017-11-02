@@ -45,18 +45,8 @@ public class Paygovwebview extends AppCompatActivity {
         PayGovView.getSettings().setBuiltInZoomControls(true);
         PayGovView.getSettings().setJavaScriptEnabled(true);
 
-         /*PayGovView.loadData(paygovresponse,"text/html",null);*/
 
-       /* Intent i = new Intent();
-        i.setComponent(new ComponentName("com.android.browser", "com.android.browser.BrowserActivity"));
-        i.setAction(Intent.ACTION_VIEW);
-        String html = "<html><body>hello World</body></html>";
-        String dataUri = "data:text/html," + URLEncoder.encode(html).replaceAll("\\+","%20");
-        i.setData(Uri.parse(dataUri));
-        startActivity(i);*/
-
-
-        PayGovRefresh = (SwipeRefreshLayout) findViewById(R.id.paygovrefresh);
+        /*PayGovRefresh = (SwipeRefreshLayout) findViewById(R.id.paygovrefresh);
 
         PayGovRefresh.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
@@ -65,7 +55,7 @@ public class Paygovwebview extends AppCompatActivity {
                         PayGovView.reload();
                     }
                 }
-        );
+        );*/
 
 
         getwebview();
@@ -77,57 +67,6 @@ public class Paygovwebview extends AppCompatActivity {
 
             startWebView(paygovresponse);
 
-        /*    PayGovView.setWebViewClient(new WebViewClient() {
-                @Override
-                public void onReceivedSslError(final WebView view, final SslErrorHandler handler, SslError error) {
-                    Log.d("CHECK", "onReceivedSslError");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(Paygovwebview.this);
-                    final AlertDialog alertDialog = builder.create();
-
-                    String message = "Certificate error.";
-                    switch (error.getPrimaryError()) {
-                        case SslError.SSL_UNTRUSTED:
-                            message = "The certificate authority is not trusted.";
-                            break;
-                        case SslError.SSL_EXPIRED:
-                            message = "The certificate has expired.";
-                            break;
-                        case SslError.SSL_IDMISMATCH:
-                            message = "The certificate Hostname mismatch.";
-                            break;
-                        case SslError.SSL_NOTYETVALID:
-                            message = "The certificate is not yet valid.";
-                            break;
-                    }
-                    message += " Do you want to continue anyway?";
-                    alertDialog.setTitle("SSL Certificate Error");
-                    alertDialog.setMessage(message);
-
-                    alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.d("CHECK", "Button ok pressed");
-                            // Ignore SSL certificate errors
-                            handler.proceed();
-
-                        }
-                    });
-
-                    alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Log.d("CHECK", "Button cancel pressed");
-                            handler.cancel();
-                        }
-                    });
-                    alertDialog.show();
-                    //To perform dynamic click for ssl error
-                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
-
-                }
-            });
-*/
         }
         else {
             Toast.makeText(this, "You are offline!!!!", Toast.LENGTH_LONG).show();
@@ -184,28 +123,13 @@ public class Paygovwebview extends AppCompatActivity {
 
         });
 
-        // Javascript inabled on webview
+        // Javascript enabled on webview
         PayGovView.getSettings().setLoadWithOverviewMode(true);
         PayGovView.getSettings().setUseWideViewPort(true);
         PayGovView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
         PayGovView.setScrollbarFadingEnabled(false);
         PayGovView.getSettings().setBuiltInZoomControls(true);
         PayGovView.getSettings().setJavaScriptEnabled(true);
-        // webView.getSettings().setBuiltInZoomControls(true);
-
-        // Other webview options
-        /*
-        webView.getSettings().setLoadWithOverviewMode(true);
-        webView.getSettings().setUseWideViewPort(true);
-        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        webView.setScrollbarFadingEnabled(false);
-        webView.getSettings().setBuiltInZoomControls(true);
-        */
-
-        /*
-         String summary = "<html><body>You scored <b>192</b> points.</body></html>";
-         webview.loadData(summary, "text/html", null);
-         */
 
         //Load url in webview
         PayGovView.loadData(url,"text/html",null);
@@ -225,8 +149,6 @@ public class Paygovwebview extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Oh no! " + description, Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
 

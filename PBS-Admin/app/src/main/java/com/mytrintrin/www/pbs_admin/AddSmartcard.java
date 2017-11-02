@@ -115,6 +115,8 @@ public class AddSmartcard extends AppCompatActivity {
                         break;
                     case 1 : cardtype="2";
                         break;
+                    case 2 : cardtype="3";
+                        break;
                 }
             }
 
@@ -367,7 +369,7 @@ public class AddSmartcard extends AppCompatActivity {
                 finaltagid = finaltagid + s1 + s2;
             }
             CardRFID=finaltagid.toUpperCase()+"00000000";
-            Toast.makeText(this,"RFID id is "+CardRFID,Toast.LENGTH_LONG).show();
+            //Toast.makeText(this,"RFID id is "+CardRFID,Toast.LENGTH_LONG).show();
             if(SmartcardRfidList.contains(CardRFID))
             {
                 Toast.makeText(this,"Already Scanned : "+CardRFID,Toast.LENGTH_LONG).show();
@@ -474,7 +476,7 @@ public class AddSmartcard extends AppCompatActivity {
     {
         for(int i =0;i<FromArray.size();i++)
         {
-            Toast.makeText(this, "Cardnum : "+FromArray.get(i)+"RFID : "+ SmartcardRfidList.get(i)+"Card Type : "+CardTypeList.get(i), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Cardnum : "+FromArray.get(i)+"RFID : "+ SmartcardRfidList.get(i)+"Card Type : "+CardTypeList.get(i), Toast.LENGTH_SHORT).show();
             sendtoserver(FromArray.get(i),SmartcardRfidList.get(i),CardTypeList.get(i));
         }
     }
@@ -490,7 +492,7 @@ public class AddSmartcard extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 mProgressDialog.dismiss();
-                Toast.makeText(AddSmartcard.this, response, Toast.LENGTH_LONG).show();
+               // Toast.makeText(AddSmartcard.this, response, Toast.LENGTH_LONG).show();
                 FromArray.clear();
                 CardTypeList.clear();
                 SmartcardRfidList.clear();

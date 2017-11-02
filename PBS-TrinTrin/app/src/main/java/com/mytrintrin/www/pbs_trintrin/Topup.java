@@ -1,18 +1,26 @@
 package com.mytrintrin.www.pbs_trintrin;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +51,7 @@ public class Topup extends AppCompatActivity {
     private Toolbar Topuptoolbar;
     EditText Transactionno_topup, Comments_topup, Username_topup;
     String amountfortopup, Usernamefortopup, transactionno_topup, comments_topup, Topupname, Topupid, TopupValidity,loginid;
-    int Memberid_topup, Usagefee;
+    int Memberid_topup, Usagefee,position;
     Spinner Paymentmode_topup;
     public static ArrayList<String> TopupIDArrayList = new ArrayList<String>();
     public static ArrayList<String> TopupNameArrayList = new ArrayList<String>();
@@ -55,6 +63,11 @@ public class Topup extends AppCompatActivity {
     JSONObject Topupobject;
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
+    private ProgressDialog mProgressdialog;
+    LinearLayout Topuplayout;
+    ArrayList<Button> Plans = new ArrayList<>();
+    CheckBox Cash,Debit,Credit;
+    String paymentmode="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +91,8 @@ public class Topup extends AppCompatActivity {
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
         loginid = loginpref.getString("User-id", null);
+        Topuplayout = (LinearLayout) findViewById(R.id.topupdynamiclayout);
         checkinternet();
-
         gettopupplans();
     }
 
@@ -128,9 +141,15 @@ public class Topup extends AppCompatActivity {
             Comments_topup.requestFocus();
             return;
         }
+        mProgressdialog = new ProgressDialog(Topup.this);
+        mProgressdialog.setTitle("Please wait");
+        mProgressdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressdialog.setCancelable(true);
+        mProgressdialog.show();
         StringRequest topuprequest = new StringRequest(Request.Method.POST, API.addcredit + Memberid_topup + "/topup", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                mProgressdialog.dismiss();
                 Toast.makeText(Topup.this, "Topup successfull", Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder TopuupBuilder = new AlertDialog.Builder(Topup.this);
                 TopuupBuilder.setTitle("Top Up");
@@ -150,6 +169,7 @@ public class Topup extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                mProgressdialog.dismiss();
                 if (error.networkResponse != null) {
                     parseVolleyError(error);
                     return;
@@ -234,7 +254,8 @@ public class Topup extends AppCompatActivity {
                 try {
                     JSONObject plansresponse = new JSONObject(response);
                     Topupobject = plansresponse;
-                    gettopupdetails();
+                    //gettopupdetails();
+                    gettopup();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -349,6 +370,244 @@ public class Topup extends AppCompatActivity {
             e.printStackTrace();
         }
 
+    }
+
+    public void gettopup()
+    {
+        try {
+            JSONArray data = Topupobject.getJSONArray("data");
+            TopupNameArrayList.clear();
+            TopupIDArrayList.clear();
+            Plans.clear();
+            for(int i =0;i<data.length();i++)
+            {
+                JSONObject getid = data.getJSONObject(i);
+                String id = getid.getString("topupId");
+                String name = getid.getString("topupName");
+                TopupIDArrayList.add(id);
+                TopupNameArrayList.add(name);
+                Usagefee = getid.getInt("userFees");
+                TopupValidity = getid.getString("validity");
+                Button topup = new Button(Topup.this);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(0, 15, 0, 0);
+                topup.setLayoutParams(params);
+                topup.setBackgroundResource(R.drawable.roundcorner);
+                topup.setText(name);
+                topup.setTextColor(Color.parseColor("white"));
+                Plans.add(topup);
+                Topuplayout.addView(topup);
+                topup.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        position =Topuplayout.indexOfChild(view);
+                        showtopupdetailsdialog();
+                    }
+                });
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showtopupdetailsdialog()
+    {
+        AlertDialog.Builder TopupBuilder = new AlertDialog.Builder(Topup.this);
+        TopupBuilder.setIcon(R.mipmap.logo);
+        TopupBuilder.setTitle("Topup");
+        LayoutInflater topupinflate = LayoutInflater.from(Topup.this);
+        View topupview = topupinflate.inflate(R.layout.topupdetails,null);
+        final EditText planname = (EditText) topupview.findViewById(R.id.planname_topup);
+        final EditText username = (EditText) topupview.findViewById(R.id.username_topup);
+        final EditText transactionno = (EditText) topupview.findViewById(R.id.ettopuptransactionid);
+        final EditText comment  = (EditText) topupview.findViewById(R.id.ettopupcomments);
+        final Spinner payment = (Spinner) topupview.findViewById(R.id.topuppaymentmode);
+        Cash = (CheckBox) topupview.findViewById(R.id.cbcash);
+        Debit = (CheckBox) topupview.findViewById(R.id.cbdebitcard);
+        Credit = (CheckBox) topupview.findViewById(R.id.cbcreditcard);
+        Cash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                paymentmode="Cash";
+                Debit.setChecked(false);
+                Credit.setChecked(false);
+            }
+        });
+        Debit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                paymentmode="Debit Card";
+                Cash.setChecked(false);
+                Credit.setChecked(false);
+            }
+        });
+        Credit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                paymentmode="Credit Card";
+                Cash.setChecked(false);
+                Debit.setChecked(false);
+            }
+        });
+        planname.setText(TopupNameArrayList.get(position));
+        username.setText(Usernamefortopup);
+        TopupBuilder.setView(topupview);
+        TopupBuilder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                String pname = planname.getText().toString().trim();
+                String uname = username.getText().toString().trim();
+                final String transno = transactionno.getText().toString().trim();
+                final String comments = comment.getText().toString().trim();
+                if(pname.equals(""))
+                {
+                    Toast.makeText(Topup.this, "Plan Name Cannot be empty", Toast.LENGTH_LONG).show();
+                    showtopupdetailsdialog();
+                    return;
+                }
+                if(uname.equals(""))
+                {
+                    Toast.makeText(Topup.this, "User Name Cannot be empty", Toast.LENGTH_LONG).show();
+                    showtopupdetailsdialog();
+                    return;
+                }
+                if(transno.equals(""))
+                {
+                    Toast.makeText(Topup.this, "Transaction Number Cannot be empty", Toast.LENGTH_LONG).show();
+                    showtopupdetailsdialog();
+                    return;
+                }
+                if(comments.equals(""))
+                {
+                    Toast.makeText(Topup.this, "Comments Cannot be empty", Toast.LENGTH_LONG).show();
+                    showtopupdetailsdialog();
+                    return;
+                }
+                if(paymentmode.equals("")||paymentmode.equals(null))
+                {
+                    Toast.makeText(Topup.this, "Please select the payment", Toast.LENGTH_LONG).show();
+                    showtopupdetailsdialog();
+                    return;
+                }
+                Topupid= TopupIDArrayList.get(position);
+                mProgressdialog = new ProgressDialog(Topup.this);
+                mProgressdialog.setTitle("Please wait");
+                mProgressdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                mProgressdialog.setCancelable(true);
+                mProgressdialog.show();
+                StringRequest topuprequest = new StringRequest(Request.Method.POST, API.addcredit + Memberid_topup + "/topup", new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        mProgressdialog.dismiss();
+                        Toast.makeText(Topup.this, "Topup successfull", Toast.LENGTH_SHORT).show();
+                        AlertDialog.Builder TopuupBuilder = new AlertDialog.Builder(Topup.this);
+                        TopuupBuilder.setTitle("Top Up");
+                        TopuupBuilder.setMessage("Top up Successfull");
+                        TopuupBuilder.setIcon(R.mipmap.logo);
+                        TopuupBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startActivity(new Intent(Topup.this, GetStarted.class));
+                                dialogInterface.dismiss();
+                                finish();
+                            }
+                        });
+                        TopuupBuilder.setCancelable(false);
+                        TopuupBuilder.show();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mProgressdialog.dismiss();
+                        if (error.networkResponse != null) {
+                            parseVolleyError(error);
+                            return;
+                        }
+                        if (error instanceof ServerError) {
+                            Toast.makeText(Topup.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                            Log.d("Error", String.valueOf(error instanceof ServerError));
+                            error.printStackTrace();
+                        } else if (error instanceof AuthFailureError) {
+                            Toast.makeText(Topup.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                            Log.d("Error", "Authentication Error");
+                            error.printStackTrace();
+                        } else if (error instanceof ParseError) {
+                            Toast.makeText(Topup.this, "Parse Error", Toast.LENGTH_LONG).show();
+                            Log.d("Error", "Parse Error");
+                            error.printStackTrace();
+                        } else if (error instanceof NetworkError) {
+                            Toast.makeText(Topup.this, "Please check your connection", Toast.LENGTH_LONG).show();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Topup.this);
+                            builder.setIcon(R.mipmap.logo);
+                            builder.setTitle("NO INTERNET CONNECTION!!!");
+                            builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                            builder.setPositiveButton("Exit",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,
+                                                            int which) {
+                                            dialog.dismiss();
+                                            finish();
+                                        }
+                                    });
+                            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                    checkinternet();
+                                }
+                            });
+                            builder.show();
+                            Log.d("Error", "Network Error");
+                            error.printStackTrace();
+                        } else if (error instanceof TimeoutError) {
+                            Toast.makeText(Topup.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                            Log.d("Error", "Timeout Error");
+                            error.printStackTrace();
+                        } else if (error instanceof NoConnectionError) {
+                            Toast.makeText(Topup.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                            Log.d("Error", "No Connection Error");
+                            error.printStackTrace();
+                        } else {
+                            Toast.makeText(Topup.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                            error.printStackTrace();
+                        }
+                    }
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<>();
+                        headers.put("Content-Type", "application/json; charset=utf-8");
+                        headers.put("Content-Type", "application/x-www-form-urlencoded");
+                        return headers;
+                    }
+
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("credit", Topupid);
+                        params.put("creditMode", paymentmode);
+                        params.put("transactionNumber", transno);
+                        params.put("comments", comments);
+                        params.put("createdBy", loginid);
+                        return params;
+                    }
+                };
+                topuprequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(topuprequest);
+
+            }
+        });
+        TopupBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(Topup.this, "Cancelled", Toast.LENGTH_SHORT).show();
+                dialogInterface.dismiss();
+            }
+        });
+        TopupBuilder.setCancelable(false);
+        TopupBuilder.show();
     }
 
     public void parseVolleyError(VolleyError error) {

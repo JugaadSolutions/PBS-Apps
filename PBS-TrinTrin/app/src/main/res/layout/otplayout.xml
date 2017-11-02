@@ -16,7 +16,7 @@
             android:layout_marginTop="5dp"
             android:hint="OTP"
             android:inputType="number"
-            android:maxLength="@integer/otpno"
+            android:maxLength="16"
             android:padding="12dp"
             android:textColor="#009746"
             android:textColorHint="@color/colorPrimary" />

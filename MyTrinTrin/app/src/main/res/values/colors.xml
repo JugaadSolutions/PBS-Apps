@@ -5,6 +5,8 @@
     <color name="colorAccent">#009746</color>
     <color name="btntextcolor">#ffffff</color>
 
+    <color name="screenbackground">#ececec</color>
+
     <!--added for welcome slider-->
     <!-- Screens background color-->
     <color name="bg_screen1">#f64c73</color>

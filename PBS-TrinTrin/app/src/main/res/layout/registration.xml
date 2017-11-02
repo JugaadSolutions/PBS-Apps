@@ -127,7 +127,8 @@
                                 android:layout_weight="1"
                                 android:buttonTint="@color/colorPrimary"
                                 android:text="Male"
-                                android:textColor="@color/colorPrimary" />
+                                android:textColor="@color/colorPrimary"
+                                android:onClick="maleselected"/>
 
                             <CheckBox
                                 android:id="@+id/cbfemale"
@@ -136,7 +137,8 @@
                                 android:layout_weight="1"
                                 android:buttonTint="@color/colorPrimary"
                                 android:text="Female"
-                                android:textColor="@color/colorPrimary" />
+                                android:textColor="@color/colorPrimary"
+                                android:onClick="femaleselected"/>
 
                             <CheckBox
                                 android:id="@+id/cbothers"
@@ -145,7 +147,8 @@
                                 android:layout_weight="1"
                                 android:buttonTint="@color/colorPrimary"
                                 android:text="Others"
-                                android:textColor="@color/colorPrimary" />
+                                android:textColor="@color/colorPrimary"
+                                android:onClick="otherselected"/>
 
                         </LinearLayout>
 
@@ -401,7 +404,7 @@
                                     android:layout_height="40dp"
                                     android:layout_gravity="end"
                                     android:background="@mipmap/ic_add_a_photo_black_24dp"
-                                    android:onClick="Takeproofpic"
+                                    android:onClick="chooseproofpicturefrom"
                                     android:visibility="visible"/>
 
                                 <ImageButton
@@ -410,7 +413,7 @@
                                     android:layout_height="40dp"
                                     android:layout_gravity="end"
                                     android:background="@mipmap/ic_add_circle_outline_black_24dp"
-                                    android:onClick="Takeproofpic_2"
+                                    android:onClick="chooseproofpicturefrom_2"
                                     android:visibility="gone"/>
 
                             </FrameLayout>
@@ -494,7 +497,7 @@
                                 android:layout_height="40dp"
                                 android:layout_gravity="end"
                                 android:background="@mipmap/ic_add_a_photo_black_24dp"
-                                android:onClick="TakeProfilePic" />
+                                android:onClick="chooseprofilepicturefrom" />
                         </FrameLayout>
 
 
@@ -714,6 +717,26 @@
                                 android:padding="12dp"
                                 android:textColor="#009746"
                                 android:textColorHint="@color/colorPrimary" />
+
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/validity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColorHint="@color/colorPrimary">
+
+                            <EditText
+                                android:id="@+id/etvalidity"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:hint="Validity"
+                                android:inputType="text"
+                                android:padding="12dp"
+                                android:textColor="#009746"
+                                android:textColorHint="@color/colorPrimary"
+                                android:visibility="gone"/>
 
                         </android.support.design.widget.TextInputLayout>
 

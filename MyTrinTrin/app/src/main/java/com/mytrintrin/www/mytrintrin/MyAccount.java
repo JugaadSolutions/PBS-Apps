@@ -113,9 +113,9 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
     ArrayList<String> Stationnamearray = new ArrayList<>();
     int i;
     public static final int RequestPermissionCode = 1;
-    SharedPreferences loginpref,marqueepref;
-    SharedPreferences.Editor editor,marqueeeditor;
-    TextView UserName, UserMail, UserBalance, MarqueeBalance, MarqueeValidity, LatestRides,UserValidity;
+    SharedPreferences loginpref,marqueepref,registrationcentrepref;
+    SharedPreferences.Editor editor,marqueeeditor,registrationeditor;
+    TextView UserName, UserMail, UserBalance, MarqueeBalance, MarqueeValidity, LatestRides,UserValidity,CardNum_tv;
     Menu nav_Menu;
 
     private static final int ProfilePicRequest = 101;
@@ -134,6 +134,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
     ArrayList<String> allstationname = new ArrayList<>();
     ArrayList<Marker> allstationmarker = new ArrayList<>();
     private ProgressDialog mProgressDialog;
+    JSONArray dockingstationarray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +158,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         Profilepic = (ImageView) profileview.findViewById(R.id.userprofilepic);
         UserName = (TextView) profileview.findViewById(R.id.username);
         UserMail = (TextView) profileview.findViewById(R.id.usermailid);
+        CardNum_tv = (TextView) profileview.findViewById(R.id.cardnumofuser);
 
         MarqueeBalance = (TextView) findViewById(R.id.MarqueeText);
        // MarqueeValidity = (TextView) findViewById(R.id.validity);
@@ -192,12 +194,14 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         mProgressDialog.setCancelable(true);
         mProgressDialog.show();
 
+        dockingstationarray = new JSONArray();
+
         checkinternet();
         getlocation();
         getalldockingstations();
         getallregistrationcentre();
         getmemberdetails();
-        getridedetails();
+        //getridedetails();
         getlatestmessage();
         onpermision();
 
@@ -723,7 +727,12 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     Toast.makeText(MyAccount.this, "Parse Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
-                } else if (error instanceof NetworkError) {
+                }else if (error instanceof NoConnectionError) {
+                    Toast.makeText(MyAccount.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                }
+                else if (error instanceof NetworkError) {
                     Toast.makeText(MyAccount.this, "Please Check your connection.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
@@ -751,10 +760,6 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(MyAccount.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
-                    error.printStackTrace();
-                } else if (error instanceof NoConnectionError) {
-                    Toast.makeText(MyAccount.this, "No Connection Error", Toast.LENGTH_LONG).show();
-                    Log.d("Error", "No Connection Error");
                     error.printStackTrace();
                 } else {
                     Toast.makeText(MyAccount.this, "Something went wrong", Toast.LENGTH_LONG).show();
@@ -820,7 +825,12 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     Toast.makeText(MyAccount.this, "Parse Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
-                } else if (error instanceof NetworkError) {
+                }else if (error instanceof NoConnectionError) {
+                    Toast.makeText(MyAccount.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                }
+                else if (error instanceof NetworkError) {
                     Toast.makeText(MyAccount.this, "Please check your connection.", Toast.LENGTH_SHORT).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
@@ -849,10 +859,6 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     Toast.makeText(MyAccount.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
                     error.printStackTrace();
-                } else if (error instanceof NoConnectionError) {
-                    Toast.makeText(MyAccount.this, "No Connection Error", Toast.LENGTH_LONG).show();
-                    Log.d("Error", "No Connection Error");
-                    error.printStackTrace();
                 } else {
                     Toast.makeText(MyAccount.this, "Something went wrong", Toast.LENGTH_LONG).show();
                     error.printStackTrace();
@@ -876,6 +882,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
             @Override
             public void onResponse(String response) {
                 try {
+                    mProgressDialog.dismiss();
                     JSONObject responsefromserver = new JSONObject(response);
                     JSONObject data = responsefromserver.getJSONObject("data");
                     userid = data.getString("UserID");
@@ -888,6 +895,12 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     String balance = data.getString("creditBalance");
                     userbalance = balance;
                     if ((data.has("membershipId"))) {
+                        JSONObject membership = data.getJSONObject("membershipId");
+                        String refundenable = membership.getString("refundEnabled");
+                        if(refundenable.equals("true"))
+                        {
+                            nav_Menu.findItem(R.id.refund_myaccount).setVisible(true);
+                        }
                         nav_Menu.findItem(R.id.topup_myaccount).setVisible(true);
                         nav_Menu.findItem(R.id.selectplan_myaccount).setVisible(false);
                         nav_Menu.findItem(R.id.tickets_myaccount).setVisible(true);
@@ -914,6 +927,12 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     }
                     if (Integer.parseInt(balance) > 0) {
                         nav_Menu.findItem(R.id.selectplan_myaccount).setVisible(false);
+                    }
+                    if (data.has("cardNum"))
+                    {
+                        String cardnumber = data.getString("cardNum");
+                        CardNum_tv.setText("Card No."+cardnumber);
+
                     }
                     profilePicpath = data.getString("profilePic");
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -958,6 +977,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                mProgressDialog.dismiss();
 
                 if (error.networkResponse != null) {
                     parseVolleyError(error);
@@ -976,7 +996,12 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     Toast.makeText(MyAccount.this, "Parse Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
-                } else if (error instanceof NetworkError) {
+                }else if (error instanceof NoConnectionError) {
+                    Toast.makeText(MyAccount.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                }
+                else if (error instanceof NetworkError) {
                     Toast.makeText(MyAccount.this, "Please Check your connection", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
@@ -1036,7 +1061,7 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
                     JSONObject responsefromserver = new JSONObject(response);
                     JSONArray data = responsefromserver.getJSONArray("data");
                     int datalength = data.length();
-                    mProgressDialog.dismiss();
+
                     if (datalength > 0) {
                         if (datalength > 5) {
                             datalength = 5;
@@ -1243,23 +1268,162 @@ public class MyAccount extends AppCompatActivity implements OnMapReadyCallback, 
         }
         else if(id == R.id.contactus_myaccount)
         {
-            AlertDialog.Builder contactdialog = new AlertDialog.Builder(this);
-            contactdialog.setTitle("Contact Us");
-            contactdialog.setIcon(R.drawable.splashlogo);
-            LayoutInflater contactinflate = LayoutInflater.from(this);
-            View contactView = contactinflate.inflate(R.layout.contactus,null);
-            TextView Version = (TextView) contactView.findViewById(R.id.versiontextview);
-            Version.setText("Version : "+BuildConfig.VERSION_NAME.toString());
-            contactdialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                }
-            });
-            contactdialog.setView(contactView);
-            contactdialog.show();
+            startActivity(new Intent(MyAccount.this,ContactUs.class) );
+        }
+
+        else if(id==R.id.refund_myaccount)
+        {
+            showrefunddialog();
         }
         return false;
+    }
+
+
+    public void showrefunddialog()
+    {
+        AlertDialog.Builder RefundBuilder = new AlertDialog.Builder(this);
+        RefundBuilder.setIcon(R.mipmap.logo);
+        RefundBuilder.setTitle("Refund Request");
+        RefundBuilder.setMessage("Do you really want to request for refund?");
+        RefundBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                sendrefundrequesttoserver();
+            }
+        });
+        RefundBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        RefundBuilder.setCancelable(false);
+        RefundBuilder.show();
+
+    }
+
+    public void sendrefundrequesttoserver()
+    {
+
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Loading...");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.show();
+
+        StringRequest refundrequest = new StringRequest(Request.Method.POST, API.onlinerefund, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mProgressDialog.dismiss();
+                Log.d("refund",response);
+                try {
+                    JSONObject responsefromserver = new JSONObject(response);
+                    JSONObject data = responsefromserver.getJSONObject("data");
+                    String message = data.getString("message");
+                    AlertDialog.Builder RefundBuilder = new AlertDialog.Builder(MyAccount.this);
+                    RefundBuilder.setIcon(R.mipmap.logo);
+                    RefundBuilder.setTitle("Refund Request");
+                    RefundBuilder.setMessage(message);
+                    RefundBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivity(new Intent(MyAccount.this,MyAccount.class));
+                            finish();
+                        }
+                    });
+                    RefundBuilder.setCancelable(false);
+                    RefundBuilder.show();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                mProgressDialog.dismiss();
+                if (error.networkResponse != null) {
+                    parseVolleyError(error);
+                    return;
+                }
+
+                if (error instanceof ServerError) {
+                    Toast.makeText(MyAccount.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", String.valueOf(error instanceof ServerError));
+                    error.printStackTrace();
+                } else if (error instanceof AuthFailureError) {
+                    Toast.makeText(MyAccount.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Authentication Error");
+                    error.printStackTrace();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(MyAccount.this, "Parse Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Parse Error");
+                    error.printStackTrace();
+                }else if (error instanceof NoConnectionError) {
+                    Toast.makeText(MyAccount.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                }
+                else if (error instanceof NetworkError) {
+                    Toast.makeText(MyAccount.this, "Please Check your connection", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Network Error");
+                    error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            MyAccount.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
+                } else if (error instanceof TimeoutError) {
+                    Toast.makeText(MyAccount.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Timeout Error");
+                    error.printStackTrace();
+                } else if (error instanceof NoConnectionError) {
+                    Toast.makeText(MyAccount.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(MyAccount.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                }
+            }
+        }) {
+
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                return headers;
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("user", loginuserid);
+                return params;
+            }
+
+        };
+        refundrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        TrinTrinSingleton.getInstance(getApplicationContext()).addtorequestqueue(refundrequest);
     }
 
     public void parseVolleyError(VolleyError error) {

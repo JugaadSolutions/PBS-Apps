@@ -288,6 +288,10 @@ public class Login extends AppCompatActivity {
                     Toast.makeText(Login.this, "Parse Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
+                }else if (error instanceof NoConnectionError) {
+                    Toast.makeText(Login.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
                 } else if (error instanceof NetworkError) {
                     Toast.makeText(Login.this, "Please check your connection.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
@@ -316,10 +320,6 @@ public class Login extends AppCompatActivity {
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(Login.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
-                    error.printStackTrace();
-                } else if (error instanceof NoConnectionError) {
-                    Toast.makeText(Login.this, "No Connection Error", Toast.LENGTH_LONG).show();
-                    Log.d("Error", "No Connection Error");
                     error.printStackTrace();
                 } else {
                     Toast.makeText(Login.this, "Something went wrong", Toast.LENGTH_LONG).show();

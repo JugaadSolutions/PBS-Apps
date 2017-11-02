@@ -21,4 +21,16 @@
         android:title="Payment History"
         android:icon="@mipmap/ic_attach_money_black_24dp"/>
 
+    <item android:id="@+id/nav_emailupdate"
+        android:title="Email Update"
+        android:icon="@mipmap/ic_edit_black_24dp"/>
+
+    <item android:id="@+id/nav_syncuser"
+        android:title="Sync User"
+        android:icon="@mipmap/ic_loop_black_24dp"/>
+
+    <item android:id="@+id/nav_checkoutforuser"
+        android:title="Checkout"
+        android:icon="@mipmap/ic_transfer_within_a_station_black_24dp"/>
+
 </menu>

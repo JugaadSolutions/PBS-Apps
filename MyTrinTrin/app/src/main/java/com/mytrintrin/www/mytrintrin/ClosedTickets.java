@@ -152,7 +152,8 @@ public class ClosedTickets extends AppCompatActivity {
         try {
             Ticketsdetails = TicketArray.getJSONObject(ticketposition);
             String TicketID = Ticketsdetails.getString("uuId");
-            String Name = Ticketsdetails.getString("name");
+            JSONObject user = Ticketsdetails.getJSONObject("user");
+            String Name = user.getString("Name");
             String Subject=Ticketsdetails.getString("subject");
             String Description = Ticketsdetails.getString("description");
             String Date = Ticketsdetails.getString("ticketdate");

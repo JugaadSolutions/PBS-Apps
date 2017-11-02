@@ -198,7 +198,7 @@ public class Login extends AppCompatActivity {
                     String userid = data.getString("uid");
                     String role = data.getString("role");
                     mProgressDialog.dismiss();
-                    if (role.equals("registration-employee")) {
+                      if (role.equals("registration-employee")) {
                         editor.putString("User-id", userid);
                         editor.putString("Role",role);
                         editor.commit();
@@ -305,6 +305,8 @@ public class Login extends AppCompatActivity {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json; charset=utf-8");
                 headers.put("Content-Type", "application/x-www-form-urlencoded");
+                headers.put("Accept-Encoding", "gzip");
+                /*headers.put("Content-Encoding", "gzip");*/
                 return headers;
             }
             @Override

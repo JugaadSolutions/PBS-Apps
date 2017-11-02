@@ -6,8 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.PersistableBundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
@@ -55,6 +57,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,8 +69,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,14 +89,14 @@ public class Registration extends AppCompatActivity implements NavigationView.On
     DrawerLayout RegistrationDrawer;
 
     LinearLayout Basicdetails, Profilepic, Proofpic, Selectplan, Payment, Smartcard;
-    EditText Firstname, Lastname, Email, Phone, Address, DocNo, Amount, TransactionNo, Comments, CardNum, OtpNum, Age, EmergencyContact;
+    EditText Firstname, Lastname, Email, Phone, Address, DocNo, Amount, TransactionNo, Comments, CardNum, OtpNum, Age, EmergencyContact,Validity;
     CheckBox male, female, others;
     Spinner Country, State, City, DocType, Plans, Paymentmode, CountryCode;
     TextView statetv, citytv,paymenttv;
     ImageView profilepic, proofpic, proofpic_2;
     ImageButton Takeprofilepic, Takeproofpic, Takeproofpic_2;
-    String Fname, Lname, email, phone, address, gender, country, state, city, doctype, docno, uid, Planname, Planid, LoginId, userdetails, cardno, age, emergencycontact;
-    Bitmap profilephoto = null, proofphoto = null, proofphoto_2 = null;
+    String Fname, Lname, email, phone, address, gender="", country, state, city, doctype, docno, uid, Planname, Planid, LoginId, userdetails, cardno, age, emergencycontact,cardnumforsync,message;
+    Bitmap profilephoto, proofphoto , proofphoto_2 ;
     int Userid, CreditBalance, Usagefee, OTP;
     Menu nav_menu;
     NavigationView Registration_navigation;
@@ -100,6 +106,10 @@ public class Registration extends AppCompatActivity implements NavigationView.On
     private static final int ProofPicRequest = 102;
     private static final int ProofPicRequest_2 = 103;
     public static final int RequestPermissionCode = 1;
+    private static int RESULT_LOAD_IMG_PROFILE = 1;
+    private static int RESULT_LOAD_IMG_PROOF_1 = 2;
+    private static int RESULT_LOAD_IMG_PROOF_2 = 3;
+
 
     private ProgressDialog mProgressDialog;
 
@@ -114,6 +124,15 @@ public class Registration extends AppCompatActivity implements NavigationView.On
 
     SharedPreferences loginpref;
     SharedPreferences.Editor editor;
+    String profilePicpath = "";
+    String proofPicpath_1 = "";
+    String proofPicpath_2 = "";
+
+    public static ArrayList<String> StationIDArrayList = new ArrayList<String>();
+    public static ArrayList<String> StationNameArrayList = new ArrayList<String>();
+    Spinner Stations;
+    String StationName,StationId;
+    public ArrayAdapter<String> Stationadapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,6 +273,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
         /*Smartcard*/
         Smartcard = (LinearLayout) findViewById(R.id.smartcardlayout);
         CardNum = (EditText) findViewById(R.id.etsmartcardno);
+        Validity = (EditText) findViewById(R.id.etvalidity);
         /*Ends*/
 
         AddMembers = (Button) findViewById(R.id.addmember_registration);
@@ -451,6 +471,92 @@ public class Registration extends AppCompatActivity implements NavigationView.On
         startActivityForResult(pp, ProfilePicRequest);
     }
 
+    public void chooseprofilepicturefrom(View view)
+    {
+        AlertDialog.Builder changepicbuilder = new AlertDialog.Builder(Registration.this);
+        changepicbuilder.setIcon(R.drawable.splashlogo);
+        changepicbuilder.setTitle("Choose Profile Picture");
+        final String[] items = new String[]{"From Camera", "From Gallery"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(Registration.this, android.R.layout.select_dialog_item, items);
+        changepicbuilder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                if (i == 0) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, ProfilePicRequest);
+                }
+                if (i == 1) {
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(galleryIntent, RESULT_LOAD_IMG_PROFILE);
+                    Toast.makeText(Registration.this, "Choose Profile Picture", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        changepicbuilder.show();
+    }
+
+    public void chooseproofpicturefrom(View view) {
+        boolean hasproof = (proofpic.getDrawable() != null);
+        if (hasproof) {
+            Takeproofpic.setVisibility(View.GONE);
+            Takeproofpic_2.setVisibility(View.VISIBLE);
+
+        }
+        else {
+            Takeproofpic.setVisibility(View.VISIBLE);
+            Takeproofpic_2.setVisibility(View.GONE);
+        AlertDialog.Builder changepicbuilder = new AlertDialog.Builder(Registration.this);
+        changepicbuilder.setIcon(R.drawable.splashlogo);
+        changepicbuilder.setTitle("Choose Proof Picture");
+        final String[] items = new String[]{"From Camera", "From Gallery"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(Registration.this, android.R.layout.select_dialog_item, items);
+        changepicbuilder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                if (i == 0) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, ProofPicRequest);
+                }
+                if (i == 1) {
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(galleryIntent, RESULT_LOAD_IMG_PROOF_1);
+                    Toast.makeText(Registration.this, "Choose Proof Picture", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        changepicbuilder.show();
+    }
+    }
+
+
+    public void chooseproofpicturefrom_2(View view) {
+            AlertDialog.Builder changepicbuilder = new AlertDialog.Builder(Registration.this);
+            changepicbuilder.setIcon(R.drawable.splashlogo);
+            changepicbuilder.setTitle("Choose Proof Picture");
+            final String[] items = new String[]{"From Camera", "From Gallery"};
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(Registration.this, android.R.layout.select_dialog_item, items);
+            changepicbuilder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                    if (i == 0) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(intent, ProofPicRequest_2);
+                    }
+                    if (i == 1) {
+                        Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(galleryIntent, RESULT_LOAD_IMG_PROOF_2);
+                        Toast.makeText(Registration.this, "Choose Proof Picture", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            changepicbuilder.show();
+
+    }
+
+
     public void Takeproofpic(View view) {
         boolean hasproof = (proofpic.getDrawable() != null);
         if (hasproof) {
@@ -480,18 +586,99 @@ public class Registration extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ProfilePicRequest && resultCode == Activity.RESULT_OK) {
             profilephoto = (Bitmap) data.getExtras().get("data");
+            //profilephoto = Bitmap.createScaledBitmap(profilephoto, 400,400, false);
             profilepic.setImageBitmap(profilephoto);
+        }
+        if (requestCode == RESULT_LOAD_IMG_PROFILE && resultCode == RESULT_OK) {
+            if (null != data) {
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Video.Media.DATA};
+                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                profilePicpath = cursor.getString(columnIndex);
+                cursor.close();
+                /*profilepic.setImageBitmap(BitmapFactory.decodeFile(profilePicpath));*/
+
+                //To resize the image
+                try {
+                    profilephoto = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                    //profilephoto = Bitmap.createScaledBitmap(profilephoto, 400,400, false);
+                    profilepic.setImageBitmap(profilephoto);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //ends
+
+            } else {
+                Toast.makeText(this, "You haven't picked any pic",
+                        Toast.LENGTH_LONG).show();
+            }
         }
         if (requestCode == ProofPicRequest && resultCode == Activity.RESULT_OK) {
             proofphoto = (Bitmap) data.getExtras().get("data");
+            //proofphoto = Bitmap.createScaledBitmap(proofphoto, 400,400, false);
             proofpic.setImageBitmap(proofphoto);
+        }
+        if (requestCode == RESULT_LOAD_IMG_PROOF_1 && resultCode == RESULT_OK) {
+            if (null != data) {
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Video.Media.DATA};
+                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                proofPicpath_1 = cursor.getString(columnIndex);
+                cursor.close();
+                /*profilepic.setImageBitmap(BitmapFactory.decodeFile(profilePicpath));*/
 
+                //To resize the image
+                try {
+                    proofphoto = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                    //proofphoto = Bitmap.createScaledBitmap(proofphoto, 400,400, false);
+                    proofpic.setImageBitmap(proofphoto);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //ends
+
+            } else {
+                Toast.makeText(this, "You haven't picked any pic",
+                        Toast.LENGTH_LONG).show();
+            }
         }
         if (requestCode == ProofPicRequest_2 && resultCode == Activity.RESULT_OK) {
             proofphoto_2 = (Bitmap) data.getExtras().get("data");
+            //proofphoto_2 = Bitmap.createScaledBitmap(proofphoto_2, 400,400, false);
             proofpic_2.setImageBitmap(proofphoto_2);
-
         }
+
+        if (requestCode == RESULT_LOAD_IMG_PROOF_2 && resultCode == RESULT_OK) {
+            if (null != data) {
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Video.Media.DATA};
+                Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                proofPicpath_2 = cursor.getString(columnIndex);
+                cursor.close();
+                /*profilepic.setImageBitmap(BitmapFactory.decodeFile(profilePicpath));*/
+
+                //To resize the image
+                try {
+                    proofphoto_2 = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                    //proofphoto_2 = Bitmap.createScaledBitmap(proofphoto_2, 400,400, false);
+                    proofpic_2.setImageBitmap(proofphoto_2);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //ends
+
+            } else {
+                Toast.makeText(this, "You haven't picked any pic",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+
     }
 
     /*take profile and proof pic ends*/
@@ -622,7 +809,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
 
                 Memberobject.put("Name", Fname);
                 Memberobject.put("lastName", Lname);
-                Memberobject.put("sex", "Male");
+                Memberobject.put("sex", gender);
                 Memberobject.put("email", email);
                 Memberobject.put("phoneNumber", phone);
                 Memberobject.put("country", country);
@@ -787,7 +974,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
 
                 Memberobject.put("Name", Fname);
                 Memberobject.put("lastName", Lname);
-                Memberobject.put("sex", "Male");
+                Memberobject.put("sex", gender);
                 Memberobject.put("email", email);
                 Memberobject.put("phoneNumber", phone);
                 Memberobject.put("country", country);
@@ -1228,7 +1415,7 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                         Amount.setText(String.valueOf(CreditBalance));
                         Amount.setEnabled(false);
                     }
-                } else if (CreditBalance > 0 && processingfee.equals(true)) {
+                } else if (CreditBalance >= 0 && processingfee.equals(true)) {
                     Paymentmode.setVisibility(View.GONE);
                     paymenttv.setVisibility(View.GONE);
                     if (MembershipUsageArrayList.contains(CreditBalance)) {
@@ -1248,41 +1435,56 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                         Amount.setEnabled(false);
                     }
                 }
+                else if(CreditBalance<=0 && processingfee.equals(true))
+                {
+                    Paymentmode.setVisibility(View.GONE);
+                    paymenttv.setVisibility(View.GONE);
+                    Amount.setText(String.valueOf(CreditBalance));
+                    Amount.setEnabled(false);
+                }
+            }
+            if(Memberobject.has("validity"))
+            {
+                Validity.setVisibility(View.VISIBLE);
+                String validity = Memberobject.getString("validity");
+                SimpleDateFormat inFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                SimpleDateFormat outFormat = new SimpleDateFormat("MMM dd, yyyy");
+                Calendar c = Calendar.getInstance();
+                try {
+                    c.setTime(inFormat.parse(validity));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Validity.setText(outFormat.format(c.getTime()));
+                Validity.setEnabled(false);
             }
             if (Memberobject.has("documents")) {
                 JSONArray docsarray = Memberobject.getJSONArray("documents");
                 JSONObject docobj = docsarray.getJSONObject(0);
                 String docnos = docobj.getString("documentNumber");
                 String doccopy = docobj.getString("documentCopy");
-                /*String docType = docobj.getString("documentType");
-                List doclist = Arrays.asList(getResources().getStringArray(R.array.proof_arrays));
-                if(doclist.contains(docType))
-                {
-                    int position = doclist.indexOf(docType);
-                    DocType.setSelection(position);
-                    DocType.setEnabled(false);
-                }
-                DocNo.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});*/
                 DocNo.setText(docnos);
-               // DocNo.setEnabled(false);
+                //DocNo.setEnabled(false);
                 Takeproofpic.setEnabled(false);
                 try {
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                   StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                     StrictMode.setThreadPolicy(policy);
                     URL url = new URL("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + doccopy + ".png");
-                    //URL url = new URL("http://43.251.80.79/mytrintrin/Member/" + Userid + "/" + doccopy + ".png");
                     proofphoto = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    proofpic.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));
-                    Takeprofilepic.setEnabled(false);
-                } catch (IOException e) {
+                    /*proofphoto = Bitmap.createScaledBitmap(proofphoto, 400,400, false);
+                    proofpic.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));*/
+                    } catch (IOException e) {
                     Log.e("TAG", e.getMessage());
                 }
+                Glide.with(Registration.this).load("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + doccopy + ".png").skipMemoryCache(true).into(proofpic);
+
+                Takeprofilepic.setEnabled(false);
                 if (docsarray.length() > 1) {
                     JSONObject docobj_2 = docsarray.getJSONObject(1);
                     String docnos_2 = docobj_2.getString("documentNumber");
                     String doccopy_2 = docobj_2.getString("documentCopy");
                     DocNo.setText(docnos_2);
-                   // DocNo.setEnabled(false);
+                    //DocNo.setEnabled(false);
                     Takeproofpic_2.setEnabled(false);
                     try {
                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -1290,11 +1492,13 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                         URL url = new URL("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + doccopy_2 + ".png");
                         //URL url = new URL("http://43.251.80.79/mytrintrin/Member/" + Userid + "/" + doccopy_2 + ".png");
                         proofphoto_2 = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                        proofpic_2.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));
+                       // proofphoto_2 = Bitmap.createScaledBitmap(proofphoto_2, 400,400, false);
+                       // proofpic_2.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));
                         Takeproofpic_2.setEnabled(false);
                     } catch (IOException e) {
                         Log.e("TAG", e.getMessage());
                     }
+                    Glide.with(Registration.this).load("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + doccopy_2 + ".png").into(proofpic_2);
                 }
             }
             if (Memberobject.has("cardNum")) {
@@ -1318,11 +1522,14 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     URL url = new URL("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + profilepics + ".png");
                     // URL url = new URL("http://43.251.80.79/mytrintrin/Member/" + Userid + "/" + profilepics + ".png");
                     profilephoto = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                    profilepic.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));
+                   // profilepic.setImageBitmap(BitmapFactory.decodeStream((InputStream) url.getContent()));
+                    //profilephoto = Bitmap.createScaledBitmap(profilephoto, 400,400, false);
                     Takeprofilepic.setEnabled(false);
                 } catch (IOException e) {
                     Log.e("TAG", e.getMessage());
                 }
+                Glide.with(Registration.this).load("https://www.mytrintrin.com/mytrintrin/Member/" + Userid + "/" + profilepics + ".png").into(profilepic);
+                Takeprofilepic.setEnabled(false);
             }
             if (Memberobject.has("sex")) {
                 String gender = Memberobject.getString("sex");
@@ -1394,7 +1601,47 @@ public class Registration extends AppCompatActivity implements NavigationView.On
             startActivity(paymentintent);
             finish();
         }
+        else if (id == R.id.nav_emailupdate) {
+            Intent updateemailintent = new Intent(this, Update_Email_RC.class);
+            updateemailintent.putExtra("userid", Userid);
+            updateemailintent.putExtra("email",email);
+            startActivity(updateemailintent);
+            finish();
+        }
+        else if (id == R.id.nav_syncuser) {
+            showsyncuserdialog();
+        }
+        else if (id == R.id.nav_checkoutforuser) {
+
+                        Intent checkoutintent = new Intent(this, Checkout_RC.class);
+                        checkoutintent.putExtra("cardnum",cardno);
+                        checkoutintent.putExtra("memberid",Userid);
+                        startActivity(checkoutintent);
+                        finish();
+
+            }
+            /*Intent checkoutintent = new Intent(this, Checkout_RC.class);
+            checkoutintent.putExtra("cardnum",cardno);
+            startActivity(checkoutintent);*/
         return true;
+    }
+
+    public void showalertdialog(String msg) {
+        AlertDialog.Builder errorbuilder = new AlertDialog.Builder(
+                Registration.this);
+        errorbuilder.setIcon(R.mipmap.logo);
+        errorbuilder.setTitle("Error");
+        errorbuilder.setMessage(msg);
+        errorbuilder.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();
+                        startActivity(new Intent(Registration.this,GetStarted.class));
+                        finish();
+                    }
+                });
+        errorbuilder.show();
     }
 
     public void parseVolleyError(VolleyError error) {
@@ -1408,6 +1655,145 @@ public class Registration extends AppCompatActivity implements NavigationView.On
         } catch (JSONException e) {
         } catch (UnsupportedEncodingException errorr) {
         }
+    }
+
+
+    public void showsyncuserdialog()
+    {
+        getalldockingstations();
+        AlertDialog.Builder syncuserbuilder = new AlertDialog.Builder(Registration.this);
+        syncuserbuilder.setIcon(R.mipmap.logo);
+        syncuserbuilder.setTitle("Sync User");
+        LayoutInflater syncinflate = LayoutInflater.from(Registration.this);
+        View syncView = syncinflate.inflate(R.layout.usersync, null);
+        final EditText cardnumber = (EditText) syncView.findViewById(R.id.etusercardnumber);
+        Stations = (Spinner) syncView.findViewById(R.id.stations);
+        cardnumber.setText(cardno);
+        syncuserbuilder.setView(syncView);
+        syncuserbuilder.setPositiveButton("Sync", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                cardnumforsync = cardnumber.getText().toString().trim();
+                if(cardnumforsync.equals("")||cardnumforsync.equals(null)||cardnumforsync.length()<2)
+                {
+                    Toast.makeText(getApplicationContext(), "Please Enter Card Number/Incorrect Card Number", Toast.LENGTH_LONG).show();
+                    showsyncuserdialog();
+                    return;
+                }
+                else
+                {
+                    cardno = cardnumforsync;
+                    syncuser(cardnumforsync);
+                }
+            }
+        });
+        syncuserbuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        syncuserbuilder.setCancelable(false);
+       syncuserbuilder.show();
+    }
+
+    public void syncuser(String card)
+    {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Syncing User...");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.show();
+        StringRequest syncuserrequest = new StringRequest(Request.Method.PUT, API.usersync+card, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                mProgressDialog.dismiss();
+                try {
+                    JSONObject responsefromserver = new JSONObject(response);
+                    String message = responsefromserver.getString("message");
+                    AlertDialog.Builder SuccessBuilder = new AlertDialog.Builder(Registration.this);
+                    SuccessBuilder.setIcon(R.drawable.splashlogo);
+                    SuccessBuilder.setTitle("Sync User");
+                    SuccessBuilder.setMessage(message);
+                    SuccessBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    SuccessBuilder.setCancelable(false);
+                    SuccessBuilder.show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mProgressDialog.dismiss();
+                if (error.networkResponse != null) {
+                    parseVolleyError(error);
+                    return;
+                }
+                if (error instanceof ServerError) {
+                    Toast.makeText(Registration.this, "Server Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", String.valueOf(error instanceof ServerError));
+                    error.printStackTrace();
+                } else if (error instanceof AuthFailureError) {
+                    Toast.makeText(Registration.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Authentication Error");
+                    error.printStackTrace();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(Registration.this, "Parse Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Parse Error");
+                    error.printStackTrace();
+                } else if (error instanceof NetworkError) {
+                    Toast.makeText(Registration.this, "Please check your connection.", Toast.LENGTH_LONG).show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(
+                            Registration.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
+                    Log.d("Error", "Network Error");
+                    error.printStackTrace();
+                } else if (error instanceof TimeoutError) {
+                    Toast.makeText(Registration.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Timeout Error");
+                    error.printStackTrace();
+                } else if (error instanceof NoConnectionError) {
+                    Toast.makeText(Registration.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(Registration.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                }
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("stationName", StationName);
+                return params;
+            }
+        };
+        syncuserrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(syncuserrequest);
+
     }
 
     public void showotpdialog() {
@@ -1688,6 +2074,185 @@ public class Registration extends AppCompatActivity implements NavigationView.On
                     checkdetailsandgenerateotp();
                 }
             });
+        }
+    }
+
+    public void maleselected(View view)
+    {
+        gender="Male";
+        male.setChecked(true);
+        female.setChecked(false);
+        others.setChecked(false);
+    }
+
+    public void femaleselected(View view)
+    {
+        gender="Female";
+        male.setChecked(false);
+        female.setChecked(true);
+        others.setChecked(false);
+    }
+
+
+    public void otherselected(View view)
+    {
+        gender="Others";
+        male.setChecked(false);
+        female.setChecked(false);
+        others.setChecked(true);
+    }
+
+    public void getalldockingstations() {
+        checkinternet();
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Please wait...");
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.show();
+        StringRequest alldockingstationrequest = new StringRequest(Request.Method.GET, API.alldockingstation, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    mProgressDialog.dismiss();
+                    JSONObject responsefromserver = new JSONObject(response);
+                    JSONArray data = responsefromserver.getJSONArray("data");
+                    StationNameArrayList.clear();
+                    StationIDArrayList.clear();
+
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject dscoordinates = data.getJSONObject(i);
+                        String id = dscoordinates.getString("StationID");
+                        final String Stationname = dscoordinates.getString("name");
+                        JSONArray ports = dscoordinates.getJSONArray("portIds");
+                        StationIDArrayList.add(id);
+                        StationNameArrayList.add(Stationname);
+
+                        /* float distance = currentlocation.distanceTo(dockinglocation);
+                        if(distance<100) {
+                            String id = dscoordinates.getString("StationID");
+                            final String Stationname = dscoordinates.getString("name");
+                            JSONArray ports = dscoordinates.getJSONArray("portIds");
+                            StationIDArrayList.add(id);
+                            StationNameArrayList.add(Stationname);
+                            StationArray.put(dscoordinates);
+                            PortArray.put(ports);
+                        }*/
+
+                    }
+                    calculatedistanceandsetstation();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mProgressDialog.dismiss();
+
+                if (error.networkResponse != null) {
+                    parseVolleyError(error);
+                    return;
+                }
+
+                if (error instanceof ServerError) {
+                    Toast.makeText(Registration.this, "Server is under maintenance,Please try again later.", Toast.LENGTH_SHORT).show();
+                    Log.d("Error", String.valueOf(error instanceof ServerError));
+                    error.printStackTrace();
+                } else if (error instanceof AuthFailureError) {
+                    Toast.makeText(Registration.this, "Authentication Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Authentication Error");
+                    error.printStackTrace();
+                } else if (error instanceof ParseError) {
+                    Toast.makeText(Registration.this, "Parse Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Parse Error");
+                    error.printStackTrace();
+                } else if (error instanceof NetworkError) {
+                    Toast.makeText(Registration.this, "Please Check your connection.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Network Error");
+                    error.printStackTrace();
+                    android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(
+                            Registration.this);
+                    builder.setIcon(R.drawable.splashlogo);
+                    builder.setTitle("NO INTERNET CONNECTION!!!");
+                    builder.setMessage("Your offline !!! Please check your connection and come back later.");
+                    builder.setPositiveButton("Exit",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int which) {
+                                    dialog.dismiss();
+                                    finish();
+                                }
+                            });
+                    builder.setNegativeButton("Retry Connection", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            checkinternet();
+                        }
+                    });
+                    builder.show();
+                } else if (error instanceof TimeoutError) {
+                    Toast.makeText(Registration.this, "Timeout Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "Timeout Error");
+                    error.printStackTrace();
+                } else if (error instanceof NoConnectionError) {
+                    Toast.makeText(Registration.this, "No Connection Error", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                } else {
+                    Toast.makeText(Registration.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                    error.printStackTrace();
+                }
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                return headers;
+            }
+        };
+        alldockingstationrequest.setRetryPolicy(new DefaultRetryPolicy(45000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(alldockingstationrequest);
+    }
+
+    public void calculatedistanceandsetstation() {
+        if(StationNameArrayList.size()>0)
+        {
+            mProgressDialog.dismiss();
+            Stationadapter = new ArrayAdapter<String>(Registration.this, android.R.layout.simple_spinner_dropdown_item, StationNameArrayList);
+            Stationadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            Stations.setAdapter(Stationadapter);
+            Stations.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    StationName = Stations.getSelectedItem().toString();
+                    StationId = StationIDArrayList.get(i);
+                    Toast.makeText(Registration.this, StationName, Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
+            });
+
+        }
+        else
+        {
+            mProgressDialog.dismiss();
+            android.support.v7.app.AlertDialog.Builder Nostation = new android.support.v7.app.AlertDialog.Builder(this);
+            Nostation.setIcon(R.drawable.splashlogo);
+            Nostation.setTitle("Nearest Hubs");
+            Nostation.setMessage("Sorry,You are not near to any of the TrinTrin Hubs");
+            Nostation.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    finish();
+                }
+            });
+            Nostation.setCancelable(false);
+            Nostation.show();
         }
     }
 }

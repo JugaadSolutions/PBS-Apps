@@ -108,7 +108,7 @@ public class Register extends AppCompatActivity {
             FirstName.setError("First Name");
             return;
         }
-        if (phone.equals("") || phone.equals(null)) {
+        if (phone.equals("") || phone.equals(null)||phone.length()<9) {
             Phone.setError("Phone Number");
             return;
         }
@@ -196,17 +196,18 @@ public class Register extends AppCompatActivity {
                     Toast.makeText(Register.this, "Parse Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
-                } else if (error instanceof NetworkError) {
+                } else if (error instanceof NoConnectionError) {
+                    Toast.makeText(Register.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                }
+                else if (error instanceof NetworkError) {
                     Toast.makeText(Register.this, "Please check your connection", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(Register.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
-                    error.printStackTrace();
-                } else if (error instanceof NoConnectionError) {
-                    Toast.makeText(Register.this, "No Connection Error", Toast.LENGTH_LONG).show();
-                    Log.d("Error", "No Connection Error");
                     error.printStackTrace();
                 } else {
                     Toast.makeText(Register.this, "Something went wrong", Toast.LENGTH_LONG).show();

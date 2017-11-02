@@ -193,7 +193,12 @@ public class ChangePassword extends AppCompatActivity {
                     Toast.makeText(ChangePassword.this, "Parse Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
-                } else if (error instanceof NetworkError) {
+                }else if (error instanceof NoConnectionError) {
+                    Toast.makeText(ChangePassword.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                }
+                else if (error instanceof NetworkError) {
                     Toast.makeText(ChangePassword.this, "Please check you connection.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
@@ -221,10 +226,6 @@ public class ChangePassword extends AppCompatActivity {
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(ChangePassword.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
-                    error.printStackTrace();
-                } else if (error instanceof NoConnectionError) {
-                    Toast.makeText(ChangePassword.this, "No Connection Error", Toast.LENGTH_LONG).show();
-                    Log.d("Error", "No Connection Error");
                     error.printStackTrace();
                 } else {
                     Toast.makeText(ChangePassword.this, "Something went wrong", Toast.LENGTH_LONG).show();

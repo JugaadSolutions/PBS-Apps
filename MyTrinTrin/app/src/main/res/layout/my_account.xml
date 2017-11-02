@@ -11,7 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/screenbackground">
 
         <include
             layout="@layout/myaccount_actionbar"
@@ -32,9 +33,9 @@
                 android:id="@+id/marqueedetailslayout">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/clearbutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_clear_black_24dp"
                     android:layout_gravity="center_horizontal"
                     android:id="@+id/clearmessage"
                     android:visibility="visible"
@@ -55,7 +56,8 @@
                     android:singleLine="true"
                     android:text=""
                     android:textStyle="bold"
-                    android:textColor="@color/colorPrimary"/>
+                    android:textColor="@color/colorPrimary"
+                    android:layout_gravity="center_vertical"/>
 
                <!-- <TextView
                     android:id="@+id/validity"
@@ -96,7 +98,7 @@
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp">
+                    android:padding="0dp">
 
                     <LinearLayout
                         android:id="@+id/ridesinmyaacount"

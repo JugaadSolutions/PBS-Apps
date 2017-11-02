@@ -34,4 +34,6 @@ This is a system where bicycles are owned and operated by a civic administration
     <string name="contact_us_myaccount"><font size="20"><b>Email us:\n</b></font>support@mytrintrin.com\n\n<font size="20"><b>Need to Call us?\n</b></font>+91 821 2333 000\nTrin Trin Bicycle Sharing Operating Hours – 6AM to 10PM\nCall Centre operating hours – 9AM to 6PM\n
 </string>
 
+    <string name="contactus">Trin Trin Bicycle Sharing Operating Hours – 6AM to 10PM\nCall Centre operating hours – 9AM to 6PM</string>
+
 </resources>

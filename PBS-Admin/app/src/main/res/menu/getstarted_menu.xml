@@ -7,6 +7,11 @@
         android:title="Add Smart Card" />
 
     <item
+        android:id="@+id/addmessage_getstarted"
+        android:icon="@mipmap/ic_edit_black_24dp"
+        android:title="Add Message" />
+
+    <item
         android:id="@+id/addleave_getstarted"
         android:icon="@mipmap/ic_add_circle_outline_black_24dp"
         android:title="Add Leave" />

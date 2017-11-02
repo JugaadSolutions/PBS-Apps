@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -66,8 +68,8 @@ public class Redistribution extends AppCompatActivity implements LocationListene
     Location location;
     LocationManager locationManager;
 
-    double latitude;
-    double longitude;
+    double latitude,onstartlatitude;
+    double longitude,onstartlongitude;
 
     SwitchCompat track;
 
@@ -102,6 +104,8 @@ public class Redistribution extends AppCompatActivity implements LocationListene
     Animation startAnimation;
     SwipeRefreshLayout Zoneswipe;
 
+    private String provider;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +124,8 @@ public class Redistribution extends AppCompatActivity implements LocationListene
         redistributiontoolbar.setTitle("Redistribution");
         setSupportActionBar(redistributiontoolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        getlocation();
+        /*locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -137,7 +142,7 @@ public class Redistribution extends AppCompatActivity implements LocationListene
         if (location != null) {
             latitude = location.getLatitude();
             longitude = location.getLongitude();
-        }
+        }*/
         track = (SwitchCompat) findViewById(R.id.switchButton);
         track.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -211,8 +216,51 @@ public class Redistribution extends AppCompatActivity implements LocationListene
                 },3000);
             }
         });
-        fetchzonedetails();
+        //fetchzonedetails();
 
+    }
+
+    private void getlocation() {
+        LocationManager service = (LocationManager) getSystemService(LOCATION_SERVICE);
+        boolean enabled = service.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!enabled) {
+            android.app.AlertDialog.Builder mAlertDialog = new android.app.AlertDialog.Builder(this);
+
+            // Setting Dialog Title
+            mAlertDialog.setTitle("Location not available, Open GPS?")
+                    .setIcon(R.drawable.splashlogo)
+                    .setMessage("Activate GPS to use location services?")
+                    .setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    }).show();
+
+        }
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(provider);
+
+        if (location != null) {
+            onstartlatitude = location.getLatitude();
+            onstartlongitude = location.getLongitude();
+            onLocationChanged(location);
+        } else {
+            GPSServices mGPSService = new GPSServices(this);
+            if (mGPSService.isLocationAvailable == false) {
+                Toast.makeText(this, "Your location is not available,please try again.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     //checking internet
@@ -375,11 +423,25 @@ public class Redistribution extends AppCompatActivity implements LocationListene
     }
 
     public void againStartGPSAndSendFile() {
-        new CountDownTimer(31000, 30000) {
+        new CountDownTimer(61000, 60000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Toast.makeText(Redistribution.this, "Sending Location", Toast.LENGTH_SHORT).show();
-                sendtoserver();
+
+                Location previouslocation = new Location("");
+                previouslocation.setLatitude(onstartlatitude);
+                previouslocation.setLongitude(onstartlongitude);
+
+                Location currentlocation = new Location("");
+                currentlocation.setLatitude(latitude);
+                currentlocation.setLongitude(longitude);
+
+                float distance = previouslocation.distanceTo(currentlocation);
+                if(distance>30)
+                {
+                    Toast.makeText(Redistribution.this, "Sending Location", Toast.LENGTH_SHORT).show();
+                    sendtoserver();
+                }
+
             }
 
             @Override
@@ -412,10 +474,14 @@ public class Redistribution extends AppCompatActivity implements LocationListene
     private void sendtoserver() {
 
         String url = API.redistribution + loginuserid + "/location";
+        Toast.makeText(this, " Sending Lat :"+currentlat+"Long :"+currentlang, Toast.LENGTH_SHORT).show();
         StringRequest sendlocation = new StringRequest(Request.Method.PUT, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                // Log.d("Response", response);
+                Toast.makeText(Redistribution.this, "Location Reached to Server", Toast.LENGTH_SHORT).show();
+                onstartlongitude = Double.parseDouble(currentlang);
+                onstartlatitude = Double.parseDouble(currentlat);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -488,8 +554,10 @@ public class Redistribution extends AppCompatActivity implements LocationListene
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("latitude", String.valueOf(latitude));
-                params.put("longitude", String.valueOf(longitude));
+               /* params.put("latitude", String.valueOf(latitude));
+                params.put("longitude", String.valueOf(longitude));*/
+                params.put("latitude", currentlat);
+                params.put("longitude", currentlang);
                 return params;
             }
         };
@@ -1184,6 +1252,25 @@ public class Redistribution extends AppCompatActivity implements LocationListene
                 fetchzonedetails();
             }
         }.start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.requestLocationUpdates(provider, 5000, 5, this);
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        locationManager.removeUpdates(this);
     }
 
 }

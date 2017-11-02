@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,12 @@ import java.util.HashMap;
 import java.util.Map;
 import android.graphics.Color;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+
 public class GetStarted extends AppCompatActivity {
 
     EditText Searchby_Phone;
@@ -48,7 +55,8 @@ public class GetStarted extends AppCompatActivity {
     private Toolbar GetStartedToolbar;
     SharedPreferences loginpref,assignedpref;
     SharedPreferences.Editor editor,assignededitor;
-    TextView Centername;
+    TextView Centername,Versionname;
+    private long mRequestStartTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +69,8 @@ public class GetStarted extends AppCompatActivity {
         GeTstartedlayout = (LinearLayout) findViewById(R.id.getstartedlayout);
         SearchResults = (LinearLayout) findViewById(R.id.searchresults);
         Centername = (TextView) findViewById(R.id.centername);
+        Versionname = (TextView) findViewById(R.id.versionname);
+        Versionname.setText("Version : "+BuildConfig.VERSION_NAME.toString());
         loginpref = getApplicationContext().getSharedPreferences("LoginPref", MODE_PRIVATE);
         editor = loginpref.edit();
         loginuserid = loginpref.getString("User-id", null);
@@ -127,10 +137,17 @@ public class GetStarted extends AppCompatActivity {
         {
             searchby_phone="91-"+searchby_phone;
         }
-        StringRequest searchmemberbyphone = new StringRequest(Request.Method.POST, API.searchmember, new Response.Listener<String>() {
+        mRequestStartTime = System.currentTimeMillis();
+       StringRequest searchmemberbyphone = new StringRequest(Request.Method.POST, API.searchmember, new Response.Listener<String>() {
+       // StringRequest searchmemberbyphone = new StringRequest(Request.Method.GET, API.searchmember+searchby_phone, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
+                    /*byte[] compressed = compress(response);
+                    String decompressed = decompress(compressed);
+                    long totalRequestTime = System.currentTimeMillis() - mRequestStartTime;
+                    Toast.makeText(GetStarted.this, ""+totalRequestTime, Toast.LENGTH_SHORT).show();
+                    Log.d("Response Time",totalRequestTime+"");*/
                     JSONObject responsefromserver = new JSONObject(response);
                     JSONArray data = responsefromserver.getJSONArray("data");
                     if (data.length() > 0) {
@@ -223,6 +240,9 @@ public class GetStarted extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                long totalRequestTime = System.currentTimeMillis() - mRequestStartTime;
+                Log.d("Response Time",totalRequestTime+"");
+                Toast.makeText(GetStarted.this, ""+totalRequestTime, Toast.LENGTH_SHORT).show();
                 if (error.networkResponse != null) {
                     parseVolleyError(error);
                     return;
@@ -281,6 +301,8 @@ public class GetStarted extends AppCompatActivity {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Content-Type", "application/json; charset=utf-8");
                 headers.put("Content-Type", "application/x-www-form-urlencoded");
+                /*headers.put("Accept-Encoding", "gzip");
+                headers.put("Content-Encoding", "gzip");*/
                 return headers;
             }
             @Override
@@ -442,4 +464,33 @@ public class GetStarted extends AppCompatActivity {
         getassignedcenter.setRetryPolicy(new DefaultRetryPolicy(35000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         PBSSingleton.getInstance(getApplicationContext()).addtorequestqueue(getassignedcenter);
     }
+
+
+    public static byte[] compress(String string) throws IOException {
+        ByteArrayOutputStream os = new ByteArrayOutputStream(string.length());
+        GZIPOutputStream gos = new GZIPOutputStream(os);
+        gos.write(string.getBytes());
+        gos.close();
+        byte[] compressed = os.toByteArray();
+        os.close();
+        return compressed;
+    }
+
+    public static String decompress(byte[] compressed) throws IOException {
+        final int BUFFER_SIZE = 32;
+        ByteArrayInputStream is = new ByteArrayInputStream(compressed);
+        GZIPInputStream gis = new GZIPInputStream(is, BUFFER_SIZE);
+        StringBuilder string = new StringBuilder();
+        byte[] data = new byte[BUFFER_SIZE];
+        int bytesRead;
+        while ((bytesRead = gis.read(data)) != -1) {
+            string.append(new String(data, 0, bytesRead));
+        }
+        gis.close();
+        is.close();
+        return string.toString();
+    }
+
+
+
 }

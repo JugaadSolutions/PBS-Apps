@@ -149,7 +149,12 @@ public class Feedback extends AppCompatActivity {
                     Toast.makeText(Feedback.this, "Parse Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
-                } else if (error instanceof NetworkError) {
+                }else if (error instanceof NoConnectionError) {
+                    Toast.makeText(Feedback.this, "Server is under maintenance.Please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                }
+                else if (error instanceof NetworkError) {
                     Toast.makeText(Feedback.this, "Please check your connection.", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Network Error");
                     error.printStackTrace();
@@ -177,10 +182,6 @@ public class Feedback extends AppCompatActivity {
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(Feedback.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
-                    error.printStackTrace();
-                } else if (error instanceof NoConnectionError) {
-                    Toast.makeText(Feedback.this, "No Connection Error", Toast.LENGTH_LONG).show();
-                    Log.d("Error", "No Connection Error");
                     error.printStackTrace();
                 } else {
                     Toast.makeText(Feedback.this, "Something went wrong", Toast.LENGTH_LONG).show();

@@ -10,7 +10,7 @@
         android:icon="@mipmap/ic_edit_black_24dp"/>
 
     <item android:id="@+id/payment_myaccount"
-        android:title="Payment History"
+        android:title="Payments"
         android:icon="@mipmap/ic_event_note_black_24dp"/>
 
     <item android:id="@+id/selectplan_myaccount"
@@ -43,6 +43,11 @@
         android:title="Contact Us"
         android:icon="@mipmap/ic_announcement_black_24dp"
         android:visible="true"/>
+
+    <item android:id="@+id/refund_myaccount"
+        android:title="Refund"
+        android:icon="@drawable/ic_local_atm_black_24dp"
+        android:visible="false"/>
 
     <item android:id="@+id/logout_myaccount"
         android:title="Logout"

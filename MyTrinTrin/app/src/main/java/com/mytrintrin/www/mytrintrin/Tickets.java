@@ -100,6 +100,7 @@ public class Tickets extends AppCompatActivity {
             Name_ticketrc.setText(Name);
             Name_ticketrc.setEnabled(false);
         }
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         getusertickets();
     }
 
@@ -221,7 +222,12 @@ public class Tickets extends AppCompatActivity {
                     Toast.makeText(Tickets.this, "Parse Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Parse Error");
                     error.printStackTrace();
-                } else if (error instanceof NetworkError) {
+                }else if (error instanceof NoConnectionError) {
+                    Toast.makeText(Tickets.this, "Server is under maintenance.please try later.", Toast.LENGTH_LONG).show();
+                    Log.d("Error", "No Connection Error");
+                    error.printStackTrace();
+                }
+                else if (error instanceof NetworkError) {
                     Toast.makeText(Tickets.this, "Please check your connection.", Toast.LENGTH_LONG).show();
                     AlertDialog.Builder builder = new AlertDialog.Builder(
                             Tickets.this);
@@ -249,10 +255,6 @@ public class Tickets extends AppCompatActivity {
                 } else if (error instanceof TimeoutError) {
                     Toast.makeText(Tickets.this, "Timeout Error", Toast.LENGTH_LONG).show();
                     Log.d("Error", "Timeout Error");
-                    error.printStackTrace();
-                } else if (error instanceof NoConnectionError) {
-                    Toast.makeText(Tickets.this, "No Connection Error", Toast.LENGTH_LONG).show();
-                    Log.d("Error", "No Connection Error");
                     error.printStackTrace();
                 } else {
                     Toast.makeText(Tickets.this, "Something went wrong", Toast.LENGTH_LONG).show();
@@ -448,7 +450,8 @@ public class Tickets extends AppCompatActivity {
         try {
             Ticketsdetails = TicketArray.getJSONObject(ticketposition);
             String TicketID = Ticketsdetails.getString("uuId");
-            String Name = Ticketsdetails.getString("name");
+            JSONObject user = Ticketsdetails.getJSONObject("user");
+            String Name = user.getString("Name");
             String Subject = Ticketsdetails.getString("subject");
             String Description = Ticketsdetails.getString("description");
             String Date = Ticketsdetails.getString("ticketdate");
@@ -533,4 +536,5 @@ public class Tickets extends AppCompatActivity {
         startActivity(closedtickets);
         finish();
     }
+
 }
